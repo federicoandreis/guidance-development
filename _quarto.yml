@@ -1,0 +1,73 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "CQC Statistical Guidance"
+  subtitle: "Statistical Methods for Regulatory Analysis"
+  author: "CQC Data & Insight"
+  date: today
+  sidebar:
+    style: floating
+    search: true
+    collapse-level: 1
+
+  chapters:
+    - index.qmd
+    - quick-reference.qmd
+
+    - part: "Part I: Foundations"
+      chapters:
+        - chapters/01-getting-started.qmd
+        - chapters/02-data-types.qmd
+        - chapters/03-describing-data.qmd
+        - chapters/04-variation-uncertainty.qmd
+        - chapters/05-distribution-shape.qmd
+        - chapters/07-unusual-observations.qmd
+        - chapters/08-missing-data-foundations.qmd
+        - chapters/09-statistical-inference.qmd
+        - chapters/10-qa-principles.qmd
+
+    - part: "Part II: Core Methods"
+      chapters:
+        - chapters/11-z-scoring.qmd
+        - chapters/12-spc-basics.qmd
+        - chapters/13-t-tests.qmd
+        - chapters/14-correlation.qmd
+        - chapters/15-outlier-methods.qmd
+        - chapters/16-missing-data-methods.qmd
+
+    - part: "Part III: Worked Examples"
+      chapters:
+        - examples/README.qmd
+        - examples/example-01-complete.qmd
+        - examples/example-02-complete.qmd
+        - examples/example-03-complete.qmd
+        - examples/example-04-complete.qmd
+        - examples/example-05-complete.qmd
+        - examples/example-06-complete.qmd
+        - examples/example-07-complete.qmd
+        - examples/example-08-complete.qmd
+        - examples/example-09-complete.qmd
+        - examples/example-10-outliers.qmd
+
+    - part: "Appendices"
+      chapters:
+        - appendices/glossary.qmd
+        - appendices/references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    css: custom.css
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    number-depth: 2
+    code-fold: false
+    code-tools: true
+
+execute:
+  freeze: auto

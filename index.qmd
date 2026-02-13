@@ -1,0 +1,51 @@
+---
+title: "CQC Statistical Guidance"
+subtitle: "Statistical Methods for Regulatory Analysis"
+author: "CQC Data & Insight"
+date: today
+number-sections: false
+---
+
+## Overview
+
+Practical statistical guidance for CQC analysts. Methods, worked examples, and decision criteria with complete R and Python code.
+
+---
+
+**Start Here**:
+- [QA Principles](chapters/10-qa-principles.qmd): Quality framework for all analysis
+- [Quick Reference](quick-reference.qmd): Find the right method for your question
+
+---
+
+::: {style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2em; margin: 1.5em 0;"}
+::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #3182ce;"}
+**Part I: Foundations**
+
+Statistical concepts for regulatory analysis.
+
+[Getting Started →](chapters/01-getting-started.qmd)
+:::
+
+::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #38a169;"}
+**Part II: Core Methods**
+
+Z-scoring, SPC, t-tests, correlation, outlier detection, missing data.
+
+[View Methods →](chapters/11-z-scoring.qmd)
+:::
+
+::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #e53e3e;"}
+**Part III: Worked Examples**
+
+10 complete analytical workflows with realistic data.
+
+[View Examples →](examples/README.qmd)
+:::
+:::
+
+---
+
+**Using this guidance**: Check QA principles → Select method based on your question → Follow worked example → Execute with provided code → Document decisions → Escalate complex cases to the Guild.
+
+

@@ -1,0 +1,82 @@
+---
+title: "Figure Generation (Working Document)"
+number-sections: false
+---
+
+This page generates figures for the book and can be removed after running.
+
+## Kurtosis Figure
+
+```{r}
+#| label: fig-kurtosis-gen
+#| echo: false
+#| warning: false
+#| message: false
+
+library(ggplot2)
+
+# Set consistent theme
+theme_cqc <- theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10),
+    legend.position = "bottom"
+  )
+
+# Generate distributions with different kurtosis
+set.seed(123)
+x_range <- seq(-4, 4, length.out = 1000)
+
+# High kurtosis (leptokurtic): t-distribution with df=3
+high_kurtosis <- dt(x_range, df = 3)
+
+# Normal kurtosis (mesokurtic): standard normal
+normal_kurtosis <- dnorm(x_range)
+
+# Low kurtosis (platykurtic): uniform-ish distribution using beta
+low_kurtosis <- rep(0, length(x_range))
+mask <- (x_range >= -3) & (x_range <= 3)
+low_vals <- dbeta((x_range[mask] + 3)/6, 2, 2) / 1.5
+low_kurtosis[mask] <- low_vals
+
+# Create data frame
+df <- data.frame(
+  x = rep(x_range, 3),
+  density = c(high_kurtosis, normal_kurtosis, low_kurtosis),
+  type = rep(c("High Kurtosis\n(Leptokurtic)\nHeavy tails, peaked center", 
+               "Normal Kurtosis\n(Mesokurtic)\nModerate tails", 
+               "Low Kurtosis\n(Platykurtic)\nLight tails, flatter shape"), 
+             each = length(x_range))
+)
+
+df$type <- factor(df$type, levels = c("High Kurtosis\n(Leptokurtic)\nHeavy tails, peaked center",
+                                       "Normal Kurtosis\n(Mesokurtic)\nModerate tails",
+                                       "Low Kurtosis\n(Platykurtic)\nLight tails, flatter shape"))
+
+# Plot
+p <- ggplot(df, aes(x = x, y = density, fill = type)) +
+  geom_area(alpha = 0.7, color = NA) +
+  facet_wrap(~type, scales = "free_y") +
+  scale_fill_manual(values = c("#E74C3C", "#3498DB", "#9B59B6")) +
+  labs(
+    title = "Types of Kurtosis in Probability Distributions",
+    x = "Value",
+    y = "Density"
+  ) +
+  theme_cqc +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 10, face = "bold"))
+
+# Save to figures folder
+ggsave("../figures/kurtosis.png", p, width = 10, height = 3.5, dpi = 300)
+
+# Display
+p
+```
+
+✓ Saved to `figures/kurtosis.png`
+
+---
+
+**Note**: After rendering this page once, the PNG file will be saved to the `figures/` folder. You can then remove this appendix from `_quarto.yml`.

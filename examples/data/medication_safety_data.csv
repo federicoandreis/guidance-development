@@ -1,0 +1,16 @@
+"home_id","home_name","beds","incidents_before","incidents_after","difference"
+"CH01","Care Home A",41,3.7,2.7,-1
+"CH02","Care Home B",36,4.5,3.1,-1.4
+"CH03","Care Home C",33,4,1.4,-2.6
+"CH04","Care Home D",34,2.8,2.2,-0.6
+"CH05","Care Home E",74,8.3,5.4,-2.9
+"CH06","Care Home F",37,3.9,2.9,-1
+"CH07","Care Home G",52,5.1,3.7,-1.4
+"CH08","Care Home H",23,2.2,1.8,-0.4
+"CH09","Care Home I",46,5.7,4.5,-1.2
+"CH10","Care Home J",37,3.1,2.1,-1
+"CH11","Care Home K",21,1.7,1.4,-0.3
+"CH12","Care Home L",71,7.1,5.2,-1.9
+"CH13","Care Home M",25,2.5,1.9,-0.6
+"CH14","Care Home N",67,8.9,6.3,-2.6
+"CH15","Care Home O",69,7,4.8,-2.2

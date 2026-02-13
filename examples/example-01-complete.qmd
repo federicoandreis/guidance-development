@@ -1,0 +1,738 @@
+---
+title: "Example 1: GP Access Analysis"
+subtitle: "Z-scoring with Data Quality Challenges"
+number-sections: false
+---
+
+```{r}
+#| include: false
+# Setup Python environment
+library(reticulate)
+use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
+```
+
+## Scenario Overview
+
+**Method**: Z-scoring (@sec-z-scoring)  
+**Complexity**: Medium  
+**Time to complete**: 2-3 hours  
+**Status**: ✅ Complete
+
+::: {.callout-note icon=false}
+## 📖 Method Reference
+For detailed explanation of z-scoring methodology, assumptions, and step-by-step guidance, see @sec-z-scoring.
+:::
+
+---
+
+## 📋 Scenario
+
+You are a CQC analyst tasked with identifying GP practices with significantly poor patient access based on the 2025 GP Patient Survey. The analysis will inform inspection targeting and help identify practices that may need support.
+
+**Analytical Question**: Which GP practices have phone access difficulty rates that are statistically significantly worse than the national average?
+
+**Context**: The 2025 GP Patient Survey found that 35% of respondents who tried to contact their GP by phone described it as difficult. However, there is substantial variation between practices. CQC wants to identify practices in the worst-performing band for follow-up.
+
+---
+
+## 🎯 Learning Objectives
+
+By working through this example, you will learn to:
+
+1. **Handle survey data** with varying response rates and sample sizes
+2. **Manage missing data** and document your decisions
+3. **Check z-scoring assumptions** and handle violations
+4. **Deal with small denominators** (practices with few respondents)
+5. **Calculate and interpret z-scores** in a regulatory context
+6. **Assign performance bands** and identify outliers
+7. **Visualize results** effectively for stakeholders
+8. **Document QA decisions** to meet CQC framework requirements
+9. **Communicate findings** to non-technical audiences
+
+---
+
+## 📊 Dataset Description
+
+### Synthetic Data: `data/gp_access_data.csv`
+
+**6,500 GP practices** with the following variables:
+
+| Variable | Description | Type | Notes |
+|----------|-------------|------|-------|
+| `practice_code` | Unique practice identifier | String | Format: ABC1234 |
+| `practice_name` | Practice name | String | Synthetic names |
+| `icb_code` | Integrated Care Board code | String | E.g., QOQ |
+| `icb_name` | ICB name | String | E.g., NHS Devon ICB |
+| `region` | NHS England region | String | 7 regions |
+| `list_size` | Registered patients | Integer | 500 - 25,000 |
+| `survey_responses` | Survey respondents | Integer | 30 - 800 |
+| `phone_difficult_n` | Respondents finding phone contact difficult | Integer | 0 - 500 |
+| `imd_quintile` | Index of Multiple Deprivation quintile | Integer | 1 (most deprived) - 5 (least deprived) |
+| `rural_urban` | Rural/urban classification | String | Urban / Rural |
+
+### Data Characteristics
+
+**Realistic issues included**:
+- ~5% missing data on `phone_difficult_n` (non-response)
+- Wide variation in `survey_responses` (30 to 800)
+- Some practices with very small list sizes (<1,000 patients)
+- Slight positive skew in difficulty rates
+- Regional variation
+- Deprivation gradient (more deprived areas have worse access)
+
+**Data generation**: Synthetic data generated using R (`set.seed(42)` for reproducibility). The data matches realistic GP Patient Survey patterns including deprivation gradients and natural variation. Both R and Python load the same CSV file, ensuring identical results.
+
+---
+
+## Step 1: Data Preparation
+
+**Purpose**: Load, check, clean, and prepare the GP access dataset for analysis.
+
+**Key tasks**:
+1. Import data
+2. Check data structure and quality
+3. Identify and handle missing data
+4. Check for errors and outliers
+5. Create analysis dataset
+
+---
+
+### Import Data
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-setup-r}
+#| message: false
+#| warning: false
+
+# Load required packages
+library(ggplot2)
+
+# Set options
+options(scipen = 999)  # Avoid scientific notation
+
+# Create output directory if needed
+if (!dir.exists("01-gp-access-analysis/outputs/figures")) {
+  dir.create("01-gp-access-analysis/outputs/figures", recursive = TRUE)
+}
+```
+
+### Python
+
+```{python ex1-setup-py}
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Set display options
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+
+# Set plot style
+sns.set_style("whitegrid")
+plt.rcParams['figure.figsize'] = (10, 6)
+```
+
+:::
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-import-r}
+# Import GP access data
+gp_data_raw <- read.csv("data/gp_access_data.csv", stringsAsFactors = FALSE)
+
+# Display first few rows
+head(gp_data_raw)
+
+# Display structure
+str(gp_data_raw)
+```
+
+### Python
+
+```{python ex1-import-py}
+import pandas as pd
+
+# Import GP access data
+gp_data_raw = pd.read_csv("data/gp_access_data.csv")
+
+# Display first few rows
+print(gp_data_raw.head())
+
+# Display info
+print(gp_data_raw.info())
+```
+
+:::
+
+**Initial observations**:
+- Dataset has 6,500 practices
+- 10 variables (identifiers, geography, characteristics, survey data)
+- Mix of character and numeric variables
+
+---
+
+### Data Quality Checks
+
+### Check for Duplicates
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-check-duplicates-r}
+# Check for duplicate practice codes
+n_duplicates <- sum(duplicated(gp_data_raw$practice_code))
+cat("Duplicate practice codes:", n_duplicates, "\n")
+
+# Check for duplicate rows
+n_dup_rows <- sum(duplicated(gp_data_raw))
+cat("Duplicate rows:", n_dup_rows, "\n")
+```
+
+### Python
+
+```{python ex1-check-duplicates-py}
+
+# Check for duplicate practice codes
+n_duplicates = gp_data_raw['practice_code'].duplicated().sum()
+print(f"Duplicate practice codes: {n_duplicates}")
+
+# Check for duplicate rows
+n_dup_rows = gp_data_raw.duplicated().sum()
+print(f"Duplicate rows: {n_dup_rows}")
+```
+
+:::
+
+✅ **Result**: No duplicates found.
+
+---
+
+### Check Missing Data
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-check-missing-r}
+# Count missing values by variable
+missing_counts <- colSums(is.na(gp_data_raw))
+missing_pct <- round(100 * missing_counts / nrow(gp_data_raw), 1)
+
+# Create summary table
+missing_summary <- data.frame(
+  Variable = names(missing_counts),
+  Missing_N = missing_counts,
+  Missing_Pct = missing_pct
+)
+
+# Display only variables with missing data
+missing_summary[missing_summary$Missing_N > 0, ]
+```
+
+### Python
+
+```{python ex1-check-missing-py}
+# Count missing values
+missing_summary = pd.DataFrame({
+    'Variable': gp_data_raw.columns,
+    'Missing_N': gp_data_raw.isnull().sum(),
+    'Missing_Pct': round(100 * gp_data_raw.isnull().sum() / len(gp_data_raw), 1)
+})
+
+# Display only variables with missing data
+print(missing_summary[missing_summary['Missing_N'] > 0])
+```
+
+:::
+
+**Findings**:
+- `phone_difficult_n` has ~325 missing values (~5%)
+- All other variables are complete
+
+**Decision needed**: How to handle missing `phone_difficult_n`?
+
+---
+
+### Handle Missing Data
+
+**Decision**: Exclude practices with missing `phone_difficult_n` from z-scoring analysis.
+
+**Rationale**:
+- Cannot calculate difficulty rate without numerator
+- Missing appears random (not systematic)
+- 5% exclusion is acceptable
+- Document impact in QA log
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-handle-missing-r}
+# Create analysis dataset excluding missing
+gp_data_clean <- gp_data_raw[!is.na(gp_data_raw$phone_difficult_n), ]
+
+cat("Original dataset:", nrow(gp_data_raw), "practices\n")
+cat("Clean dataset:", nrow(gp_data_clean), "practices\n")
+cat("Excluded:", nrow(gp_data_raw) - nrow(gp_data_clean), "practices\n")
+```
+
+### Python
+
+```{python ex1-handle-missing-py}
+# Create analysis dataset excluding missing
+gp_data_clean = gp_data_raw.dropna(subset=['phone_difficult_n'])
+
+print(f"Original dataset: {len(gp_data_raw)} practices")
+print(f"Clean dataset: {len(gp_data_clean)} practices")
+print(f"Excluded: {len(gp_data_raw) - len(gp_data_clean)} practices")
+```
+
+:::
+
+---
+
+### Calculate Difficulty Rate
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-calc-rate-r}
+# Calculate difficulty rate (percentage)
+gp_data_clean$difficulty_rate <- 100 * gp_data_clean$phone_difficult_n / gp_data_clean$survey_responses
+
+# Summary statistics
+summary(gp_data_clean$difficulty_rate)
+```
+
+### Python
+
+```{python ex1-calc-rate-py}
+# Calculate difficulty rate (percentage)
+gp_data_clean['difficulty_rate'] = 100 * gp_data_clean['phone_difficult_n'] / gp_data_clean['survey_responses']
+
+# Summary statistics
+print(gp_data_clean['difficulty_rate'].describe())
+```
+
+:::
+
+---
+
+### Save Clean Data
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-save-clean-r}
+# Save clean dataset (commented out - directory may not exist)
+# write.csv(gp_data_clean, "01-gp-access-analysis/data/clean_data.csv", row.names = FALSE)
+
+cat("✅ Clean data prepared\n")
+```
+
+### Python
+
+```{python ex1-save-clean-py}
+# Save clean dataset (commented out - directory may not exist)
+# gp_data_clean.to_csv("01-gp-access-analysis/data/clean_data.csv", index=False)
+
+print("✅ Clean data prepared")
+```
+
+:::
+
+---
+
+**Data Preparation Complete** ✅
+
+---
+
+## Step 2: Exploratory Analysis
+
+**Purpose**: Explore the distribution of difficulty rates, check z-scoring assumptions, and identify patterns.
+
+---
+
+### Distribution of Difficulty Rates
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-hist-r}
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(gp_data_clean, aes(x = difficulty_rate)) +
+  geom_histogram(bins = 50, fill = "steelblue", color = "white") +
+  geom_vline(xintercept = mean(gp_data_clean$difficulty_rate), 
+             color = "red", linetype = "dashed", size = 1) +
+  labs(
+    title = "Distribution of Phone Access Difficulty Rates",
+    subtitle = paste("Mean =", round(mean(gp_data_clean$difficulty_rate), 1), "%"),
+    x = "Difficulty Rate (%)",
+    y = "Number of Practices"
+  ) +
+  theme_minimal()
+
+# ggsave("01-gp-access-analysis/outputs/figures/difficulty_distribution.png", 
+#        width = 10, height = 6, dpi = 300)
+```
+
+### Python
+
+```{python ex1-hist-py}
+
+plt.figure(figsize=(10, 6))
+plt.hist(gp_data_clean['difficulty_rate'], bins=50, color='steelblue', edgecolor='white')
+plt.axvline(gp_data_clean['difficulty_rate'].mean(), color='red', linestyle='--', linewidth=2)
+plt.xlabel('Difficulty Rate (%)')
+plt.ylabel('Number of Practices')
+plt.title(f"Distribution of Phone Access Difficulty Rates\nMean = {gp_data_clean['difficulty_rate'].mean():.1f}%")
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+# plt.savefig('01-gp-access-analysis/outputs/figures/difficulty_distribution.png', dpi=300)
+plt.show()
+```
+
+:::
+
+**Observations**:
+- Approximately normal distribution
+- Mean around 34.9%
+- Slight positive skew
+- Range from ~5% to ~70%
+
+---
+
+### Check Normality
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-qq-plot-r}
+#| fig-width: 8
+#| fig-height: 8
+
+ggplot(gp_data_clean, aes(sample = difficulty_rate)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(
+    title = "Q-Q Plot: Difficulty Rates",
+    x = "Theoretical Quantiles",
+    y = "Sample Quantiles"
+  ) +
+  theme_minimal()
+
+# ggsave("01-gp-access-analysis/outputs/figures/qq_plot.png", 
+#        width = 8, height = 8, dpi = 300)
+
+# Shapiro-Wilk test (on sample if n > 5000)
+if (nrow(gp_data_clean) > 5000) {
+  sample_data <- sample(gp_data_clean$difficulty_rate, 5000)
+  shapiro_result <- shapiro.test(sample_data)
+} else {
+  shapiro_result <- shapiro.test(gp_data_clean$difficulty_rate)
+}
+
+cat("Shapiro-Wilk test p-value:", format.pval(shapiro_result$p.value), "\n")
+```
+
+### Python
+
+```{python ex1-qq-plot-py}
+
+from scipy import stats
+import scipy.stats as sp_stats
+
+fig, ax = plt.subplots(figsize=(8, 8))
+sp_stats.probplot(gp_data_clean['difficulty_rate'], dist="norm", plot=ax)
+ax.set_title("Q-Q Plot: Difficulty Rates")
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+# plt.savefig('01-gp-access-analysis/outputs/figures/qq_plot.png', dpi=300)
+plt.show()
+
+# Shapiro-Wilk test (on sample if n > 5000)
+if len(gp_data_clean) > 5000:
+    sample_data = gp_data_clean['difficulty_rate'].sample(5000)
+    stat, p_value = stats.shapiro(sample_data)
+else:
+    stat, p_value = stats.shapiro(gp_data_clean['difficulty_rate'])
+
+print(f"Shapiro-Wilk test p-value: {p_value:.4f}")
+```
+
+:::
+
+**Assessment**: Distribution is approximately normal - suitable for z-scoring.
+
+---
+
+## Step 3: Z-scoring Analysis
+
+**Purpose**: Calculate z-scores, assign performance bands, and identify practices for follow-up.
+
+---
+
+### Calculate Z-scores
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-calc-z-r}
+# National statistics
+national_mean <- mean(gp_data_clean$difficulty_rate)
+national_sd <- sd(gp_data_clean$difficulty_rate)
+
+cat("National mean:", round(national_mean, 2), "%\n")
+cat("National SD:", round(national_sd, 2), "%\n")
+
+# Calculate z-scores
+gp_data_clean$z_score <- (gp_data_clean$difficulty_rate - national_mean) / national_sd
+
+# Summary
+summary(gp_data_clean$z_score)
+```
+
+### Python
+
+```{python ex1-calc-z-py}
+# National statistics
+national_mean = gp_data_clean['difficulty_rate'].mean()
+national_sd = gp_data_clean['difficulty_rate'].std()
+
+print(f"National mean: {national_mean:.2f}%")
+print(f"National SD: {national_sd:.2f}%")
+
+# Calculate z-scores
+gp_data_clean['z_score'] = (gp_data_clean['difficulty_rate'] - national_mean) / national_sd
+
+# Summary
+print(gp_data_clean['z_score'].describe())
+```
+
+:::
+
+---
+
+### Assign Performance Bands
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-assign-bands-r}
+# Assign bands based on z-scores
+gp_data_clean$band <- cut(gp_data_clean$z_score,
+                           breaks = c(-Inf, -3, -2, -1, 1, 2, 3, Inf),
+                           labels = c("Band 1", "Band 2", "Band 3", "Band 4", 
+                                      "Band 5", "Band 6", "Band 7"))
+
+# Count by band
+table(gp_data_clean$band)
+```
+
+### Python
+
+```{python ex1-assign-bands-py}
+import numpy as np
+
+# Assign bands based on z-scores
+gp_data_clean['band'] = pd.cut(gp_data_clean['z_score'],
+                                bins=[-np.inf, -3, -2, -1, 1, 2, 3, np.inf],
+                                labels=["Band 1", "Band 2", "Band 3", "Band 4", 
+                                        "Band 5", "Band 6", "Band 7"])
+
+# Count by band
+print(gp_data_clean['band'].value_counts().sort_index())
+```
+
+:::
+
+---
+
+### Identify Practices for Follow-up
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-flag-practices-r}
+# Flag practices in worst bands (6-7)
+flagged_practices <- gp_data_clean[gp_data_clean$band %in% c("Band 6", "Band 7"), ]
+
+cat("Practices flagged for follow-up:", nrow(flagged_practices), "\n")
+cat("Percentage of total:", round(100 * nrow(flagged_practices) / nrow(gp_data_clean), 1), "%\n")
+
+# Show top 10
+head(flagged_practices[order(-flagged_practices$z_score), 
+                       c("practice_code", "practice_name", "difficulty_rate", "z_score", "band")], 10)
+```
+
+### Python
+
+```{python ex1-flag-practices-py}
+# Flag practices in worst bands (6-7)
+flagged_practices = gp_data_clean[gp_data_clean['band'].isin(["Band 6", "Band 7"])]
+
+print(f"Practices flagged for follow-up: {len(flagged_practices)}")
+print(f"Percentage of total: {100 * len(flagged_practices) / len(gp_data_clean):.1f}%")
+
+# Show top 10
+print(flagged_practices.nlargest(10, 'z_score')[['practice_code', 'practice_name', 'difficulty_rate', 'z_score', 'band']])
+```
+
+:::
+
+---
+
+### Visualize Results
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-viz-bands-r}
+#| fig-width: 12
+#| fig-height: 8
+
+ggplot(gp_data_clean, aes(x = z_score, fill = band)) +
+  geom_histogram(bins = 50, color = "white") +
+  scale_fill_manual(values = c("Band 1" = "darkgreen", "Band 2" = "green", 
+                                "Band 3" = "lightgreen", "Band 4" = "gray",
+                                "Band 5" = "orange", "Band 6" = "red", 
+                                "Band 7" = "darkred")) +
+  geom_vline(xintercept = c(-3, -2, -1, 1, 2, 3), linetype = "dashed", alpha = 0.5) +
+  labs(
+    title = "GP Practices: Phone Access Difficulty Z-scores",
+    subtitle = "Colored by performance band",
+    x = "Z-score",
+    y = "Number of Practices",
+    fill = "Performance Band"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+# ggsave("01-gp-access-analysis/outputs/figures/z_score_distribution.png", 
+#        width = 12, height = 8, dpi = 300)
+```
+
+### Python
+
+```{python ex1-viz-bands-py}
+
+colors = {"Band 1": "darkgreen", "Band 2": "green", "Band 3": "lightgreen",
+          "Band 4": "gray", "Band 5": "orange", "Band 6": "red", "Band 7": "darkred"}
+
+plt.figure(figsize=(12, 8))
+for band in ["Band 1", "Band 2", "Band 3", "Band 4", "Band 5", "Band 6", "Band 7"]:
+    data = gp_data_clean[gp_data_clean['band'] == band]['z_score']
+    plt.hist(data, bins=50, alpha=0.7, label=band, color=colors[band], edgecolor='white')
+
+for x in [-3, -2, -1, 1, 2, 3]:
+    plt.axvline(x, linestyle='--', alpha=0.5, color='black')
+
+plt.xlabel('Z-score')
+plt.ylabel('Number of Practices')
+plt.title('GP Practices: Phone Access Difficulty Z-scores\nColored by performance band')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+# plt.savefig('01-gp-access-analysis/outputs/figures/z_score_distribution.png', dpi=300)
+plt.show()
+```
+
+:::
+
+---
+
+### Save Results
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex1-save-results-r}
+# Save full results (commented out - directory may not exist)
+# write.csv(gp_data_clean, "01-gp-access-analysis/outputs/gp_access_results_full.csv", row.names = FALSE)
+
+# Save flagged practices only
+# write.csv(flagged_practices, "01-gp-access-analysis/outputs/flagged_practices.csv", row.names = FALSE)
+
+cat("✅ Analysis complete\n")
+cat("Flagged practices:", nrow(flagged_practices), "\n")
+```
+
+### Python
+
+```{python ex1-save-results-py}
+# Get flagged practices from R
+flagged_practices = r.flagged_practices
+
+# Save full results (commented out - directory may not exist)
+# gp_data_clean.to_csv("01-gp-access-analysis/outputs/gp_access_results_full.csv", index=False)
+
+# Save flagged practices only
+# flagged_practices.to_csv("01-gp-access-analysis/outputs/flagged_practices.csv", index=False)
+
+print("✅ Analysis complete")
+print(f"Flagged practices: {len(flagged_practices)}")
+```
+
+:::
+
+---
+
+**Z-scoring Analysis Complete** ✅
+
+---
+
+## Step 4: Stakeholder Report
+
+### Executive Summary
+
+**Analysis**: GP Phone Access Difficulty - 2025 Survey  
+**Date**: `r format(Sys.Date(), "%B %d, %Y")`  
+**Analyst**: CQC Data & Insight Team
+
+### Key Findings
+
+- **National average**: 34.9% of survey respondents find phone contact difficult
+- **Practices analyzed**: 6,175 (after excluding 325 with missing data)
+- **Practices flagged** (Bands 6-7): 141 practices (2.3%)
+- **Worst performers** (Band 7): 12 practices (0.2%)
+
+### Recommendations
+
+1. **Immediate follow-up**: Band 7 practices (z > 3)
+2. **Monitoring**: Band 6 practices (2 < z ≤ 3)
+3. **Context review**: Consider practice size, deprivation, rurality
+
+---
+
+### Summary
+
+This example demonstrates a complete z-scoring workflow for CQC regulatory analytics, including:
+
+✅ Data quality checks and missing data handling  
+✅ Exploratory analysis and assumption checking  
+✅ Z-score calculation and performance banding  
+✅ Identification of practices for follow-up  
+✅ Stakeholder-ready visualizations and reporting  
+
+**For full QA documentation, see**: `docs/qa-checklist.md`, `docs/decisions-log.md`, `docs/assumptions.md`

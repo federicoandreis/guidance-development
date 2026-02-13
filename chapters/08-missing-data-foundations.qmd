@@ -1,0 +1,492 @@
+---
+title: "Handling Missing Data: Foundations"
+---
+
+## When Data Isn't There {#sec-missing-data-foundations}
+
+Missing data is inevitable in regulatory analytics. Providers don't submit data, surveys have non-response, systems fail to record values, staff forget to document. The question isn't "do I have missing data?" but "**does it matter for my analysis?**"
+
+This chapter addresses the conceptual foundations you need before applying missing data methods:
+
+1. **Why does data go missing?** Understanding mechanisms (MCAR, MAR, MNAR)
+2. **What's the impact?** Distinguishing bias from loss of precision
+3. **When should I worry?** Decision framework for investigation
+4. **What are my options?** Principles for handling approaches
+
+**This chapter focuses on concepts.** For computational methods (multiple imputation, maximum likelihood, sensitivity analysis with code), see @sec-missing-data-handling.
+
+**Critical principle**: The most important question isn't "how do I fill in missing values?" It's "**why is this data missing, and what does that tell me?**" The missingness mechanism determines whether simple approaches work or whether you have a serious problem.
+
+## Why Data Goes Missing
+
+Not all missingness is equal. The reason data is missing determines whether it creates bias and what you can do about it.
+
+### Missing Completely at Random (MCAR)
+
+**Definition**: Missingness is unrelated to anything—observed or unobserved data.
+
+**Characteristics**:
+- Missing values are a random sample of all values
+- Probability of being missing is the same for all observations
+- Missingness unrelated to the value itself or any other variable
+
+**Examples**:
+- **Random system glitches**: Server fails at random times, losing 2% of records
+- **Lottery-based sampling**: You randomly select 100 of 200 providers to survey, leaving 100 "missing"
+- **Equipment failure**: A blood pressure monitor malfunctions on random patients
+
+**Impact on analysis**:
+- **No bias**: Complete cases are a random subset, so estimates are unbiased
+- **Loss of precision**: Smaller sample = wider confidence intervals = less statistical power
+- **Easy to handle**: Analyzing complete cases only is valid
+
+**Why it's rare in practice**: True randomness is uncommon. Usually missingness relates to something, even if subtly.
+
+**CQC context**: Rarely truly MCAR. Even system glitches often correlate with provider characteristics (e.g., older systems more likely to fail, smaller providers less likely to have backup systems).
+
+### Missing at Random (MAR)
+
+**Definition**: Missingness is related to observed variables, but not to the missing value itself (after accounting for observed variables).
+
+**Characteristics**:
+- Probability of being missing depends on things you observed
+- Once you account for those observed variables, missingness is random
+- Confusingly named—it's NOT random, but "random conditional on observed data"
+
+**Examples**:
+- **Smaller providers less likely to report**: Provider size is observed, and once you account for size, reporting is random. Small providers might be missing data on quality metrics, but conditional on size, the missingness is random.
+- **Older patients less likely to complete surveys**: Age is observed. Once you account for age, response is random. The missing satisfaction scores are missing because of age, not because of low satisfaction itself.
+- **Certain regions submit late**: Region is observed. Conditional on region, submission is random.
+
+**Impact on analysis**:
+- **Potential bias**: If you ignore the observed variables related to missingness, estimates can be biased
+- **Can be addressed**: If you account for the variables related to missingness (e.g., stratify by provider size, adjust for age), bias can be reduced or eliminated
+- **Requires more sophisticated methods**: Complete case analysis may be biased; need to model the missingness or use methods that account for it
+
+**Why it's common**: Many reporting and measurement processes correlate with observable characteristics.
+
+**CQC context**: Very common. Small providers, rural locations, older systems, high-workload periods—all observable factors that affect likelihood of missing data.
+
+**Key distinction from MCAR**: With MAR, missingness relates to things you can measure. With MCAR, missingness doesn't relate to anything.
+
+### Missing Not at Random (MNAR)
+
+**Definition**: Missingness is related to the unobserved value itself, even after accounting for all observed variables.
+
+**Characteristics**:
+- Probability of being missing depends on the value that would have been observed
+- Cannot be predicted from other observed variables alone
+- The missingness pattern itself contains information
+
+**Examples**:
+- **Poor performers don't report**: Providers with high incident rates choose not to submit incident data. The missingness is directly related to the (high) value they're not reporting.
+- **Low satisfaction prompts non-response**: Patients with negative experiences don't complete satisfaction surveys. The missing scores are missing *because* they're low.
+- **High costs trigger non-disclosure**: Providers with expensive care don't report cost data. Missingness correlates with (high) unreported costs.
+
+**Impact on analysis**:
+- **Serious bias**: No standard method can eliminate this bias without strong, unverifiable assumptions
+- **Results are misleading**: Complete case analysis gives biased estimates; imputation methods also biased unless they correctly model the MNAR mechanism
+- **Missingness is informative**: The pattern of who's missing tells you something important
+
+**Why it's serious**: You can't fix MNAR with statistics alone. The information needed to correct the bias is missing by definition.
+
+**CQC context**: A major concern in regulation. If poor performers systematically don't report, your analysis of complete cases paints an artificially rosy picture. This is a regulatory failure, not just a statistical problem.
+
+**Warning signs**:
+- Providers with poor inspection ratings have more missing data
+- Providers that later fail have historical gaps in reporting
+- Missingness correlates with complaints or safeguarding concerns
+- "Too good to be true" complete case results (everyone who reports looks fine)
+
+## Impact on Analysis: Bias vs Precision
+
+Missing data affects analysis in two ways. Understanding the difference is crucial.
+
+### Loss of Precision (Statistical Efficiency)
+
+**What it is**: Smaller sample size = wider confidence intervals = less ability to detect real effects.
+
+**Caused by**: All types of missingness (MCAR, MAR, MNAR)
+
+**Example**: You plan to compare 100 providers, but 20 have missing data. Analyzing 80 providers instead of 100 means less precise estimates—wider confidence intervals, lower statistical power.
+
+**Consequence**: You might miss real differences (false negatives), not because of bias but because you lack precision.
+
+**Solution**: Increase sample size if possible, or accept wider uncertainty. Some missing data methods (imputation) can recover some precision.
+
+**Regulatory implication**: Lower power means harder to detect genuinely poor performers. This affects false negative rate.
+
+### Bias (Systematic Error)
+
+**What it is**: Your estimate is systematically wrong—consistently too high or too low.
+
+**Caused by**: MAR (if you don't account for observed variables) and MNAR
+
+**Example**: Poor performers don't report. Analyzing complete cases only gives you an estimate of "performance among providers who choose to report," which is better than overall performance. Your estimate is biased upward.
+
+**Consequence**: Wrong conclusions. You think performance is better (or worse) than it actually is.
+
+**Solution**: 
+- For MAR: Account for variables related to missingness
+- For MNAR: Extremely difficult; requires specialist methods or sensitivity analysis
+
+**Regulatory implication**: Bias means your analysis is misleading. This affects both false positives and false negatives, and undermines credibility.
+
+**Key distinction**: 
+- **Low precision**: Estimate is roughly right but uncertain (wide confidence interval)
+- **Bias**: Estimate is confidently wrong (might have narrow confidence interval, but pointing at the wrong value)
+
+**You can have both**: MNAR creates bias *and* reduces precision. MAR creates bias (if not handled) but precision can be partially recovered. MCAR only reduces precision.
+
+## Investigating Missing Data: When to Worry
+
+Don't apply mechanical thresholds like "if >10% missing, exclude the variable." Instead, investigate the pattern and mechanism.
+
+### Step 1: Quantify
+
+**How much is missing?**
+
+- **Overall**: What proportion of all values are missing across your dataset?
+- **By variable**: Which variables have the most missing data?
+- **By observation**: How many observations are missing data on multiple variables?
+- **By subgroup**: Are certain types of providers (small, rural, specific sector) missing more data?
+
+**Tools**: Summary functions in statistical software (R: `colSums(is.na())`, Python: `.isnull().sum()`)
+
+**Red flag**: If missingness is concentrated in specific variables or subgroups, it's not random.
+
+### Step 2: Visualize
+
+**What pattern does missingness follow?**
+
+- **Scattered**: Missing values distributed throughout dataset (suggests MCAR)
+- **Clustered**: Missing values concentrated in specific observations or time periods (suggests MAR or MNAR)
+- **Monotone**: If A is missing, then B, C, D are also missing (suggests systematic dropout)
+- **Co-occurrence**: Certain variables always missing together (suggests related mechanisms)
+
+**Tools**: Missing data visualization packages (R: `naniar::vis_miss()`, `naniar::gg_miss_upset()`; Python: `missingno.matrix()`, `missingno.heatmap()`)
+
+**Red flag**: Clustered or patterned missingness suggests non-random mechanism.
+
+### Step 3: Investigate Relationships
+
+**Is missingness related to other variables?**
+
+**Compare characteristics**:
+- Do providers with missing data differ from complete-case providers on observed characteristics?
+- Are smaller providers more likely to have missing data?
+- Do providers with certain ratings have more missingness?
+- Does missingness vary by region, sector, or time period?
+
+**Tools**: Create a missingness indicator (1 = missing, 0 = not missing) and compare groups using t-tests or cross-tabs.
+
+**Example analysis**:
+```
+# Do small providers have more missing data?
+Small providers with missing data: 40%
+Large providers with missing data: 10%
+→ Suggests MAR (related to size)
+```
+
+**Red flag**: If providers with known risk factors (complaints, poor ratings) have more missingness, suspect MNAR.
+
+### Step 4: Ask Why
+
+**Why is it missing?**
+
+Consult with data owners, inspect metadata, check documentation:
+
+- **Data collection issue**: System failure, process change, new requirement (potentially MCAR or MAR)
+- **Not applicable**: Metric doesn't apply to this provider type (not missing, but NA—handle separately)
+- **Deliberate non-reporting**: Provider chose not to submit (likely MNAR)
+- **Measurement failure**: Value couldn't be measured or recorded (potentially MCAR)
+- **Late submission**: Data exists but not yet available (time-dependent MAR)
+
+**CQC practice**: Check with data managers, review provider history, consider regulatory context (are providers required to submit? What are consequences of non-reporting?).
+
+## Decision Framework: What to Do
+
+Based on investigation, decide how to proceed.
+
+### Scenario 1: Minor Missingness, Random Pattern
+
+**Characteristics**:
+- <5-10% missing across most variables
+- Scattered, no obvious pattern
+- Missing and complete cases similar on observed characteristics
+- Investigation suggests plausible MCAR mechanism
+
+**Decision**: Complete case analysis usually appropriate
+
+**Action**:
+1. Exclude observations with missing data
+2. Report sample size before and after exclusion
+3. Document why you believe missingness is MCAR
+4. Conduct quick sensitivity check: do complete cases differ from all cases on observed variables?
+
+**Document**:
+- "3% of providers (n=15) excluded due to missing incident data. Investigation showed no systematic pattern; providers with missing data did not differ from complete cases on size, region, or rating."
+
+**Limitation**: Still loses precision. Consider whether 5-10% loss is acceptable for your question.
+
+### Scenario 2: Moderate Missingness, Explained by Observed Variables
+
+**Characteristics**:
+- 10-30% missing on key variables
+- Clear pattern: smaller providers, certain regions, specific time periods
+- Missingness correlates with observed characteristics
+- Investigation suggests MAR mechanism
+
+**Decision**: Account for observed variables or conduct sensitivity analysis
+
+**Options**:
+1. **Stratified analysis**: Analyze small and large providers separately, then synthesize
+2. **Adjustment**: Include size/region/period as covariates in your model
+3. **Weighting**: Weight complete cases by inverse probability of having complete data
+4. **Imputation**: Use methods that account for observed variables (requires specialist support, see @sec-missing-data-handling)
+5. **Sensitivity analysis**: Compare results for complete cases vs making different assumptions about missing data
+
+**Action**:
+- Choose approach based on complexity and stakes
+- For high-stakes analysis, consult Guild for imputation methods
+- For routine analysis, sensitivity analysis often sufficient
+
+**Document**:
+- "20% of small providers had missing satisfaction data vs 5% of large providers. We analyzed small and large providers separately to avoid bias from differential missingness."
+
+**Limitation**: Relies on assumption that missingness is MAR (conditional on observed variables). If MNAR, still biased.
+
+### Scenario 3: Substantial Missingness or Problematic Pattern
+
+**Characteristics**:
+- >30% missing on key variables
+- Missingness correlates with outcome or suspected risk factors
+- Providers known to be higher-risk have more missing data
+- Investigation raises concerns about MNAR
+
+**Decision**: Do NOT proceed with standard analysis
+
+**Action**:
+1. **Escalate to Guild**: This requires specialist methods or may indicate indicator isn't fit for purpose
+2. **Report missingness as a finding**: "40% of providers did not report incident data, concentrated among providers with previous safeguarding concerns. This pattern of non-reporting is itself a regulatory concern."
+3. **Sensitivity analysis**: Best-case (all missing values are good) vs worst-case (all missing values are bad) scenarios to bound possible conclusions
+4. **Consider redesign**: Is this indicator worth continuing if missingness is this severe?
+
+**Document**:
+- "We cannot draw valid conclusions about incident rates because 40% of providers did not report, and non-reporting was concentrated among providers with known concerns. We recommend reviewing reporting requirements and considering sanctions for non-compliance."
+
+**Limitation**: No statistical fix. This is a data governance and policy problem.
+
+### Scenario 4: MNAR Suspected
+
+**Characteristics**:
+- Investigation suggests poor performers systematically don't report
+- Historical data shows providers that later failed had prior missing data
+- Regulatory intelligence supports non-reporting related to performance
+
+**Decision**: Treat missingness pattern itself as a signal
+
+**Action**:
+1. **Flag non-reporters**: Missing data is itself informative. Providers who don't report may warrant investigation.
+2. **Sensitivity analysis**: Model different scenarios (best case, worst case, various assumptions)
+3. **Guild consultation**: Specialist methods exist (selection models, pattern-mixture models) but require strong assumptions and expertise
+4. **Policy response**: Consider whether regulatory action is needed to improve reporting compliance
+
+**Document**:
+- "We cannot produce unbiased estimates of performance due to non-random missingness. However, the pattern of non-reporting—concentrated among providers with complaints and previous enforcement—is itself a regulatory concern. We flag these providers for investigation."
+
+**Key insight**: With MNAR, the analytic question shifts from "what is average performance?" to "what does the pattern of missingness tell us?"
+
+## Handling Approaches: Principles
+
+Before diving into computational methods (@sec-missing-data-handling), understand the principles.
+
+### Complete Case Analysis (Listwise Deletion)
+
+**What**: Analyze only observations with no missing data.
+
+**When valid**: 
+- MCAR (unbiased, just loses precision)
+- MAR with stratification or adjustment for observed variables
+- Small amount of missingness (<5%) where bias is likely minimal
+
+**When NOT valid**:
+- MAR without accounting for related variables (biased)
+- MNAR (biased)
+- Substantial missingness (loses too much precision)
+
+**Advantages**:
+- Simple
+- Transparent
+- No assumptions about missing values themselves
+
+**Disadvantages**:
+- Loses data and precision
+- Can be severely biased if missingness not MCAR
+- With multiple variables, can lose most of dataset
+
+**CQC practice**: Default for minor missingness. Always report sample size before and after exclusion.
+
+### Indicator Methods (Missing as a Category)
+
+**What**: Create a separate category for missing values (e.g., "Not reported") and include it in analysis.
+
+**When valid**:
+- Missingness itself is meaningful (e.g., "provider chose not to report")
+- You want to explicitly model non-reporting as a separate group
+- Exploratory analysis to see if missingness predicts outcomes
+
+**When NOT valid**:
+- You want to estimate what the missing values would have been (this doesn't do that)
+- Small number of missing cases (creates unstable estimates for missing category)
+- Missingness has no substantive meaning
+
+**Advantages**:
+- Retains all data
+- Makes missingness visible in results
+- Can reveal patterns of non-reporting
+
+**Disadvantages**:
+- Doesn't estimate what missing values are
+- Can be difficult to interpret ("missing category" vs actual values)
+- Not appropriate for all analysis types
+
+**CQC example**: In profiling providers, create three categories: "Below average", "Average", "Above average", "Not reported". Report all four groups. Providers who don't report are visible, but you're not imputing their values.
+
+### Advanced Methods (See Methods Chapter)
+
+**When needed**: MAR with substantial missingness, or high-stakes analysis requiring sophisticated approaches
+
+**Options** (detailed in @sec-missing-data-handling):
+- **Multiple imputation**: Fill in missing values multiple times, analyze each, pool results
+- **Maximum likelihood**: Estimate parameters directly from available data
+- **Inverse probability weighting**: Weight complete cases by inverse probability of being complete
+- **Sensitivity analysis**: Test different assumptions about missing values
+
+**When to escalate**: 
+- >20-30% missing and MAR
+- High-stakes regulatory decision
+- Stakeholder concern about bias
+- Methodological challenge expected
+
+**Key limitation**: All advanced methods assume MAR or require strong assumptions about MNAR. They improve on complete case analysis under MAR, but they can't eliminate MNAR bias without unverifiable assumptions.
+
+## Documenting Missing Data
+
+For QA purposes (@sec-qa-principles), always document:
+
+**What's missing**:
+- Amount (counts and percentages)
+- Variables affected
+- Observations affected
+- Time period (is missingness increasing or decreasing?)
+
+**Why it's missing**:
+- Your investigation findings
+- Likely mechanism (MCAR, MAR, MNAR)
+- Supporting evidence for mechanism
+
+**What you did**:
+- Approach chosen (complete case, stratification, imputation, etc.)
+- Rationale for approach
+- Assumptions required
+
+**What it means**:
+- Limitations created by missingness
+- Potential bias direction and magnitude
+- Uncertainty about conclusions
+- Sensitivity of results to missing data handling
+
+**Template**:
+> "Provider satisfaction data was missing for 18% of providers (n=45). Investigation showed smaller providers (<50 beds) were more likely to have missing data (30% missing) than larger providers (8% missing), suggesting MAR. We conducted stratified analysis for small and large providers separately to avoid bias from differential missingness. Results should be interpreted cautiously for small providers given reduced sample size (n=105 small providers with complete data from 150 total)."
+
+::: {.callout-note icon=false}
+## Rethinking: Missing Data as a Signal, Not Just a Problem
+
+In regulatory contexts, missing data often *is* the finding, not just an obstacle to analysis.
+
+**Why non-reporting matters**:
+
+- **Transparency indicator**: Providers who don't report may have poor data governance
+- **Risk signal**: Historical non-reporting predicts future problems
+- **Compliance issue**: Failure to meet reporting requirements is itself a concern
+- **Pattern recognition**: Multiple providers in a chain not reporting suggests systematic issue
+
+**Reframe the question**:
+- Not: "How do I get around missing data to estimate performance?"
+- But: "What does the pattern of missingness tell me about provider behavior?"
+
+**Example**: You're analyzing incident rates. Complete case analysis shows average rate is 8/month. But 40% of providers didn't report. 
+
+**Standard framing**: "We can't draw conclusions because of missingness."
+
+**Regulatory framing**: "40% of providers failed to report incidents as required. This non-compliance is itself a regulatory finding requiring investigation. Among providers who reported, average rate was 8/month, but this may overestimate quality if non-reporters have higher rates."
+
+**Action**: Flag non-reporters for investigation, not just to check for high incident rates, but to understand why they're not reporting.
+
+**Key insight**: In academic research, missing data is an obstacle to unbiased inference. In regulation, systematic non-reporting may be more important than the values themselves.
+:::
+
+::: {.callout-warning icon=false}
+## Overthinking: The MAR Assumption Is Often Unverifiable
+
+**Fundamental problem**: You can't definitively prove data is MAR vs MNAR, because the distinction depends on the unobserved values.
+
+**What you can check**:
+- Whether missingness correlates with observed variables (if not, might be MCAR)
+- Whether missing and complete cases differ on observed characteristics (if they do, not MCAR)
+
+**What you CANNOT check**:
+- Whether missingness correlates with the unobserved values themselves
+- Among observations with the same observed characteristics, whether missingness correlates with the missing value
+
+**Implication**: Advanced missing data methods assume MAR. This assumption is convenient but unverifiable. Results depend on this assumption being true.
+
+**What to do**:
+
+1. **Make reasonable judgments**: Use domain knowledge. If poor performers have incentive to not report, assume MNAR. If missingness is administrative (late submission), assume MAR.
+
+2. **Sensitivity analysis**: Test how results change under different assumptions about MNAR.
+
+3. **Document assumptions**: Be explicit about what you're assuming and why.
+
+4. **Acknowledge limits**: Even sophisticated imputation can't overcome MNAR without strong assumptions.
+
+**CQC practice**: Most regulatory analysis should assume data is NOT MAR unless you have good evidence otherwise. Non-reporting often correlates with poor performance (MNAR). Document this assumption and its implications for interpretation.
+:::
+
+## Looking Ahead: Methods Chapter
+
+This chapter covered the conceptual foundations. For computational methods, see @sec-missing-data-handling, which covers:
+
+- **Quantifying and visualizing** missingness patterns with code
+- **Sensitivity analysis** frameworks and implementation
+- **Multiple imputation** when and how to use it
+- **R and Python code** for all approaches
+- **Worked examples** with CQC-realistic scenarios
+
+**When to use methods chapter**: After you've investigated missingness using this chapter's framework and determined that simple complete case analysis is insufficient.
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **Mechanism matters most**: MCAR, MAR, and MNAR have different implications. Investigation is critical before choosing an approach.
+
+2. **Bias vs precision**: Missing data always reduces precision. MAR and MNAR also create bias. Understand which problem you're dealing with.
+
+3. **No mechanical thresholds**: "10% missing" doesn't automatically mean anything. Pattern and mechanism matter more than percentage.
+
+4. **Complete case is default**: For minor missingness (~5%) with random pattern, analyzing complete cases only is usually appropriate. Document and move on.
+
+5. **Investigate before acting**: Quantify, visualize, understand relationships, ask why. This investigation is more important than any statistical method.
+
+6. **MNAR is serious**: If poor performers don't report, no standard method fixes the bias. Treat non-reporting as a finding itself.
+
+7. **Missingness can be informative**: In regulation, who doesn't report often tells you as much as the reported values.
+
+8. **Document everything**: Amount, pattern, mechanism, approach, assumptions, limitations. Essential for QA and credibility.
+
+These principles guide the choice of methods detailed in @sec-missing-data-handling.
+:::

@@ -1,0 +1,287 @@
+---
+title: "Statistical Inference"
+---
+
+## From Samples to Conclusions {#sec-statistical-inference}
+
+You've calculated that a care home has 30% more incidents than the national average. Is this a real problem or chance variation? Should you investigate?
+
+**Statistical inference** provides structured ways to move from observed data (your sample) to conclusions about the broader reality (the population), while quantifying uncertainty.
+
+**This chapter covers**: Population vs sample, estimation (point and interval), hypothesis testing, and practical application to CQC work.
+
+::: {.callout-note icon=false}
+## Rethinking: Exploratory vs Confirmatory Analysis
+
+Most CQC analysis is **exploratory**: we use data to understand patterns and guide decisions, not to provide definitive proof.
+
+**Exploratory** (most CQC work):
+- Flexible, iterative process
+- Data guides analytical decisions (transformations, outlier handling)
+- Results suggest where to investigate
+- Example: Profiling provider performance to prioritize inspections
+
+**Confirmatory** (rare at CQC):
+- Study design and analysis plan fully specified before data collection
+- No peeking at data to guide decisions
+- Formal statistical inference is strictly valid
+- Example: Pre-registered evaluation of an intervention
+
+**Why this matters**: Formal inference assumes confirmatory analysis. In exploratory work, p-values and CIs are optimistic—they don't account for all your data-driven decisions.
+
+**CQC practice**: Treat most analyses as exploratory. Use statistics to **guide investigation**, not as definitive proof. Look for patterns across multiple sources. Statistical flagging is one input among many (clinical judgment, inspection history, context).
+:::
+
+## Population, Sample, and Estimation
+
+### The Fundamental Problem
+
+**Population**: The complete set you care about (all care homes in England, a provider's true underlying incident rate).
+
+**Sample**: The subset you actually observe (200 care homes you collected data from, incidents observed in past 6 months).
+
+**The problem**: You observe a sample but want to know about the population.
+
+**The solution**: Use the sample to estimate population parameters, while acknowledging uncertainty.
+
+### Point and Interval Estimation
+
+**Point estimate**: A single number as your best guess of the population parameter.
+- Sample mean waiting time = 3.2 hours → estimates population mean
+- Sample incident rate = 45 per 1,000 bed-days → estimates provider's true rate
+
+**Confidence interval (CI)**: A range of plausible values for the population parameter.
+- **95% CI**: If we repeated this analysis many times, 95% of intervals would contain the true value
+- **Practical interpretation**: We're 95% confident the true value is in this range
+
+**Example**: Provider's incident rate = 45 per 1,000 bed-days (95% CI: 38-52)
+- Point estimate: 45
+- Plausible range: 38 to 52
+- We're 95% confident the true rate is between 38 and 52
+
+**What determines CI width**:
+- **Sample size**: Larger sample → narrower CI (more precise)
+- **Variability**: Higher SD → wider CI (more uncertainty)
+- **Confidence level**: 99% CI wider than 95% CI
+
+**CQC implication**: Small providers have wide CIs. This doesn't mean ignore them—interpret their estimates with appropriate caution.
+
+**The uncertainty paradox**: A small provider with a high incident rate might not be statistically flagged (wide CI includes the benchmark). But from a regulatory perspective, potential harm exists even if uncertain. **Statistical significance ≠ regulatory priority.**
+
+## Hypothesis Testing
+
+### The Three-Step Logic
+
+Hypothesis testing asks: "Are our data surprising enough to conclude something is happening?"
+
+**Step 1: State the null hypothesis (H₀)**—Assume nothing special is happening.
+
+Examples: This care home's true rate = national average; the intervention made no difference; urban and rural practices have equal scores.
+
+**Step 2: Calculate the p-value**—If H₀ were true, how likely would we see data this extreme?
+
+**Step 3: Decide**—If the data would be very surprising under H₀ (small p-value), conclude something probably is happening. If not surprising (large p-value), you can't rule out chance.
+
+### Understanding p-values
+
+**Definition**: The probability of seeing data this extreme (or more extreme) if the null hypothesis were true.
+
+**Plain English**: "If this provider were actually average, how surprised should we be by what we observed?"
+
+**Example**: p = 0.03 means "If the provider's true rate equals the national average, there's only a 3% chance we'd see a difference this large from random variation alone."
+
+**What p-values are NOT**:
+- NOT the probability the null hypothesis is true
+- NOT the probability the result is due to chance
+- NOT a measure of effect size or importance
+- NOT proof of causation
+
+### The 0.05 Threshold
+
+**Convention**: p < 0.05 often used as "statistical significance."
+
+**What this means**: We accept a 5% false positive rate—flagging providers as concerning when they're actually fine.
+
+**Critical point**: 0.05 is arbitrary, from Ronald Fisher (1925), not a law of nature.
+
+**CQC practice—choose thresholds based on context**:
+
+| Context | Recommended Threshold | Rationale |
+|---------|----------------------|-----------|
+| **High-stakes decisions** (enforcement) | 0.01 or 0.001 | Minimize false positives, higher evidence bar |
+| **Screening for inspection** (initial flagging) | 0.10 or 0.20 | Catch more potential issues, investigation will confirm |
+| **Exploratory analysis** (patterns) | No fixed threshold | Look at effect sizes and CIs, not just p-values |
+
+**Important**: p = 0.049 and p = 0.051 differ trivially. Treat 0.05 as a guideline, not a cliff edge.
+
+## Statistical vs Practical Significance and Effect Sizes
+
+### The Critical Distinction
+
+**Statistical significance**: The result is unlikely due to chance alone (typically p < 0.05). Tells you there's probably a real difference.
+
+**Practical significance**: The effect size is large enough to matter in the real world. Tells you whether the difference is meaningful for decisions.
+
+**They're different things. Always report both.**
+
+### The Sample Size Problem
+
+| Scenario | What Happens | Example |
+|----------|--------------|---------|
+| **Large sample, small effect** | Statistically significant BUT practically trivial | 10,000 providers: 0.2% difference (p < 0.05) but only 1 extra incident per 500 bed-days per year |
+| **Small sample, large effect** | Not statistically significant BUT practically important | 10 providers: 25% difference (p > 0.05) but large enough to investigate regardless |
+
+**Lesson**: Statistical significance gets you in the door. Practical significance tells you whether to walk through it.
+
+### Effect Size Measures
+
+**Cohen's d** (standardized mean difference): Difference / pooled SD
+
+| Cohen's d | Interpretation |
+|-----------|----------------|
+| < 0.2 | Negligible |
+| 0.2 - 0.5 | Small |
+| 0.5 - 0.8 | Medium |
+| > 0.8 | Large |
+
+**Example**: Two regions differ in wait times by 2 hours. Is that large?
+- If SD = 1 hour → d = 2.0 (very large)
+- If SD = 10 hours → d = 0.2 (small)
+
+**Other measures**:
+- **Absolute difference**: Raw difference (e.g., 7.5 points on 0-100 scale). Easy to interpret but doesn't account for variability.
+- **Percentage difference**: Relative change (e.g., 30% reduction). Intuitive but misleading with small baselines.
+
+**CQC practice**: Report both absolute differences (operational context) and standardized effect sizes (comparison across indicators).
+
+### Why Confidence Intervals Are Better Than p-values Alone
+
+CIs tell you two things at once:
+1. **Statistical significance**: Does the interval exclude the null value (e.g., 0)?
+2. **Practical significance**: What's the plausible range of effects?
+
+**Example comparisons**:
+
+| Confidence Interval | Interpretation |
+|---------------------|----------------|
+| [5.8, 9.2] | Significant (excludes 0) AND large effect |
+| [0.1, 0.3] | Significant (excludes 0) BUT tiny effect |
+| [-2.0, 8.0] | Not significant (includes 0) BUT could be large effect |
+
+**CQC practice**: Always report CIs alongside p-values. Stakeholders understand "the true difference is probably between X and Y" better than "p = 0.03."
+
+## False Positives vs False Negatives
+
+In regulation, we face a trade-off between two types of errors:
+
+| Error Type | Definition | Consequence | Controlled By |
+|------------|------------|-------------|---------------|
+| **False Positive** (Type I) | Flagging a provider as concerning when they're actually fine | Wasted resources, unfair to provider, reputational damage | Significance level (typically 5%) |
+| **False Negative** (Type II) | Missing a provider who actually has problems | Patients at risk, regulatory failure | Statistical power (sample size, effect size) |
+
+**The trade-off**: Stricter thresholds reduce false positives but increase false negatives. Lenient thresholds reduce false negatives but increase false positives.
+
+**CQC context**: We typically prioritize avoiding false negatives (missing real problems) over avoiding false positives (investigating providers who turn out fine). This affects how we set thresholds.
+
+This doesn't mean ignoring false positives—they waste inspection capacity and can damage provider reputation. But it does mean accepting higher false positive rates than academic research would.
+
+::: {.callout-note icon=false}
+## Rethinking: Regulatory vs Research Priorities
+
+Academic research and regulation have different priorities.
+
+**Research context**: False positives mislead the field. Use strict thresholds (p < 0.05, often p < 0.01).
+
+**Regulatory context**: Missing serious problems (false negative) can harm patients. Investigating a provider who turns out fine (false positive) wastes resources but doesn't directly harm patients.
+
+**CQC practice**: Document your threshold choice and rationale. For high-stakes indicators (patient safety), accept 10-20% false positives to catch more true problems. For lower-stakes indicators (patient experience), use stricter thresholds.
+
+**This is professional judgment, not mechanical application of "p < 0.05."**
+:::
+
+## Common Pitfalls
+
+| Pitfall | Wrong Interpretation | Correct Interpretation | What to Do |
+|---------|---------------------|------------------------|------------|
+| **p > 0.05 means no difference** | Absence of evidence = evidence of absence | Insufficient evidence to conclude there's a difference. Could mean: no difference exists, sample too small, or difference smaller than detectable. | Report the CI. Wide CI = high uncertainty. |
+| **p < 0.05 proves causation** | Statistical significance = proof of cause and effect | We've detected an association. Causation requires temporal sequence, plausible mechanism, ruling out confounders. | Most CQC analyses are observational. Identify concerning patterns that warrant investigation, not proof. |
+| **0.049 vs 0.051 is meaningful** | 0.05 is a hard boundary | The difference is trivial. Both indicate moderate evidence. | Report exact p-value. Interpret as continuous evidence, not binary. |
+| **Multiple testing without adjustment** | Test 20 hypotheses at p < 0.05 with no correction | Expect 1 false positive even if nothing is happening. | For routine comparisons: accept some false positives (investigation confirms). For high-stakes: use Bonferroni or stricter thresholds. |
+
+## Reporting Results Correctly
+
+### What to Always Include
+
+Every statistical result should report:
+
+1. **Sample sizes** for all groups
+2. **Effect estimate** (mean difference, proportion difference)
+3. **Confidence interval** (95% CI)
+4. **p-value** (exact value, not just "p < 0.05")
+5. **Effect size** (Cohen's d or equivalent)
+6. **Interpretation** (statistical and practical significance)
+7. **Limitations** (sample size, generalizability, confounders)
+
+### Good vs Bad Examples
+
+**Good**:
+> "Pilot practices (n=10) scored 7.5 points higher than controls (n=10) on average (95% CI: 5.8 to 9.2, p < 0.001, Cohen's d = 4.06). This represents a large and operationally meaningful improvement on the 0-100 scale. Small sample size (n=10 per group) limits generalizability. No information on whether improvements persist over time."
+
+**Bad**:
+> "Pilot practices scored significantly higher (p < 0.05)."
+
+### Communicating to Stakeholders
+
+| Instead of | Use |
+|------------|-----|
+| "Statistically significant at p < 0.05" | "Very unlikely to be due to chance alone" |
+| Leading with p-value | "The pilot improved scores by 7.5 points on average—a meaningful improvement. This is very unlikely to be due to chance (p < 0.001)." |
+| Point estimate only | "The true improvement is probably between 5.8 and 9.2 points (95% confidence interval)." |
+
+::: {.callout-warning icon=false}
+## Overthinking: Statistical Power
+
+**Statistical power**: The probability of detecting a real effect when it exists (avoiding false negatives).
+
+**Power depends on**:
+- Sample size: Larger = more power
+- Effect size: Larger = more power
+- Significance level: Stricter (p < 0.01 vs p < 0.05) = less power
+- Variability: Lower SD = more power
+
+**CQC context for small providers**:
+- **If flagged**: Take seriously (detected despite low power → strong signal)
+- **If not flagged**: Can't conclude they're fine (might have missed a problem)
+
+**Asymmetry**: Statistical methods better at detecting problems in large providers (high power) than small providers (low power). This doesn't mean small providers are safer—it means our detection ability is limited.
+
+**When to calculate power**: Before designing a new indicator. Ask: "Will we have enough data to detect meaningful differences?"
+
+**When to escalate**: If designing a new indicator and unsure about power calculations, consult the Quantitative Guild.
+:::
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **Most CQC work is exploratory**: Use statistics to guide investigation, not as definitive proof. Look for patterns across multiple sources.
+
+2. **Samples estimate populations**: We observe samples but want to know about populations. CIs quantify uncertainty.
+
+3. **Sample size governs precision**: Larger samples → narrower CIs → more precise estimates. Small providers have high uncertainty.
+
+4. **p-values are probabilities of data**: p = 0.03 means data unlikely under null, NOT null hypothesis 97% false.
+
+5. **0.05 is a guideline, not law**: Choose thresholds based on decision context (high-stakes: 0.01; screening: 0.10-0.20).
+
+6. **Statistical ≠ practical significance**: Always evaluate both. Large samples make tiny effects significant; small samples make large effects non-significant.
+
+7. **Report effect sizes**: Show magnitude independent of sample size. Essential for practical interpretation.
+
+8. **CIs better than p-values alone**: Show both significance and magnitude in one summary.
+
+9. **False positive/negative trade-off**: In regulation, prioritize avoiding false negatives (missing problems) over false positives (wasteful investigations).
+
+10. **Report completely**: Sample sizes, estimates, CIs, p-values, effect sizes, interpretations, limitations.
+:::

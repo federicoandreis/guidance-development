@@ -1,0 +1,39 @@
+/* Cover page styling for index.qmd */
+.quarto-title-block {
+  text-align: center;
+  padding: 3em 0;
+}
+
+/* Make main title larger and more prominent on cover */
+#title-block-header.quarto-title-block.default .quarto-title h1.title {
+  font-size: 3em;
+  font-weight: bold;
+  margin-bottom: 0.3em;
+  color: #2c5282;
+}
+
+/* Subtitle styling */
+#title-block-header.quarto-title-block.default .quarto-title .subtitle {
+  font-size: 1.5em;
+  color: #4a5568;
+  margin-bottom: 1em;
+}
+
+/* Author and date on cover */
+#title-block-header.quarto-title-block.default .quarto-title-meta {
+  text-align: center;
+  font-size: 1.1em;
+  margin-top: 2em;
+}
+
+/* Add spacing to cover page content */
+body.quarto-light-mode #quarto-content main:first-child {
+  margin-top: 2em;
+}
+
+/* Make "How to Use This Book" section more prominent */
+#how-to-use-this-book {
+  margin-top: 3em;
+  border-top: 2px solid #e2e8f0;
+  padding-top: 2em;
+}

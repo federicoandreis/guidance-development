@@ -1,0 +1,81 @@
+"home_id","home_name","residents","staff_ratio","cqc_rating","infections","infection_rate"
+"CH001","Care Home 1",64,0.323801297042519,"Good",1,1.56
+"CH002","Care Home 2",81,0.661205300688744,"Requires Improvement",5,6.17
+"CH003","Care Home 3",84,0.622522397432476,"Good",2,2.38
+"CH004","Care Home 4",72,0.385422111395746,"Requires Improvement",4,5.56
+"CH005","Care Home 5",37,0.681954507529736,"Inadequate",3,8.11
+"CH006","Care Home 6",98,0.315487879794091,"Good",2,2.04
+"CH007","Care Home 7",69,0.692041275557131,"Requires Improvement",1,1.45
+"CH008","Care Home 8",82,0.548127930238843,"Good",0,0
+"CH009","Care Home 9",51,0.384860935155302,"Good",1,1.96
+"CH010","Care Home 10",73,0.382987517677247,"Requires Improvement",2,2.74
+"CH011","Care Home 11",62,0.405178226996213,"Requires Improvement",2,3.23
+"CH012","Care Home 12",91,0.375135147385299,"Good",3,3.3
+"CH013","Care Home 13",88,0.320005469955504,"Good",5,5.68
+"CH014","Care Home 14",57,0.578222201298922,"Good",4,7.02
+"CH015","Care Home 15",82,0.427544227614999,"Requires Improvement",2,2.44
+"CH016","Care Home 16",29,0.524587348662317,"Good",0,0
+"CH017","Care Home 17",47,0.331766567006707,"Good",1,2.13
+"CH018","Care Home 18",48,0.392884948290884,"Good",3,6.25
+"CH019","Care Home 19",70,0.33577240249142,"Good",2,2.86
+"CH020","Care Home 20",30,0.469004311505705,"Good",0,0
+"CH021","Care Home 21",78,0.403818691335618,"Good",1,1.28
+"CH022","Care Home 22",51,0.469422912411392,"Good",1,1.96
+"CH023","Care Home 23",64,0.469457106664777,"Good",2,3.12
+"CH024","Care Home 24",82,0.363678050413728,"Good",2,2.44
+"CH025","Care Home 25",22,0.619314633589238,"Outstanding",1,4.55
+"CH026","Care Home 26",71,0.533320315554738,"Good",1,1.41
+"CH027","Care Home 27",63,0.68694662777707,"Good",0,0
+"CH028","Care Home 28",58,0.619513202179223,"Good",3,5.17
+"CH029","Care Home 29",84,0.582597271539271,"Requires Improvement",1,1.19
+"CH030","Care Home 30",73,0.552849123999476,"Requires Improvement",3,4.11
+"CH031","Care Home 31",74,0.420251354575157,"Good",4,5.41
+"CH032","Care Home 32",76,0.317135683260858,"Good",2,2.63
+"CH033","Care Home 33",44,0.66431247824803,"Good",0,0
+"CH034","Care Home 34",78,0.375092833302915,"Good",1,1.28
+"CH035","Care Home 35",93,0.556813158839941,"Good",3,3.23
+"CH036","Care Home 36",42,0.589265560451895,"Good",2,4.76
+"CH037","Care Home 37",49,0.499296910967678,"Good",2,4.08
+"CH038","Care Home 38",60,0.665854515042156,"Requires Improvement",0,0
+"CH039","Care Home 39",34,0.594016723614186,"Good",2,5.88
+"CH040","Care Home 40",30,0.552860828116536,"Good",1,3.33
+"CH041","Care Home 41",66,0.620745026040822,"Good",2,3.03
+"CH042","Care Home 42",74,0.46806202121079,"Good",1,1.35
+"CH043","Care Home 43",64,0.547680977918208,"Requires Improvement",2,3.12
+"CH044","Care Home 44",31,0.415624110866338,"Good",0,0
+"CH045","Care Home 45",72,0.406934329401702,"Requires Improvement",0,0
+"CH046","Care Home 46",46,0.385405607242137,"Good",1,2.17
+"CH047","Care Home 47",36,0.454852658323944,"Requires Improvement",0,0
+"CH048","Care Home 48",47,0.318235220573843,"Good",1,2.13
+"CH049","Care Home 49",20,0.313666963111609,"Inadequate",0,0
+"CH050","Care Home 50",32,0.503950089216232,"Good",2,6.25
+"CH051","Care Home 51",56,0.663142179884016,"Good",2,3.57
+"CH052","Care Home 52",77,0.676695702411234,"Good",1,1.3
+"CH053","Care Home 53",60,0.321751742996275,"Requires Improvement",3,5
+"CH054","Care Home 54",82,0.557282691542059,"Requires Improvement",5,6.1
+"CH055","Care Home 55",83,0.553679189831018,"Good",3,3.61
+"CH056","Care Home 56",36,0.462613770458847,"Requires Improvement",4,11.11
+"CH057","Care Home 57",64,0.430248948093504,"Inadequate",3,4.69
+"CH058","Care Home 58",28,0.686481430567801,"Inadequate",2,7.14
+"CH059","Care Home 59",62,0.408389949332923,"Good",2,3.23
+"CH060","Care Home 60",59,0.586538589838892,"Good",1,1.69
+"CH061","Care Home 61",86,0.525787567254156,"Inadequate",6,6.98
+"CH062","Care Home 62",98,0.487584535963833,"Inadequate",6,6.12
+"CH063","Care Home 63",87,0.353005863633007,"Good",2,2.3
+"CH064","Care Home 64",33,0.477059713564813,"Good",0,0
+"CH065","Care Home 65",52,0.375919110327959,"Good",1,1.92
+"CH066","Care Home 66",56,0.348779731988907,"Inadequate",5,8.93
+"CH067","Care Home 67",83,0.522409749403596,"Good",5,6.02
+"CH068","Care Home 68",97,0.461912772059441,"Good",4,4.12
+"CH069","Care Home 69",81,0.637738999631256,"Good",1,1.23
+"CH070","Care Home 70",45,0.303140816930681,"Good",0,0
+"CH071","Care Home 71",79,0.512194451875985,"Good",1,1.27
+"CH072","Care Home 72",87,0.63628477845341,"Good",3,3.45
+"CH073","Care Home 73",36,0.497804728988558,"Requires Improvement",0,0
+"CH074","Care Home 74",52,0.638517747353762,"Good",3,5.77
+"CH075","Care Home 75",48,0.639286303706467,"Requires Improvement",3,6.25
+"CH076","Care Home 76",49,0.609447943419218,"Good",0,0
+"CH077","Care Home 77",43,0.600411612633616,"Outstanding",1,2.33
+"CH078","Care Home 78",96,0.336203529220074,"Good",2,2.08
+"CH079","Care Home 79",45,0.547444596234709,"Good",2,4.44
+"CH080","Care Home 80",91,0.372566467151046,"Good",3,3.3

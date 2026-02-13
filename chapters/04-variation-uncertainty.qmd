@@ -1,0 +1,339 @@
+---
+title: "Measuring Variation"
+---
+
+## How Spread Out Is Your Data? {#sec-variation-uncertainty}
+
+Chapter 3 told you where the middle is. This chapter tells you how spread out your data is around that middle.
+
+Two providers might both have a mean incident rate of 10 per month, but one consistently records 9-11 incidents (low variation), while the other swings from 0-20 (high variation). This distinction matters for regulation.
+
+**Why measuring variation matters**:
+
+- **Consistency vs volatility**: Low variation suggests stable processes, high variation suggests inconsistent performance
+- **Comparison context**: A provider 5 incidents above the mean is more concerning if typical variation is ±2 than if it's ±10
+- **Method selection**: Different measures suit different data types (quantitative vs qualitative)
+- **Outlier detection**: You need to know typical spread to identify unusual values
+
+**Building on Chapter 3**: You know where your data sits (location). This chapter quantifies how variable it is (spread).
+
+## Variation in Quantitative Data
+
+Quantitative data (continuous and discrete) requires measures that use arithmetic. The most common are standard deviation, variance, and interquartile range.
+
+### Standard Deviation and Variance
+
+**Standard deviation (SD)** and **variance** are the same measure, related by a monotonic transformation: variance = SD². They quantify average distance from the mean.
+
+**Key distinction**: Units of measurement and interpretability.
+
+- **Variance**: Squared units (e.g., hours², incidents²). Mathematically convenient but hard to interpret.
+- **Standard deviation**: Original units (e.g., hours, incidents). Easy to interpret: "typical distance from mean."
+
+**When to report which**:
+- **SD for interpretation**: "The standard deviation is 2.5 hours, so most practices are within 2.5 hours of the mean."
+- **Variance for calculations**: Many statistical methods (t-tests, ANOVA, regression) work with variance internally.
+- **Both are the same information**: If you have one, you have the other. Don't treat them as different measures.
+
+**Interpretation**:
+- Low SD/variance: Data clustered tightly around mean, consistent performance
+- High SD/variance: Data spread out, variable performance
+- Example: Mean waiting time = 3.2 hours, SD = 0.8 hours → most practices are between 2.4 and 4.0 hours
+
+**Why SD/variance matters**:
+- **Z-scoring** (@sec-z-scoring): Quantifies how many SDs a provider is from the mean
+- **Control limits in SPC** (@sec-spc-basics): Typically set at ±3 SD from mean
+- **Comparing providers**: A provider 1 SD above mean in a low-SD indicator is more unusual than 1 SD above mean in a high-SD indicator
+
+**CQC context**: SD tells you how much natural variation exists across providers. If the SD of incident rates is large, providers naturally vary a lot. If it's small, any deviation is more notable.
+
+### Interquartile Range: Robust to Outliers
+
+**Interquartile range (IQR)** is the distance between the 25th and 75th percentiles (Q3 - Q1). It describes the spread of the middle 50% of your data.
+
+**Why use IQR instead of SD**:
+- **Robust to outliers**: Extreme values don't affect it
+- **Works with skewed data**: Doesn't assume symmetry
+- **Easy to communicate**: "The middle half of providers span this range"
+
+**When to use**:
+- Skewed data where SD is inflated by outliers
+- Reporting spread to non-technical audiences
+- Box plots (which display IQR visually)
+
+**Example**: IQR = 1.5 hours means the middle 50% of practices have waiting times within a 1.5-hour range. Whether the extreme tail extends to 10 hours or 100 hours doesn't affect this.
+
+**SD vs IQR**: 
+- SD uses all data, more efficient with symmetric data
+- IQR ignores tails, more robust with skewed data or outliers
+- Report both when data is skewed
+
+### Range and Percentile-Based Measures
+
+**Range**: Maximum - Minimum. Simple but heavily influenced by outliers. Rarely useful for CQC work.
+
+**Percentile ranges**: Distance between any two percentiles (e.g., 10th to 90th). More robust than full range.
+
+- **80% range** (P10 to P90): Excludes extreme 10% at each tail
+- **90% range** (P5 to P95): Excludes extreme 5% at each tail
+
+**When to use**: Describing spread while excluding extreme outliers, especially for skewed distributions.
+
+### Coefficient of Variation: Comparing Across Scales
+
+**Coefficient of Variation (CV)** normalizes SD to make variability comparable across different scales or units.
+
+**Definition**: CV = SD / Mean (often expressed as percentage)
+
+**Why use CV**:
+- **Compare different indicators**: "Which is more variable, waiting times or incident rates?"
+- **Compare different scales**: Providers with very different baseline levels
+- **Assess scaling**: Does variability increase proportionally with the mean?
+
+**Example**:
+- Waiting times: Mean = 3 hours, SD = 0.6 hours → CV = 20%
+- Incident rates: Mean = 15 per month, SD = 3 per month → CV = 20%
+
+Both have the same relative variability (20%), even though raw SDs differ.
+
+**Interpretation**:
+- Low CV (< 15%): Low relative variability, consistent performance
+- Moderate CV (15-30%): Moderate relative variability
+- High CV (> 30%): High relative variability, inconsistent performance
+
+**Limitations**:
+- Undefined when mean = 0
+- Unstable when mean is close to 0
+- Requires ratio scale (meaningful zero point)
+- Only works for quantitative data
+
+### Summary: Quantitative Variation Measures
+
+| Measure | Calculation | When to Use | Strengths | Limitations |
+|---------|-------------|-------------|-----------|-------------|
+| **SD/Variance** | Average distance from mean (variance = SD²) | Symmetric data, statistical methods | Uses all data, efficient | Sensitive to outliers, inflated by skewness |
+| **IQR** | Q3 - Q1 | Skewed data, outliers present | Robust to extremes | Ignores tails, less efficient |
+| **Range** | Max - Min | Quick check only | Simple | Heavily influenced by extremes |
+| **Percentile ranges** | P90 - P10, etc. | Skewed data, excluding extremes | Customizable robustness | Arbitrary percentile choice |
+| **CV** | SD / Mean (%) | Comparing across scales | Normalized, comparable | Unstable near zero, ratio scale only |
+
+## Variation in Ordinal Data
+
+Ordinal data (ordered categories) can use quantile-based measures but not arithmetic-based measures.
+
+### What Works for Ordinal Data
+
+**IQR and percentile ranges**: These only require ordering, not arithmetic.
+
+- Example: CQC ratings (Inadequate < Requires Improvement < Good < Outstanding)
+- Can calculate: Median rating, IQR of ratings, percentage in each category
+- Cannot calculate: Mean rating, SD of ratings (no meaningful arithmetic)
+
+**Percentage in each category**: Simple and interpretable.
+
+- Example: "60% of providers are Good, 30% Outstanding, 10% Requires Improvement"
+- Shows distribution without assuming equal spacing between categories
+
+### What Doesn't Work for Ordinal Data
+
+**SD and variance**: Require arithmetic operations. You cannot calculate a meaningful "average distance" from a mean rating when the spacing between categories is undefined.
+
+**Don't do this**: Assign numbers (1=Inadequate, 2=Requires Improvement, 3=Good, 4=Outstanding) and calculate SD. The numbers are arbitrary—why not 1, 2, 4, 10? Different numbering gives different SDs, making it meaningless.
+
+## Variation in Nominal Data
+
+Nominal data (unordered categories) cannot use quantiles or arithmetic. You need heterogeneity measures.
+
+### Heterogeneity Measures for Categorical Data
+
+**Proportion in largest category**: Simple measure of concentration.
+
+- If 90% of providers are in one category, low heterogeneity (homogeneous)
+- If categories are evenly split, high heterogeneity (diverse)
+
+**Shannon's Entropy (H)**: Measures uncertainty or diversity in categorical data.
+
+$$H = -\sum_{i=1}^{k} p_i \log_2(p_i)$$
+
+Where *p*ᵢ is the proportion in category *i*, and *k* is the number of categories.
+
+**Interpretation**:
+- H = 0: All observations in one category (no diversity)
+- H = log₂(k): Perfectly uniform distribution (maximum diversity)
+- Higher H = more heterogeneous/diverse
+
+**Example**: Provider types across a region
+- 100% hospitals: H = 0 (no diversity)
+- 50% hospitals, 50% care homes: H = 1.0
+- 25% each of 4 types: H = 2.0 (maximum for 4 categories)
+
+**CQC use cases**:
+- Measuring diversity of provider types in a region
+- Quantifying heterogeneity of incident categories
+- Comparing diversity across regions or time periods
+
+**Simpson's Diversity Index (D)**: Probability that two randomly selected observations are from different categories.
+
+$$D = 1 - \sum_{i=1}^{k} p_i^2$$
+
+**Interpretation**:
+- D = 0: All observations in one category (no diversity)
+- D = (k-1)/k: Perfectly uniform distribution (maximum diversity)
+- Higher D = more diverse
+
+**Example**: Same provider type data
+- 100% hospitals: D = 0
+- 50% hospitals, 50% care homes: D = 0.5
+- 25% each of 4 types: D = 0.75
+
+**When to use which**:
+- **Shannon's Entropy**: More sensitive to rare categories, commonly used in ecology and information theory
+- **Simpson's Index**: More intuitive interpretation (probability of difference), less sensitive to rare categories
+- **Both are valid**: Choose based on audience and context
+
+::: {.callout-note icon=false}
+## Rethinking: Why Heterogeneity Matters for Regulation
+
+Heterogeneity in categorical variables affects how you interpret performance data.
+
+**Example 1: Incident categories**
+- Low heterogeneity (90% medication errors): Suggests a specific, targetable problem
+- High heterogeneity (evenly split across 10 categories): Suggests systemic quality issues, harder to target
+
+**Example 2: Provider types in a region**
+- Low heterogeneity (all care homes): Simpler to benchmark and compare
+- High heterogeneity (hospitals, care homes, GP practices, hospices): Need stratified analysis, harder to create fair comparisons
+
+**Example 3: CQC ratings over time**
+- Increasing heterogeneity: System becoming more variable, some improving while others decline
+- Decreasing heterogeneity: System converging, either improving together or declining together
+
+Measuring heterogeneity helps you understand whether variation is concentrated in specific areas (targetable) or diffuse across many dimensions (systemic).
+:::
+
+::: {.callout-warning icon=false}
+## Overthinking: Other Normalized Measures
+
+Beyond CV, other normalized measures exist for specific contexts.
+
+### Quartile Coefficient of Dispersion (QCD)
+
+**Definition**: QCD = (Q3 - Q1) / (Q3 + Q1)
+
+**Purpose**: Normalized version of IQR, comparable across scales.
+
+**Interpretation**:
+- QCD = 0: No spread (all values equal)
+- QCD = 1: Maximum theoretical spread
+- Higher QCD = more relative variability
+
+**When to use**:
+- Comparing IQR-based spread across different scales
+- When data is skewed (CV not appropriate)
+- When you want a robust, normalized dispersion measure
+
+### Normalized Entropy
+
+**Definition**: H_norm = H / log₂(k), where k = number of categories
+
+**Purpose**: Makes Shannon's Entropy comparable across variables with different numbers of categories.
+
+**Interpretation**:
+- H_norm = 0: All observations in one category
+- H_norm = 1: Perfectly uniform distribution
+- Scale: Always between 0 and 1, regardless of number of categories
+
+**When to use**:
+- Comparing heterogeneity across categorical variables with different numbers of categories
+- Example: Comparing diversity of incident types (10 categories) vs provider types (4 categories)
+
+### When Normalization Matters
+
+**Comparing across indicators**: "Is waiting time more variable than incident rates?" requires normalized measures (CV, QCD).
+
+**Comparing across time**: If the mean changes over time, raw SD changes too. CV shows whether relative variability changed.
+
+**Comparing across regions**: If regions have different baseline levels, normalized measures show whether relative variability differs.
+
+**When to escalate**: If you're unsure which normalization is appropriate for your comparison, or if stakeholders are confused by normalized measures, consult the Quantitative Guild.
+:::
+
+## Choosing the Right Measure
+
+Match your variation measure to your data type and analytical question.
+
+### By Data Type
+
+| Data Type | Appropriate Measures | Inappropriate Measures |
+|-----------|---------------------|------------------------|
+| **Continuous** | SD, variance, IQR, range | Entropy, Simpson's Index |
+| **Discrete** | SD, variance, IQR, range | Entropy, Simpson's Index |
+| **Ordinal** | IQR, percentile ranges, % in each category | SD, variance (no meaningful arithmetic) |
+| **Nominal** | Entropy, Simpson's Index, % in largest category | SD, variance, IQR (no ordering) |
+
+### By Data Characteristics
+
+| Characteristic | Preferred Measure | Why |
+|----------------|-------------------|-----|
+| **Symmetric, no outliers** | SD, variance, CV | Most efficient, uses all data |
+| **Outliers present** | IQR, percentile ranges, QCD | Robust to extremes |
+| **Comparing scales** | CV, QCD | Normalized measures needed |
+| **Small sample** | IQR | Less sensitive to sampling variability |
+
+### By Purpose
+
+| Purpose | Recommended Measure | Example |
+|---------|---------------------|---------|
+| **Statistical methods** | SD, variance | Input for z-scoring, t-tests, SPC |
+| **Robust description** | IQR | Reporting to stakeholders, skewed data |
+| **Comparing scales** | CV, QCD | "Which indicator is more variable?" |
+| **Categorical diversity** | Entropy, Simpson's Index | "How diverse are incident types?" |
+| **Simple communication** | Range, IQR | Non-technical audiences |
+
+## Visualizing Variation
+
+Summary statistics are essential, but visualization reveals patterns numbers alone might miss.
+
+**Histogram**: Shows distribution shape and outliers.
+
+- Good for: Understanding distribution shape before choosing methods
+- Reveals: Multimodality, outliers, gaps in data
+
+**Box plot**: Shows median, quartiles (IQR), and outliers in a compact format.
+
+- Good for: Comparing multiple groups side-by-side
+- Reveals: Differences in central tendency, spread, and outliers across groups
+
+**Violin plot**: Combines box plot with density plot, showing full distribution shape.
+
+- Good for: Seeing distribution shape while comparing groups
+- Reveals: Multimodality and density patterns
+
+**Scatter plot**: Shows relationship between two variables.
+
+- Good for: Exploring whether variables are related
+- Reveals: Linear vs nonlinear relationships, clustering, outliers
+
+Always visualize your data before applying statistical methods. Patterns obvious in plots might not be obvious in summary statistics.
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **Variation is not one thing**: Different data types require different measures. Quantitative → SD/IQR/CV. Ordinal → IQR only. Nominal → Entropy/Simpson's Index.
+
+2. **SD and variance are the same measure**: Related by variance = SD². Use SD for interpretation (original units), variance for calculations (mathematical convenience). Don't treat them as different.
+
+3. **Match measure to data characteristics**: SD for symmetric data without outliers, IQR when outliers present or sample is small.
+
+4. **CV normalizes for scale**: Use CV when comparing variability across different indicators or scales. Makes relative variability comparable.
+
+5. **Ordinal ≠ quantitative**: You can calculate IQR for ordinal data (only needs ordering), but not SD (requires arithmetic). Don't assign arbitrary numbers to categories and calculate SD.
+
+6. **Categorical data needs heterogeneity measures**: Shannon's Entropy and Simpson's Index quantify diversity in nominal data. Higher values = more heterogeneous.
+
+7. **Choose absolute or relative**: Raw measures (SD, IQR) show absolute spread. Normalized measures (CV, QCD) show relative spread. Use relative when comparing across scales.
+
+8. **Visualize before you analyze**: Plots reveal distribution shape, outliers, and patterns that summary statistics might miss.
+:::

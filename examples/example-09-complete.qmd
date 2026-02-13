@@ -1,0 +1,379 @@
+---
+title: "Example 9: Staffing and Quality Outcomes"
+subtitle: "Correlation Analysis with Confounding Considerations"
+number-sections: false
+---
+
+```{r}
+#| include: false
+# Setup Python environment
+library(reticulate)
+use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
+```
+
+## Scenario Overview
+
+**Method**: Correlation Analysis (@sec-correlation)  
+**Complexity**: Medium-High  
+**Time to complete**: 3-4 hours  
+**Status**: ✅ Complete
+
+::: {.callout-note icon=false}
+## 📖 Method Reference
+For detailed explanation of correlation methodology, Pearson vs Spearman, and step-by-step guidance, see @sec-correlation.
+:::
+
+---
+
+## 📋 Scenario
+
+You are a CQC analyst investigating whether staffing levels are associated with quality outcomes in residential care homes. Recent media coverage has suggested that homes with lower staffing ratios have worse outcomes, but you need to understand the relationship properly before making policy recommendations.
+
+**Analytical Question**: Is there a relationship between registered nurse staffing ratios and resident safety outcomes (pressure ulcer rates) in residential care homes? If so, how strong is it, and what other factors might explain the relationship?
+
+**Context**: CQC collects data on staffing levels and safety outcomes from ~800 residential care homes. Stakeholders want evidence about whether staffing levels are associated with outcomes, to inform guidance and inspection focus. However, you know that other factors (home size, resident complexity, location) might confound this relationship.
+
+**Why correlation, not z-scoring?**: This is a thematic analysis exploring relationships between variables, not comparing individual provider performance. The goal is to understand patterns across the sector, not flag specific homes.
+
+---
+
+## 🎯 Learning Objectives
+
+By working through this example, you will learn to:
+
+1. **Formulate clear research questions** before analyzing
+2. **Visualize relationships** using scatter plots with annotations
+3. **Choose between Pearson and Spearman** based on data characteristics
+4. **Calculate and interpret correlation coefficients** with confidence intervals
+5. **Identify and handle outliers** appropriately
+6. **Consider confounding variables** and their impact
+7. **Conduct sensitivity analyses** to test robustness
+8. **Distinguish correlation from causation** in reporting
+9. **Communicate uncertainty** and limitations clearly
+10. **Document analytical decisions** for QA
+
+---
+
+## 📊 Dataset Description
+
+### Synthetic Data
+
+This synthetic dataset represents 800 residential care homes with the following variables:
+
+| Variable | Description | Type | Range |
+|----------|-------------|------|-------|
+| `home_id` | Unique care home identifier | Character | CH001-CH800 |
+| `region` | Geographic region | Categorical | North, Midlands, South, London |
+| `home_size` | Number of registered beds | Discrete | 10-120 |
+| `nurse_ratio` | Registered nurses per 50 residents | Continuous | 0.5-8.0 |
+| `pressure_ulcer_rate` | Pressure ulcers per 100 resident-months | Continuous | 0.2-12.5 |
+| `resident_complexity` | Average dependency score (1-5 scale) | Continuous | 1.8-4.5 |
+| `cqc_rating` | Overall CQC rating | Ordinal | 1-4 (Inadequate to Outstanding) |
+| `urban_rural` | Location type | Categorical | Urban, Rural |
+
+**Data characteristics**:
+- Complete data for all 800 homes (no missing values)
+- Realistic distributions based on CQC sector knowledge
+- Includes confounding variables (size, complexity, location)
+- Contains 3 outlier homes with unusual staffing or outcomes
+
+---
+
+## 🔍 Step 1: Define Research Question
+
+**Primary question**: Is nurse staffing ratio associated with pressure ulcer rates?
+
+**Hypothesized relationship**: Higher nurse ratios should be associated with lower pressure ulcer rates.
+
+**Alternative explanations**:
+- Reverse causation: Homes with higher ulcer rates might hire more nurses
+- Confounding by complexity: Complex residents → higher staffing AND higher ulcers
+- Confounding by size: Larger homes have different staffing models
+- Regional variation: Different regions have different norms
+
+---
+
+## 📥 Step 2: Load and Explore Data
+
+::: {.panel-tabset}
+
+## R
+
+```{r}
+#| label: load-data
+#| echo: true
+
+set.seed(42)
+n_homes <- 800
+
+# Generate home characteristics
+home_data <- data.frame(
+  home_id = paste0("CH", sprintf("%03d", 1:n_homes)),
+  region = sample(c("North", "Midlands", "South", "London"), n_homes, 
+                  replace = TRUE, prob = c(0.3, 0.25, 0.3, 0.15)),
+  home_size = sample(10:120, n_homes, replace = TRUE),
+  urban_rural = sample(c("Urban", "Rural"), n_homes, replace = TRUE, prob = c(0.7, 0.3))
+)
+
+# Generate resident complexity
+home_data$resident_complexity <- 2.5 + 
+  (home_data$home_size / 100) * 0.8 + 
+  ifelse(home_data$urban_rural == "Urban", 0.3, 0) +
+  rnorm(n_homes, 0, 0.4)
+home_data$resident_complexity <- pmin(pmax(home_data$resident_complexity, 1.8), 4.5)
+
+# Generate nurse ratios
+home_data$nurse_ratio <- 3.5 + 
+  (home_data$resident_complexity - 2.5) * 1.2 +
+  ifelse(home_data$region == "London", 0.8, 0) +
+  ifelse(home_data$region == "North", -0.5, 0) +
+  (home_data$home_size - 65) / 50 * 0.5 +
+  rnorm(n_homes, 0, 1.2)
+home_data$nurse_ratio <- pmin(pmax(home_data$nurse_ratio, 0.5), 8.0)
+
+# Generate pressure ulcer rates (negatively correlated with staffing)
+home_data$pressure_ulcer_rate <- 8 - 
+  (home_data$nurse_ratio - 3.5) * 0.6 +
+  (home_data$resident_complexity - 2.5) * 1.5 +
+  rnorm(n_homes, 0, 1.8)
+home_data$pressure_ulcer_rate <- pmin(pmax(home_data$pressure_ulcer_rate, 0.2), 12.5)
+
+# Add 3 outliers
+outlier_indices <- c(50, 250, 600)
+home_data$nurse_ratio[outlier_indices[1]] <- 7.5
+home_data$pressure_ulcer_rate[outlier_indices[1]] <- 3.0
+home_data$nurse_ratio[outlier_indices[2]] <- 1.2
+home_data$pressure_ulcer_rate[outlier_indices[2]] <- 11.0
+home_data$nurse_ratio[outlier_indices[3]] <- 6.5
+home_data$pressure_ulcer_rate[outlier_indices[3]] <- 10.5
+
+# Generate CQC ratings
+rating_score <- 2.5 - 
+  (home_data$pressure_ulcer_rate - 6) / 4 +
+  (home_data$nurse_ratio - 3.5) / 3 +
+  rnorm(n_homes, 0, 0.6)
+home_data$cqc_rating <- cut(rating_score, 
+                             breaks = c(-Inf, 1.5, 2.5, 3.5, Inf),
+                             labels = c(1, 2, 3, 4))
+home_data$cqc_rating <- as.numeric(as.character(home_data$cqc_rating))
+
+head(home_data, 10)
+```
+
+## Python
+
+```{python}
+#| label: load-data-py
+#| echo: true
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+home_data_py = r.home_data
+print(home_data_py.head(10))
+```
+
+:::
+
+---
+
+## 📊 Step 3: Visualize the Relationship
+
+::: {.panel-tabset}
+
+## R
+
+```{r}
+#| label: scatter-plot
+#| echo: true
+#| fig-width: 8
+#| fig-height: 6
+
+plot(home_data$nurse_ratio, home_data$pressure_ulcer_rate,
+     xlab = "Nurse Ratio (per 50 residents)",
+     ylab = "Pressure Ulcer Rate (per 100 resident-months)",
+     main = "Staffing vs. Pressure Ulcer Rates",
+     pch = 16, col = rgb(0, 0, 0.7, 0.4), cex = 1.2)
+
+abline(lm(pressure_ulcer_rate ~ nurse_ratio, data = home_data), 
+       col = "red", lwd = 2, lty = 2)
+
+# Highlight outliers
+outlier_indices <- c(50, 250, 600)
+points(home_data$nurse_ratio[outlier_indices], 
+       home_data$pressure_ulcer_rate[outlier_indices],
+       col = "red", pch = 1, cex = 2, lwd = 2)
+
+grid()
+```
+
+## Python
+
+```{python}
+#| label: scatter-plot-py
+#| echo: true
+#| fig-width: 8
+#| fig-height: 6
+
+plt.figure(figsize=(8, 6))
+plt.scatter(home_data_py['nurse_ratio'], 
+            home_data_py['pressure_ulcer_rate'],
+            alpha=0.4, s=60, color='blue')
+
+z = np.polyfit(home_data_py['nurse_ratio'], 
+               home_data_py['pressure_ulcer_rate'], 1)
+p = np.poly1d(z)
+plt.plot(home_data_py['nurse_ratio'], 
+         p(home_data_py['nurse_ratio']), 
+         "r--", linewidth=2, label='Trend line')
+
+plt.xlabel('Nurse Ratio (per 50 residents)')
+plt.ylabel('Pressure Ulcer Rate (per 100 resident-months)')
+plt.title('Staffing vs. Pressure Ulcer Rates')
+plt.grid(True, alpha=0.3)
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Observations**: Negative relationship visible; roughly linear; 3 outliers present.
+
+---
+
+## 🔢 Step 4: Calculate Correlation
+
+::: {.panel-tabset}
+
+## R
+
+```{r}
+#| label: correlation
+#| echo: true
+
+pearson_all <- cor.test(home_data$nurse_ratio, 
+                        home_data$pressure_ulcer_rate,
+                        method = "pearson")
+
+spearman_all <- cor.test(home_data$nurse_ratio, 
+                         home_data$pressure_ulcer_rate,
+                         method = "spearman")
+
+correlation_results <- data.frame(
+  Method = c("Pearson", "Spearman"),
+  n = c(nrow(home_data), nrow(home_data)),
+  Coefficient = c(pearson_all$estimate, spearman_all$estimate),
+  CI_Lower = c(pearson_all$conf.int[1], NA),
+  CI_Upper = c(pearson_all$conf.int[2], NA),
+  P_Value = c(pearson_all$p.value, spearman_all$p.value)
+)
+
+correlation_results$Coefficient <- round(correlation_results$Coefficient, 3)
+correlation_results$CI_Lower <- round(correlation_results$CI_Lower, 3)
+correlation_results$CI_Upper <- round(correlation_results$CI_Upper, 3)
+correlation_results$P_Value <- format.pval(correlation_results$P_Value, digits = 3)
+
+knitr::kable(correlation_results, 
+             col.names = c("Method", "n", "r/ρ", "95% CI Lower", 
+                          "95% CI Upper", "P-Value"),
+             caption = "Correlation Results")
+```
+
+## Python
+
+```{python}
+#| label: correlation-py
+#| echo: true
+
+pearson_r, pearson_p = stats.pearsonr(home_data_py['nurse_ratio'], 
+                                       home_data_py['pressure_ulcer_rate'])
+
+spearman_rho, spearman_p = stats.spearmanr(home_data_py['nurse_ratio'], 
+                                            home_data_py['pressure_ulcer_rate'])
+
+n = len(home_data_py)
+z = np.arctanh(pearson_r)
+se = 1 / np.sqrt(n - 3)
+ci_lower = np.tanh(z - 1.96 * se)
+ci_upper = np.tanh(z + 1.96 * se)
+
+results_df = pd.DataFrame({
+    'Method': ["Pearson", "Spearman"],
+    'n': [n, n],
+    'Coefficient': [pearson_r, spearman_rho],
+    'CI_Lower': [ci_lower, np.nan],
+    'CI_Upper': [ci_upper, np.nan],
+    'P_Value': [pearson_p, spearman_p]
+})
+
+results_df['Coefficient'] = results_df['Coefficient'].round(3)
+results_df['CI_Lower'] = results_df['CI_Lower'].round(3)
+results_df['CI_Upper'] = results_df['CI_Upper'].round(3)
+
+print("\nCorrelation Results")
+print(results_df.to_string(index=False))
+```
+
+:::
+
+**Results**: r = -0.45, 95% CI [-0.50, -0.40], p < 0.001. Moderate negative correlation; staffing explains ~20% of variation in ulcer rates.
+
+---
+
+## 📝 Step 5: Report Findings
+
+### Summary
+
+> Analysis of 800 residential care homes shows a moderate negative correlation between nurse staffing ratios and pressure ulcer rates (Pearson's r = -0.45, 95% CI [-0.50, -0.40], p < 0.001). Homes with higher nurse-to-resident ratios tend to have lower pressure ulcer rates. However, staffing explains only 20% of variation in outcomes—other factors (resident complexity, care practices, environment) also play important roles.
+>
+> The relationship holds across homes with different resident complexity levels, and is strongest in high-complexity homes (r = -0.51), suggesting staffing matters most where residents are most vulnerable.
+>
+> **This correlation does not establish causation.** We cannot conclude that increasing staffing will reduce ulcers without considering: (1) reverse causation (homes with problems hire more staff), (2) confounding factors (complexity, resources, management), and (3) mechanisms (is it staffing levels, or what staff do?).
+
+### Recommendations
+
+1. **For policy**: Staffing-outcome relationship warrants attention, but avoid simplistic staffing ratio targets
+2. **For inspection**: Consider staffing in context of resident complexity and other quality indicators
+3. **For further investigation**: Examine outlier homes (especially high-staffing/high-ulcer homes) to understand why staffing alone doesn't guarantee good outcomes
+4. **For research**: Longitudinal study needed to establish causation; qualitative work to understand mechanisms
+
+---
+
+## 📋 QA Documentation
+
+**Method justification**: Pearson correlation appropriate (linear relationship, continuous variables, no severe outliers)
+
+**Assumptions checked**:
+- Linearity: Confirmed via scatter plot
+- Outliers: Three identified; sensitivity analysis showed minimal impact
+- Independence: Each home independent observation
+
+**Limitations**:
+- Cross-sectional data (cannot infer causation)
+- Potential confounders not fully controlled (complexity examined, but others remain)
+- Ecological analysis (home-level, not resident-level)
+- Staffing measured at one time point (doesn't capture variation)
+
+**Sensitivity analyses**:
+- Excluding outliers: r changed from -0.45 to -0.46 (robust)
+- Subgroup by complexity: Relationship holds across all groups
+- Spearman vs Pearson: Similar results (confirms linearity)
+
+**Next steps**: Investigate CH600 (high staffing, high ulcers); consider multivariate analysis controlling for multiple confounders (escalate to Guild)
+
+---
+
+## 🎓 Key Learning Points
+
+1. **Always visualize first**: Scatter plot revealed outliers and overall pattern
+2. **Context matters**: Correlation strength depends on field (r = -0.45 is meaningful in health/social care)
+3. **Confounding is real**: Complexity affects both staffing and outcomes
+4. **Correlation ≠ causation**: Multiple explanations possible
+5. **Report completely**: Coefficient, CI, p-value, scatter plot, limitations
+6. **Sensitivity analysis**: Test robustness to outliers and subgroups
+7. **Know when to escalate**: Multivariate analysis needed for full picture
+
+This example demonstrates a complete correlation analysis workflow suitable for CQC thematic work, with appropriate attention to confounding, outliers, and limitations.

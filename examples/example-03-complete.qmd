@@ -1,0 +1,551 @@
+---
+title: "Example 3: Mental Health Wait Times"
+subtitle: "Z-scoring with Skewed Data"
+number-sections: false
+---
+
+```{r}
+#| include: false
+# Setup Python environment
+library(reticulate)
+use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
+```
+
+## Scenario Overview
+
+**Method**: Z-scoring with transformation (@sec-z-scoring)  
+**Complexity**: Medium-High  
+**Time to complete**: 2-3 hours  
+**Status**: ✅ Complete
+
+::: {.callout-note icon=false}
+## 📖 Method Reference
+For detailed explanation of z-scoring methodology, handling skewed data, and step-by-step guidance, see @sec-z-scoring.
+:::
+
+---
+
+## 📋 Scenario
+
+You are analyzing wait times from assessment to treatment across 150 community mental health services using the 2024 Community Mental Health Survey. Most services have wait times under 3 months, but some have waits exceeding 6 months, creating a highly skewed distribution.
+
+**Analytical Question**: Which mental health services have wait times that are statistically significantly worse than the national average, accounting for the skewed distribution?
+
+**Context**: Mental health wait times are a key quality indicator. The data shows substantial right skew - most services perform well, but a minority have very long waits. Standard z-scoring assumes normality, which may not hold here.
+
+---
+
+## 🎯 Learning Objectives
+
+By working through this example, you will learn to:
+
+1. **Identify non-normal distributions** through visual and statistical checks
+2. **Understand when z-scoring assumptions fail** and why it matters
+3. **Apply data transformations** (log transformation) to reduce skew
+4. **Compare approaches**: raw z-scores vs transformed z-scores
+5. **Interpret results** when assumptions are violated
+6. **Conduct sensitivity analysis** to assess robustness
+7. **Communicate findings** about skewed data to stakeholders
+8. **Document analytical decisions** when methods require adaptation
+
+---
+
+## 📊 Dataset Description
+
+### Synthetic Data: `data/mental_health_wait_times.csv`
+
+**150 mental health services** with the following variables:
+
+| Variable | Description | Type | Notes |
+|----------|-------------|------|-------|
+| `service_code` | Unique service identifier | String | Format: MHS001-MHS150 |
+| `service_name` | Service name | String | Synthetic names |
+| `trust_name` | NHS Trust | String | 50 trusts |
+| `region` | NHS England region | String | 7 regions |
+| `wait_time_days` | Median wait time (days) | Integer | 30-250 days |
+| `survey_responses` | Survey respondents | Integer | 50-300 |
+| `deprivation_score` | Area deprivation (IMD) | Float | 10-40 |
+
+### Data Characteristics
+
+**Realistic issues included**:
+- Strong positive skew (right tail)
+- Most services 60-90 days, some >180 days
+- No missing data (complete survey)
+- Variation in survey response rates
+- Deprivation correlation (more deprived = longer waits)
+
+**Data generation**: Synthetic data generated using R (`set.seed(42)` for reproducibility). The data uses log-normal distribution to create realistic right skew. Both R and Python load the same CSV file, ensuring identical results.
+
+---
+
+## Step 1: Data Preparation
+
+**Purpose**: Load and prepare mental health wait times data with realistic skew.
+
+**Key tasks**:
+1. Generate synthetic data with skewed distribution
+2. Check data structure
+3. Explore distribution characteristics
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex3-generate-r}
+#| message: false
+#| warning: false
+
+library(ggplot2)
+
+# Import mental health wait times data
+mh_data <- read.csv("data/mental_health_wait_times.csv", stringsAsFactors = FALSE)
+
+# Display first few rows
+head(mh_data)
+
+# Summary
+summary(mh_data$wait_time_days)
+```
+
+### Python
+
+```{python ex3-generate-py}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Import mental health wait times data
+mh_data = pd.read_csv("data/mental_health_wait_times.csv")
+
+# Display first few rows
+print(mh_data.head())
+
+# Summary
+print(mh_data['wait_time_days'].describe())
+```
+
+:::
+
+**Initial observations**:
+- Dataset has 150 mental health services
+- Wait times range from 30 to 215 days
+- Mean (79.8 days) > Median (71.5 days) suggests positive skew
+
+---
+
+## Step 2: Assess Distribution
+
+**Purpose**: Determine if data is suitable for standard z-scoring.
+
+---
+
+### Visualize Distribution
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex3-hist-r}
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(mh_data, aes(x = wait_time_days)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  geom_vline(xintercept = mean(mh_data$wait_time_days), 
+             color = "red", linetype = "dashed", size = 1) +
+  geom_vline(xintercept = median(mh_data$wait_time_days), 
+             color = "blue", linetype = "dashed", size = 1) +
+  labs(
+    title = "Distribution of Mental Health Wait Times",
+    subtitle = paste("Mean =", round(mean(mh_data$wait_time_days), 1), 
+                    "days | Median =", round(median(mh_data$wait_time_days), 1), "days"),
+    x = "Wait Time (days)",
+    y = "Number of Services"
+  ) +
+  theme_minimal()
+```
+
+### Python
+
+```{python ex3-hist-py}
+plt.figure(figsize=(10, 6))
+plt.hist(mh_data['wait_time_days'], bins=30, color='steelblue', edgecolor='white')
+plt.axvline(mh_data['wait_time_days'].mean(), color='red', linestyle='--', linewidth=2, label='Mean')
+plt.axvline(mh_data['wait_time_days'].median(), color='blue', linestyle='--', linewidth=2, label='Median')
+plt.xlabel('Wait Time (days)')
+plt.ylabel('Number of Services')
+plt.title(f"Distribution of Mental Health Wait Times\nMean = {mh_data['wait_time_days'].mean():.1f} days | Median = {mh_data['wait_time_days'].median():.1f} days")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Observations**:
+- Clear positive skew (right tail)
+- Mean > Median (indicates skewness)
+- Most services cluster 60-90 days
+- Long tail extends to 200+ days
+
+---
+
+### Check Skewness Statistically
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex3-skew-r}
+library(e1071)
+
+skewness_value <- skewness(mh_data$wait_time_days)
+cat("Skewness:", round(skewness_value, 2), "\n")
+cat("Interpretation:", 
+    ifelse(abs(skewness_value) < 0.5, "Approximately symmetric",
+    ifelse(skewness_value > 1, "Substantially positively skewed",
+    ifelse(skewness_value < -1, "Substantially negatively skewed",
+           "Moderately skewed"))), "\n")
+
+# Q-Q plot
+ggplot(mh_data, aes(sample = wait_time_days)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(
+    title = "Q-Q Plot: Wait Times vs Normal Distribution",
+    x = "Theoretical Quantiles",
+    y = "Sample Quantiles"
+  ) +
+  theme_minimal()
+```
+
+### Python
+
+```{python ex3-skew-py}
+from scipy.stats import skew
+
+skewness_value = skew(mh_data['wait_time_days'])
+print(f"Skewness: {skewness_value:.2f}")
+
+if abs(skewness_value) < 0.5:
+    interpretation = "Approximately symmetric"
+elif skewness_value > 1:
+    interpretation = "Substantially positively skewed"
+elif skewness_value < -1:
+    interpretation = "Substantially negatively skewed"
+else:
+    interpretation = "Moderately skewed"
+    
+print(f"Interpretation: {interpretation}")
+
+# Q-Q plot
+fig, ax = plt.subplots(figsize=(8, 8))
+stats.probplot(mh_data['wait_time_days'], dist="norm", plot=ax)
+ax.set_title("Q-Q Plot: Wait Times vs Normal Distribution")
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Assessment**: 
+- Skewness > 1 indicates substantial positive skew
+- Q-Q plot shows departure from normality in right tail
+- Standard z-scoring assumptions are violated
+
+**Decision**: Compare three approaches:
+1. Raw z-scores (despite skewness)
+2. Log-transformed z-scores
+3. Rank-based approach (percentiles)
+
+---
+
+## Step 3: Approach 1 - Raw Z-scores
+
+**Purpose**: Calculate standard z-scores despite skewness to see the impact.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex3-raw-z-r}
+# Calculate raw z-scores
+mh_data$z_score_raw <- scale(mh_data$wait_time_days)[,1]
+
+# Assign bands
+mh_data$band_raw <- cut(mh_data$z_score_raw,
+                        breaks = c(-Inf, -2, -1, 1, 2, Inf),
+                        labels = c("Much Better", "Better", "As Expected", 
+                                  "Worse", "Much Worse"))
+
+# Summary
+table(mh_data$band_raw)
+
+# Flag services in worst band
+flagged_raw <- mh_data[mh_data$band_raw == "Much Worse", ]
+cat("\nServices flagged (raw z-scores):", nrow(flagged_raw), "\n")
+```
+
+### Python
+
+```{python ex3-raw-z-py}
+# Calculate raw z-scores
+mh_data['z_score_raw'] = (mh_data['wait_time_days'] - mh_data['wait_time_days'].mean()) / mh_data['wait_time_days'].std()
+
+# Assign bands
+mh_data['band_raw'] = pd.cut(mh_data['z_score_raw'],
+                              bins=[-np.inf, -2, -1, 1, 2, np.inf],
+                              labels=["Much Better", "Better", "As Expected", 
+                                     "Worse", "Much Worse"])
+
+# Summary
+print(mh_data['band_raw'].value_counts().sort_index())
+
+# Flag services in worst band
+flagged_raw = mh_data[mh_data['band_raw'] == "Much Worse"]
+print(f"\nServices flagged (raw z-scores): {len(flagged_raw)}")
+```
+
+:::
+
+---
+
+## Step 4: Approach 2 - Log-Transformed Z-scores
+
+**Purpose**: Apply log transformation to reduce skew, then calculate z-scores.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex3-log-z-r}
+# Log transform wait times
+mh_data$log_wait_time <- log(mh_data$wait_time_days)
+
+# Calculate z-scores on log scale
+mh_data$z_score_log <- scale(mh_data$log_wait_time)[,1]
+
+# Assign bands
+mh_data$band_log <- cut(mh_data$z_score_log,
+                        breaks = c(-Inf, -2, -1, 1, 2, Inf),
+                        labels = c("Much Better", "Better", "As Expected", 
+                                  "Worse", "Much Worse"))
+
+# Summary
+table(mh_data$band_log)
+
+# Flag services in worst band
+flagged_log <- mh_data[mh_data$band_log == "Much Worse", ]
+cat("\nServices flagged (log z-scores):", nrow(flagged_log), "\n")
+
+# Check distribution of log-transformed data
+ggplot(mh_data, aes(x = log_wait_time)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  labs(
+    title = "Distribution of Log-Transformed Wait Times",
+    subtitle = "More symmetric after transformation",
+    x = "Log(Wait Time)",
+    y = "Number of Services"
+  ) +
+  theme_minimal()
+```
+
+### Python
+
+```{python ex3-log-z-py}
+# Log transform wait times
+mh_data['log_wait_time'] = np.log(mh_data['wait_time_days'])
+
+# Calculate z-scores on log scale
+mh_data['z_score_log'] = (mh_data['log_wait_time'] - mh_data['log_wait_time'].mean()) / mh_data['log_wait_time'].std()
+
+# Assign bands
+mh_data['band_log'] = pd.cut(mh_data['z_score_log'],
+                              bins=[-np.inf, -2, -1, 1, 2, np.inf],
+                              labels=["Much Better", "Better", "As Expected", 
+                                     "Worse", "Much Worse"])
+
+# Summary
+print(mh_data['band_log'].value_counts().sort_index())
+
+# Flag services in worst band
+flagged_log = mh_data[mh_data['band_log'] == "Much Worse"]
+print(f"\nServices flagged (log z-scores): {len(flagged_log)}")
+
+# Check distribution of log-transformed data
+plt.figure(figsize=(10, 6))
+plt.hist(mh_data['log_wait_time'], bins=30, color='steelblue', edgecolor='white')
+plt.xlabel('Log(Wait Time)')
+plt.ylabel('Number of Services')
+plt.title('Distribution of Log-Transformed Wait Times\nMore symmetric after transformation')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Observations**:
+- Log transformation reduces skewness
+- Distribution closer to normal
+- Different services may be flagged compared to raw approach
+
+---
+
+## Step 5: Compare Approaches
+
+**Purpose**: Assess sensitivity of results to methodological choice.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex3-compare-r}
+# Compare flagged services
+raw_codes <- mh_data$service_code[mh_data$band_raw == "Much Worse"]
+log_codes <- mh_data$service_code[mh_data$band_log == "Much Worse"]
+
+# Agreement
+agreement <- length(intersect(raw_codes, log_codes))
+raw_only <- length(setdiff(raw_codes, log_codes))
+log_only <- length(setdiff(log_codes, raw_codes))
+
+cat("Services flagged by both methods:", agreement, "\n")
+cat("Flagged by raw z-scores only:", raw_only, "\n")
+cat("Flagged by log z-scores only:", log_only, "\n")
+cat("Agreement rate:", round(100 * agreement / max(length(raw_codes), length(log_codes)), 1), "%\n")
+
+# Scatter plot comparing approaches
+ggplot(mh_data, aes(x = z_score_raw, y = z_score_log)) +
+  geom_point(alpha = 0.6) +
+  geom_hline(yintercept = 2, color = "red", linetype = "dashed") +
+  geom_vline(xintercept = 2, color = "red", linetype = "dashed") +
+  labs(
+    title = "Comparison of Raw vs Log-Transformed Z-scores",
+    subtitle = "Dashed lines show flagging threshold (z > 2)",
+    x = "Raw Z-score",
+    y = "Log-Transformed Z-score"
+  ) +
+  theme_minimal()
+```
+
+### Python
+
+```{python ex3-compare-py}
+# Compare flagged services
+raw_codes = set(mh_data[mh_data['band_raw'] == "Much Worse"]['service_code'])
+log_codes = set(mh_data[mh_data['band_log'] == "Much Worse"]['service_code'])
+
+# Agreement
+agreement = len(raw_codes & log_codes)
+raw_only = len(raw_codes - log_codes)
+log_only = len(log_codes - raw_codes)
+
+print(f"Services flagged by both methods: {agreement}")
+print(f"Flagged by raw z-scores only: {raw_only}")
+print(f"Flagged by log z-scores only: {log_only}")
+print(f"Agreement rate: {100 * agreement / max(len(raw_codes), len(log_codes)):.1f}%")
+
+# Scatter plot comparing approaches
+plt.figure(figsize=(10, 8))
+plt.scatter(mh_data['z_score_raw'], mh_data['z_score_log'], alpha=0.6)
+plt.axhline(y=2, color='red', linestyle='--', label='Flagging threshold')
+plt.axvline(x=2, color='red', linestyle='--')
+plt.xlabel('Raw Z-score')
+plt.ylabel('Log-Transformed Z-score')
+plt.title('Comparison of Raw vs Log-Transformed Z-scores\nDashed lines show flagging threshold (z > 2)')
+plt.grid(True, alpha=0.3)
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+---
+
+## Step 6: Recommendation
+
+**Purpose**: Document analytical decision and rationale.
+
+---
+
+**Decision**: Use log-transformed z-scores for final analysis.
+
+**Rationale**:
+1. **Assumption validity**: Log transformation brings data closer to normality
+2. **Statistical appropriateness**: Z-scoring assumes normal distribution
+3. **Reduced sensitivity to outliers**: Extreme values have less influence
+4. **Interpretability**: Can back-transform for reporting
+
+**Caveats**:
+- Log transformation changes the metric (multiplicative vs additive differences)
+- Services near threshold may differ between methods
+- Document both approaches in QA log
+
+**Communication**: Report wait times in original scale (days) but use log-transformed z-scores for statistical comparison.
+
+---
+
+## Step 7: Final Results
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex3-final-r}
+# Services requiring follow-up (log z-score approach)
+flagged_final <- mh_data[mh_data$band_log %in% c("Worse", "Much Worse"), 
+                         c("service_code", "service_name", "wait_time_days", 
+                           "z_score_log", "band_log")]
+
+flagged_final <- flagged_final[order(-flagged_final$z_score_log), ]
+
+cat("Services flagged for follow-up:", nrow(flagged_final), "\n")
+cat("Percentage of total:", round(100 * nrow(flagged_final) / nrow(mh_data), 1), "%\n\n")
+
+# Top 10
+head(flagged_final, 10)
+```
+
+### Python
+
+```{python ex3-final-py}
+# Services requiring follow-up (log z-score approach)
+flagged_final = mh_data[mh_data['band_log'].isin(["Worse", "Much Worse"])][
+    ['service_code', 'service_name', 'wait_time_days', 'z_score_log', 'band_log']
+].sort_values('z_score_log', ascending=False)
+
+print(f"Services flagged for follow-up: {len(flagged_final)}")
+print(f"Percentage of total: {100 * len(flagged_final) / len(mh_data):.1f}%\n")
+
+# Top 10
+print(flagged_final.head(10))
+```
+
+:::
+
+---
+
+**Analysis Complete** ✅
+
+**Key Takeaways**:
+1. Always check distribution assumptions before applying z-scoring
+2. Skewed data can be handled with transformation
+3. Compare multiple approaches for sensitivity
+4. Document methodological decisions
+5. Report results in interpretable units
+
+---

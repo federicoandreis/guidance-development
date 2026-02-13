@@ -1,0 +1,192 @@
+---
+title: "Distribution Shape"
+---
+
+## Beyond Location and Spread {#sec-distribution-shape}
+
+Chapters 3 and 4 covered location (where the centre is) and spread (how variable the data is). But two distributions with the same mean and SD can look very different.
+
+This chapter covers **shape** (symmetry and tail behaviour).
+
+**Why shape matters**:
+
+- **Method assumptions**: Many methods assume symmetric distributions. Heavy asymmetry or extreme tails violate these assumptions.
+- **Interpretation**: In asymmetric distributions, mean and median diverge. Understanding shape helps you choose the right summary.
+- **Outlier context**: Extreme values in heavy-tailed distributions may be expected, not anomalies.
+
+## Skewness: Measuring Asymmetry
+
+**Skewness** quantifies how asymmetric a distribution is.
+
+### Types of Skewness
+
+**Symmetric (no skew)**: Mean ≈ Median. Data balanced around the centre. Bell-shaped or uniform distributions.
+
+**Positive skew (right skew)**: Long tail to the right. Mean > Median. Common in CQC data.
+
+- Example: Waiting times (most short, some very long)
+- Example: Incident counts (most low, some very high)
+- Example: Length of stay (most short, a few extended stays)
+
+**Negative skew (left skew)**: Long tail to the left. Mean < Median. Less common in CQC data.
+
+- Example: Percentage of patients seen within target (most high, some very low)
+- Example: Bed occupancy rates (most high, occasional low periods)
+
+![Types of skewness in probability distributions. Left shows positive (right) skew where mean > median, middle shows no skew (symmetric) where mean ≈ median, and right shows negative (left) skew where mean < median.](../figures/skewness.png){#fig-skewness width=100%}
+
+### Detecting Skewness
+
+**Visual check**: Plot a histogram or density plot. Does one tail extend further than the other?
+
+**Mean vs median**: 
+- If mean > median by a substantial amount → positive skew
+- If mean < median by a substantial amount → negative skew
+- If mean ≈ median → approximately symmetric
+
+**Formal measure**: Skewness statistic (available in most statistical software)
+- Values near 0: Approximately symmetric
+- Values > 1: Substantial positive skew
+- Values < -1: Substantial negative skew
+- Values between -0.5 and 0.5: Mild skew, often negligible
+
+### Why Skewness Matters
+
+**1. Method selection**: 
+
+- Methods assuming normality (t-tests, ANOVA, standard z-scoring) may fail with heavy skewness
+- When skewness > 1 or < -1, consider robust methods or transformations
+
+**2. Choosing location measures**:
+
+- Symmetric data: Mean is efficient and appropriate
+- Skewed data: Median often better represents "typical" performance
+- See @sec-describing-data for detailed guidance
+
+**3. Choosing spread measures**:
+
+- Symmetric data: SD is efficient
+- Skewed data: IQR more robust, not inflated by long tails
+- See @sec-variation-uncertainty for detailed guidance
+
+**4. Outlier interpretation**:
+
+- In skewed distributions, extreme values in the tail direction may be expected, not anomalies
+- Don't automatically flag as outliers—check if they're part of the natural tail
+- See @sec-unusual-observations for outlier detection methods
+
+### Handling Skewness
+
+**Option 1: Use robust methods**
+- Median instead of mean (@sec-describing-data)
+- IQR instead of SD (@sec-variation-uncertainty)
+- Rank-based tests instead of t-tests
+
+**Option 2: Transform the data**
+- Log transformation often reduces positive skew
+- Square root transformation for count data
+- See individual method chapters for transformation guidance
+
+**Option 3: Accept and document**
+- Some skewness is inherent to the data (e.g., waiting times are naturally right-skewed)
+- Document the skewness and interpret results accordingly
+- Use methods that accommodate skewness (e.g., working z-scores, @sec-z-scoring)
+
+**When to escalate**: If you're unsure whether skewness is severe enough to invalidate your method, consult the Quantitative Guild.
+
+## Kurtosis: Measuring Tail Behaviour
+
+**Kurtosis** measures how heavy or light the tails of a distribution are compared to a normal distribution.
+
+### Interpreting Kurtosis
+
+**Normal distribution**: Kurtosis = 3 (sometimes reported as "excess kurtosis" = 0, where excess = kurtosis - 3)
+
+**High kurtosis (leptokurtic)**: Heavy tails, more extreme values than normal distribution
+
+- Kurtosis > 3 (or excess kurtosis > 0)
+- More outliers and extreme values
+- Example: Incident data with occasional spikes
+
+**Low kurtosis (platykurtic)**: Light tails, fewer extreme values than normal distribution
+
+- Kurtosis < 3 (or excess kurtosis < 0)
+- Fewer outliers, more uniform spread
+- Example: Constrained performance indicators (e.g., percentages bounded at 0-100%)
+
+![Types of kurtosis in probability distributions. Left shows high kurtosis (leptokurtic) with heavy tails and peaked center, middle shows normal kurtosis (mesokurtic) with moderate tails, and right shows low kurtosis (platykurtic) with light tails and flatter shape. High kurtosis means more extreme values; low kurtosis means fewer extreme values.](../figures/kurtosis.png){#fig-kurtosis width=100%}
+
+### Why Kurtosis Matters
+
+**1. Outlier frequency**: High kurtosis means expect more extreme values. Don't overreact to outliers if kurtosis is high—they're part of the distribution.
+
+**2. Method assumptions**: Extreme kurtosis (< 2 or > 5) suggests non-normality. Methods assuming normality may be unreliable.
+
+**3. Risk assessment**: High kurtosis indicates higher risk of extreme events, even if mean and SD look acceptable.
+
+### Detecting Kurtosis
+
+**Visual check**: Compare your distribution to @fig-kurtosis. Q-Q plots also show tail behaviour clearly—heavy tails deviate from the diagonal line at both ends.
+
+**Formal measure**: Kurtosis statistic (available in most statistical software)
+- Values 2.5-3.5: Approximately normal tails
+- Values > 4: Heavy tails
+- Values < 2: Light tails
+
+### Practical Guidance
+
+**For CQC work**: Kurtosis is less commonly used than skewness. Most CQC data concerns involve skewness or outliers, not kurtosis specifically.
+
+**When kurtosis matters**:
+- Risk assessment: Are extreme events more common than expected?
+- Method validation: Does the method assume normal tails?
+- Simulation/modelling: Need to capture tail behaviour accurately
+
+**When to escalate**: If kurtosis is extreme (< 2 or > 5) and you're using methods assuming normality, consult the Quantitative Guild.
+
+::: {.callout-note icon=false}
+## Rethinking: Skewness vs Kurtosis in Practice
+
+At CQC, **skewness** is far more important than kurtosis for day-to-day work.
+
+**Prioritize skewness checks** because:
+- It's easier to detect visually (histogram shows it immediately)
+- It has clearer implications (use median/IQR instead of mean/SD)
+- Most method violations involve skewness, not kurtosis alone
+- Stakeholders understand "the data is skewed" more readily than "high kurtosis"
+
+**Check kurtosis** only when:
+- You're using methods that are particularly sensitive to tail behaviour
+- You're assessing risk of extreme events
+- Visual inspection suggests very heavy or very light tails
+- A specialist has asked for it
+
+**Don't routinely report kurtosis** to non-technical audiences. It's too abstract. Focus on skewness and outliers, which have clearer regulatory implications.
+:::
+
+## Summary: Choosing Shape Measures
+
+| Question | Measure | What It Tells You |
+|----------|---------|-------------------|
+| Is the distribution symmetric? | Skewness | Asymmetry. Guides location/spread measure choice. |
+| Are extreme values common? | Kurtosis, visual inspection | Tail behaviour. Affects outlier interpretation. |
+| Should I use mean or median? | Skewness, mean vs median | If skewed, prefer median. See @sec-describing-data. |
+| Should I use SD or IQR? | Skewness, outliers | If skewed or outliers, prefer IQR. See @sec-variation-uncertainty. |
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **Shape affects method choice**: Skewness > 1 or < -1 suggests using robust methods (median, IQR) or transforming data before applying methods assuming normality.
+
+2. **Skewness is visual**: You can see it in a histogram immediately. Mean > median = positive skew. Mean < median = negative skew.
+
+3. **Skewness is common in CQC data**: Waiting times, incident counts, and length of stay are naturally right-skewed. Don't force normality—use appropriate methods.
+
+4. **Kurtosis matters less than skewness**: For most CQC work, focus on skewness. Check kurtosis only when assessing tail behaviour or risk of extreme events.
+
+5. **Visual inspection first**: Always plot your data. Shape measures confirm what you see, but don't replace visual inspection.
+
+6. **Document departures from normality**: If your data is skewed or heavy-tailed, document this and explain how you addressed it (robust methods, transformation, or acceptance).
+:::

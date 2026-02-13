@@ -1,0 +1,480 @@
+---
+title: "Worked Examples Library"
+subtitle: "Complete Analytical Workflows for CQC Analysts"
+number-sections: false
+---
+
+# Overview
+
+**Purpose**: Complete, realistic analytical workflows demonstrating statistical methods in authentic CQC contexts.
+
+**Based on**: Real CQC analytical scenarios from State of Care 2024/25 and common regulatory analytics patterns.
+
+**What makes these examples special**:
+- ✅ Realistic data with quality issues (not toy examples)
+- ✅ Complete workflows from data prep to stakeholder reporting
+- ✅ QA documentation modeled throughout
+- ✅ Dual R/Python code for all analyses
+- ✅ Based on actual CQC analytical questions
+
+---
+
+## 📚 Available Examples
+
+### Example 1: GP Access Analysis (Z-scoring)
+**Status**: ✅ **COMPLETE**  
+**Method**: Z-scoring with data quality challenges  
+**File**: `01-gp-access-analysis/`  
+**Time**: 2-3 hours | **Complexity**: Medium
+
+**Scenario**: Compare GP practices on patient access metrics (phone contact difficulty) using 2025 GP Patient Survey data. Identify practices with significantly worse access for targeted support.
+
+**Key Features**:
+- 6,500 GP practices
+- Survey response rates vary
+- Missing data (~5%)
+- Small practice size considerations
+- Deprivation as potential confounder
+
+---
+
+### Example 2: Care Home Falls Monitoring (SPC)
+**Status**: ✅ **COMPLETE**  
+**Method**: Statistical Process Control with intervention  
+**File**: `02-care-home-falls-spc/`  
+**Time**: 2-3 hours | **Complexity**: Medium
+
+**Scenario**: Monitor monthly falls rates in a care home over 24 months. A falls prevention program was implemented at month 13. Determine if intervention reduced falls and if performance is stable.
+
+**Key Features**:
+- Time series data (24 months)
+- Clear intervention point
+- Seasonal variation
+- Special cause event (outbreak month)
+- Baseline vs post-intervention comparison
+
+---
+
+### Example 3: Mental Health Wait Times (Skewed Data)
+**Status**: ✅ **COMPLETE**  
+**Method**: Z-scoring with transformation  
+**File**: `example-03-complete.qmd`  
+**Time**: 2-3 hours | **Complexity**: Medium-High
+
+**Scenario**: Compare community mental health services on wait times from assessment to treatment. Data from Community Mental Health Survey 2024 shows highly skewed distribution (most services <3 months, some >6 months).
+
+**Key Features**:
+- 150 mental health trusts
+- Highly skewed data (right tail)
+- Survey-based (response bias considerations)
+- Working z-scores vs transformation
+- Interpretation with non-normal data
+
+---
+
+### Example 4: Medication Safety Pilot (Paired t-test)
+**Status**: ✅ **COMPLETE**  
+**Method**: Paired t-test with small sample  
+**File**: `example-04-complete.qmd`  
+**Time**: 2-3 hours | **Complexity**: Medium
+
+**Scenario**: A medication safety intervention was piloted in 15 care homes. Compare medication incident rates before and after the 6-month pilot to assess effectiveness for potential rollout.
+
+**Key Features**:
+- Small sample (N=15 care homes)
+- Paired design (before/after)
+- One outlier (very large reduction)
+- Effect size interpretation
+- Statistical vs practical significance
+
+---
+
+### Example 5: Regional A&E Performance (Two-sample t-test)
+**Status**: ✅ **COMPLETE**  
+**Method**: Two-sample t-test  
+**File**: `example-05-complete.qmd`  
+**Time**: 2-3 hours | **Complexity**: Medium
+
+**Scenario**: Compare A&E 4-hour wait performance between two integrated care systems (ICS) to understand if regional differences exist. Data from 200 hospital trusts (100 per ICS).
+
+**Key Features**:
+- Independent samples
+- Approximately normal distribution
+- Assumption checking
+- Confounders (trust size, deprivation)
+- Practical significance interpretation
+
+---
+
+### Example 6: Ambulance Handover Delays (Time Series)
+**Status**: ✅ **COMPLETE**  
+**Method**: SPC + trend analysis  
+**File**: `example-06-complete.qmd`  
+**Time**: 2-3 hours | **Complexity**: Medium-High
+
+**Scenario**: Monitor ambulance handover delays (>30 minutes) across a hospital trust over 18 months. Identify trends and special causes.
+
+**Key Features**:
+- Monthly time series
+- Increasing trend
+- Winter pressures (seasonality)
+- Multiple special causes
+- System-level factors
+
+---
+
+### Example 7: Infection Rates in Care Homes (Count Data)
+**Status**: ✅ **COMPLETE**  
+**Method**: Rate comparison with varying denominators  
+**File**: `example-07-complete.qmd`  
+**Time**: 1-2 hours | **Complexity**: Medium
+
+**Scenario**: Compare infection rates across care homes using Vivaldi study data. Account for varying resident numbers and case-mix.
+
+**Key Features**:
+- Count data (infections)
+- Varying denominators (residents)
+- Case-mix adjustment needed
+- Small numbers in some homes
+- Rate vs count interpretation
+
+---
+
+### Example 8: DoLS Application Trends (Local Authority)
+**Status**: ✅ **COMPLETE**  
+**Method**: Panel data + interrupted time series  
+**File**: `example-08-complete.qmd`  
+**Time**: 2-3 hours | **Complexity**: High
+
+**Scenario**: Analyze Deprivation of Liberty Safeguards (DoLS) application trends across local authorities. Identify authorities with unusual patterns.
+
+**Key Features**:
+- Local authority level data
+- Time trends
+- Population size variation
+- Backlog considerations
+- Policy change impact
+
+---
+
+### Example 9: Staffing and Quality Outcomes (Correlation)
+**Status**: ✅ **COMPLETE**  
+**Method**: Correlation analysis with confounding considerations  
+**File**: `example-09-complete.qmd`  
+**Time**: 3-4 hours | **Complexity**: Medium-High
+
+**Scenario**: Investigate whether registered nurse staffing ratios are associated with resident safety outcomes (pressure ulcer rates) in ~800 residential care homes. Media coverage has suggested lower staffing = worse outcomes, but you need proper evidence for policy recommendations.
+
+**Key Features**:
+- Exploring relationships between variables
+- Choosing Pearson vs Spearman correlation
+- Handling outliers appropriately
+- Considering confounding variables (home size, resident complexity, location)
+- Distinguishing correlation from causation
+- Sensitivity analyses to test robustness
+- Communicating uncertainty and limitations
+
+---
+
+### Example 10: Care Home Staffing Investigation (Outlier Detection)
+**Status**: ✅ **COMPLETE**  
+**Method**: Outlier detection and treatment  
+**File**: `example-10-outliers.qmd`  
+**Time**: 2-3 hours | **Complexity**: Medium
+
+**Scenario**: Analyze staffing ratios (qualified staff per 10 residents) across 350 care homes. Recent submissions show extreme values ranging from 0 to 12. Systematically identify which extreme values warrant investigation and distinguish data errors from genuine extremes.
+
+**Key Features**:
+- Applying multiple detection methods (Z-score, Modified Z-score, IQR)
+- Comparing method agreement for prioritization
+- Systematic investigation process
+- Distinguishing data errors from genuine extremes
+- Handling small provider variation
+- Treatment decision framework (keep/remove/adjust)
+- Documenting outlier decisions for regulatory defensibility
+
+---
+
+## 🎯 Example Structure
+
+Each example follows this structure:
+
+```
+example-name/
+├── README.md                 # Scenario description & learning objectives
+├── data/
+│   ├── raw_data.csv         # Synthetic dataset (with realistic issues)
+│   ├── data_dictionary.md   # Variable descriptions
+│   └── clean_data.csv       # After cleaning (for comparison)
+├── analysis/
+│   ├── 01-data-prep.qmd     # Data cleaning & QA
+│   ├── 02-exploration.qmd   # Exploratory analysis
+│   ├── 03-main-analysis.qmd # Primary analysis
+│   └── 04-reporting.qmd     # Stakeholder report
+├── outputs/
+│   ├── figures/             # Generated plots
+│   └── reports/             # Rendered reports
+├── docs/
+│   ├── qa-checklist.md      # Completed QA record
+│   ├── decisions-log.md     # Key decisions documented
+│   └── assumptions.md       # Assumptions checked
+└── scripts/
+    ├── analysis.R           # Complete R script
+    └── analysis.py          # Complete Python script
+```
+
+---
+
+## 📖 Learning Objectives
+
+### Example 1: GP Access (Z-scoring)
+**Learn**:
+- Handling survey data with varying response rates
+- Missing data strategies
+- Small denominator considerations
+- Interpreting z-scores in context
+- Communicating statistical findings to non-technical stakeholders
+
+### Example 2: Falls Monitoring (SPC)
+**Learn**:
+- Setting up control charts
+- Baseline period selection
+- Detecting intervention effects
+- Applying detection rules
+- Handling special causes
+- When to recalculate limits
+
+### Example 3: Mental Health Waits (Skewed Data)
+**Learn**:
+- Identifying non-normal distributions
+- When z-scoring assumptions fail
+- Transformation approaches
+- Working z-scores (CQC method)
+- Comparing multiple approaches
+- Sensitivity analysis
+
+### Example 4: Medication Safety (Paired t-test)
+**Learn**:
+- Paired vs independent designs
+- Small sample considerations
+- Outlier handling
+- Effect size calculation and interpretation
+- Power analysis
+- Statistical vs practical significance
+
+### Example 5: Regional A&E (Two-sample t-test)
+**Learn**:
+- Independent samples comparison
+- Assumption checking workflow
+- Confounding variables
+- Subgroup analysis
+- Contextual interpretation
+
+### Example 6: Ambulance Handovers (SPC)
+**Learn**:
+- Time series monitoring
+- Trend detection
+- Seasonal patterns
+- Multiple special causes
+- System-level interpretation
+
+### Example 7: Infection Rates (Count Data)
+**Learn**:
+- Rate calculations with varying denominators
+- Small numbers handling
+- Case-mix considerations
+- Count vs rate interpretation
+
+### Example 8: DoLS Trends (Panel Data)
+**Learn**:
+- Panel data structures
+- Interrupted time series
+- Policy impact assessment
+- Authority-level variation
+
+### Example 9: Staffing and Quality (Correlation)
+**Learn**:
+- Formulating clear research questions
+- Pearson vs Spearman selection
+- Handling outliers in correlation
+- Confounding variable considerations
+- Correlation vs causation distinction
+- Sensitivity analysis approaches
+- Communicating uncertainty effectively
+
+### Example 10: Staffing Investigation (Outliers)
+**Learn**:
+- Multiple detection method application
+- Method agreement interpretation
+- Systematic investigation process
+- Distinguishing errors from extremes
+- Small provider variation handling
+- Treatment decision documentation
+- Regulatory defensibility requirements
+
+---
+
+## 🔧 Technical Features
+
+### Realistic Data Issues
+Each example includes common real-world problems:
+- Missing data (various patterns)
+- Outliers (data errors vs real variation)
+- Small sample sizes
+- Skewed distributions
+- Measurement error
+- Confounding variables
+
+### Complete Workflows
+Not just the statistical method, but:
+- Data import and cleaning
+- Exploratory data analysis
+- Assumption checking
+- Sensitivity analyses
+- Visualization
+- Interpretation
+- QA documentation
+- Stakeholder communication
+
+### Dual Language Support
+- Complete R code (tidyverse style)
+- Complete Python code (pandas/scipy)
+- Side-by-side comparison where helpful
+- Consistent outputs
+
+### QA Documentation
+Each example models good practice:
+- Completed QA checklist
+- Decision log (why we made choices)
+- Assumptions documented
+- Limitations stated
+- Alternative approaches considered
+
+---
+
+## 🚀 Implementation Priority
+
+### Phase 1 (Build First - 4-6 weeks)
+1. ✅ Example 1: GP Access (Z-scoring)
+2. ✅ Example 2: Falls Monitoring (SPC)
+3. ✅ Example 4: Medication Safety (Paired t-test)
+
+**Rationale**: Cover the three core methods (Z-scoring, SPC, t-tests) with realistic scenarios
+
+### Phase 2 (Next - 4-6 weeks)
+4. Example 3: Mental Health Waits (Skewed data)
+5. Example 5: Regional A&E (Two-sample)
+
+**Rationale**: Add complexity (non-normal data, confounders)
+
+### Phase 3 (Future - as needed)
+6. Example 6: Ambulance Handovers
+7. Example 7: Infection Rates
+8. Example 8: DoLS Trends
+
+**Rationale**: Advanced scenarios, additional methods
+
+---
+
+## 💡 Usage
+
+### For Learning
+- Work through examples sequentially
+- Try modifying parameters
+- Compare your approach to the documented decisions
+- Practice QA documentation
+
+### For Reference
+- Find similar scenario to your analysis
+- Adapt code for your data
+- Use QA templates
+- Copy visualization approaches
+
+### For Training
+- Use as training materials
+- Group exercises
+- Discussion of decision points
+- Practice peer review
+
+---
+
+## 🚀 Running the Examples
+
+### Prerequisites
+
+**R Users:**
+```r
+# Install required packages
+install.packages(c("tidyverse", "ggplot2", "qcc", "naniar", "mice"))
+```
+
+**Python Users:**
+```python
+# Install required packages
+pip install pandas numpy matplotlib seaborn scipy statsmodels missingno
+```
+
+### Data Files
+
+All data files are located in `examples/data/` and are ready to use:
+
+- `gp_access_data.csv` - Example 1 (GP Access)
+- `falls_data.csv` - Example 2 (Care Home Falls)
+- `mental_health_wait_times.csv` - Example 3 (Mental Health)
+- `ae_performance_data.csv` - Examples 4, 5 (A&E Performance)
+- `infection_rates.csv` - Example 6 (Infection Rates)
+- `medication_safety_data.csv` - Example 4 (Medication Safety)
+- Additional files for Examples 7-10
+
+**Data generation**: All data is synthetic, generated by `data/generate_example_data.R`. You don't need to run this script - the CSV files are already provided.
+
+### Running an Example
+
+1. **Open the example file** (e.g., `example-01-complete.qmd`)
+2. **Ensure your working directory** is the project root (`f:/Varia/guidance/`)
+3. **Data paths are relative**: Code uses `examples/data/filename.csv`
+4. **Run code chunks sequentially** - each chunk builds on previous ones
+5. **Choose your language**: Use either R or Python tabs (both produce identical results)
+
+### Troubleshooting
+
+**"File not found" error:**
+- Check working directory is project root
+- Verify data file exists in `examples/data/`
+- Use relative path: `examples/data/filename.csv`
+
+**Package errors:**
+- Install missing packages (see Prerequisites above)
+- Update packages if using older versions
+
+**Code doesn't run:**
+- Run chunks in order (later chunks depend on earlier ones)
+- Check you've loaded required libraries
+- Verify data loaded correctly in first chunk
+
+---
+
+## 📝 Notes
+
+### Data Generation
+- All data is synthetic but realistic
+- Based on actual CQC data patterns
+- Includes realistic data quality issues
+- Preserves statistical properties
+
+### Scenarios
+- Based on State of Care 2024/25
+- Reflect real CQC analytical questions
+- Include regulatory context
+- Show stakeholder communication
+
+### Maintenance
+- Examples will be updated as methods evolve
+- New examples added based on user feedback
+- Code tested with each Quarto book update
+
+---
+
+**Status**: ✅ All 10 examples complete!
+
+**Next Action**: User feedback and refinement

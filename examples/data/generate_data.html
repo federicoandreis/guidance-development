@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Generate Example Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="generate_data_files/libs/clipboard/clipboard.min.js"></script>
+<script src="generate_data_files/libs/quarto-html/quarto.js"></script>
+<script src="generate_data_files/libs/quarto-html/popper.min.js"></script>
+<script src="generate_data_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="generate_data_files/libs/quarto-html/anchor.min.js"></script>
+<link href="generate_data_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="generate_data_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="generate_data_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="generate_data_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="generate_data_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Generate Example Data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate synthetic data for all examples</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create data directory if it doesn't exist</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">"examples/data"</span>)) {</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="st">"examples/data"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 1: GP Access Analysis</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>n_practices <span class="ot">&lt;-</span> <span class="dv">6500</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>gp_data_raw <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">practice_code =</span> <span class="fu">paste0</span>(<span class="fu">sample</span>(LETTERS, n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">sample</span>(LETTERS, n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">sample</span>(LETTERS, n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>, n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>, n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>, n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">practice_name =</span> <span class="fu">paste</span>(<span class="st">"Practice"</span>, <span class="dv">1</span><span class="sc">:</span>n_practices),</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">icb_code =</span> <span class="fu">sample</span>(<span class="fu">paste0</span>(<span class="st">"Q"</span>, <span class="fu">sample</span>(<span class="dv">10</span><span class="sc">:</span><span class="dv">99</span>, <span class="dv">20</span>)), n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">icb_name =</span> <span class="fu">sample</span>(<span class="fu">paste</span>(<span class="st">"NHS"</span>, <span class="fu">c</span>(<span class="st">"Devon"</span>, <span class="st">"Cornwall"</span>, <span class="st">"Somerset"</span>, <span class="st">"Dorset"</span>), <span class="st">"ICB"</span>), </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                   n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">region =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"South West"</span>, <span class="st">"South East"</span>, <span class="st">"London"</span>, <span class="st">"Midlands"</span>, <span class="st">"North East"</span>, </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"North West"</span>, <span class="st">"East"</span>), n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">list_size =</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n_practices, <span class="dv">8000</span>, <span class="dv">4000</span>)),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">survey_responses =</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n_practices, <span class="dv">200</span>, <span class="dv">100</span>)),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">imd_quintile =</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">rural_urban =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Urban"</span>, <span class="st">"Rural"</span>), n_practices, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.3</span>))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>gp_data_raw<span class="sc">$</span>list_size <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">500</span>, <span class="fu">pmin</span>(<span class="dv">25000</span>, gp_data_raw<span class="sc">$</span>list_size))</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>gp_data_raw<span class="sc">$</span>survey_responses <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">30</span>, <span class="fu">pmin</span>(<span class="dv">800</span>, gp_data_raw<span class="sc">$</span>survey_responses))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>base_rate <span class="ot">&lt;-</span> <span class="fl">0.35</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>deprivation_effect <span class="ot">&lt;-</span> (gp_data_raw<span class="sc">$</span>imd_quintile <span class="sc">-</span> <span class="dv">3</span>) <span class="sc">*</span> <span class="sc">-</span><span class="fl">0.02</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>gp_data_raw<span class="sc">$</span>phone_difficult_n <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n_practices, </span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>                                        gp_data_raw<span class="sc">$</span>survey_responses,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">pmax</span>(<span class="fl">0.1</span>, <span class="fu">pmin</span>(<span class="fl">0.6</span>, base_rate <span class="sc">+</span> deprivation_effect <span class="sc">+</span> <span class="fu">rnorm</span>(n_practices, <span class="dv">0</span>, <span class="fl">0.08</span>))))</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>missing_idx <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n_practices, <span class="fu">round</span>(n_practices <span class="sc">*</span> <span class="fl">0.05</span>))</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>gp_data_raw<span class="sc">$</span>phone_difficult_n[missing_idx] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(gp_data_raw, <span class="st">"gp_access_data.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">na =</span> <span class="st">""</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"✓ Generated: gp_access_data.csv</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✓ Generated: gp_access_data.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 2: Care Home Falls</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>baseline_falls <span class="ot">&lt;-</span> <span class="fu">rpois</span>(<span class="dv">12</span>, <span class="at">lambda =</span> <span class="fl">17.5</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>baseline_falls[<span class="dv">8</span>] <span class="ot">&lt;-</span> <span class="dv">26</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>post_falls <span class="ot">&lt;-</span> <span class="fu">rpois</span>(<span class="dv">12</span>, <span class="at">lambda =</span> <span class="dv">13</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>falls_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">month =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"2023-01-01"</span>), <span class="at">by =</span> <span class="st">"month"</span>, <span class="at">length.out =</span> <span class="dv">24</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">falls_count =</span> <span class="fu">c</span>(baseline_falls, post_falls),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">phase =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"Baseline"</span>, <span class="dv">12</span>), <span class="fu">rep</span>(<span class="st">"Post-intervention"</span>, <span class="dv">12</span>))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(falls_data, <span class="st">"falls_data.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"✓ Generated: falls_data.csv</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✓ Generated: falls_data.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 3: Mental Health Wait Times</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n_services <span class="ot">&lt;-</span> <span class="dv">150</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>log_mean <span class="ot">&lt;-</span> <span class="fu">log</span>(<span class="dv">75</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>log_sd <span class="ot">&lt;-</span> <span class="fl">0.4</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>mh_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">service_code =</span> <span class="fu">sprintf</span>(<span class="st">"MHS%03d"</span>, <span class="dv">1</span><span class="sc">:</span>n_services),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">service_name =</span> <span class="fu">paste</span>(<span class="st">"Mental Health Service"</span>, <span class="dv">1</span><span class="sc">:</span>n_services),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">trust_name =</span> <span class="fu">sample</span>(<span class="fu">paste</span>(<span class="st">"NHS Trust"</span>, LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>]), n_services, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">region =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"South West"</span>, <span class="st">"South East"</span>, <span class="st">"London"</span>, <span class="st">"Midlands"</span>, </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"North East"</span>, <span class="st">"North West"</span>, <span class="st">"East"</span>), n_services, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">survey_responses =</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n_services, <span class="dv">150</span>, <span class="dv">50</span>)),</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">deprivation_score =</span> <span class="fu">runif</span>(n_services, <span class="dv">10</span>, <span class="dv">40</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>mh_data<span class="sc">$</span>survey_responses <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">50</span>, <span class="fu">pmin</span>(<span class="dv">300</span>, mh_data<span class="sc">$</span>survey_responses))</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>deprivation_effect <span class="ot">&lt;-</span> (mh_data<span class="sc">$</span>deprivation_score <span class="sc">-</span> <span class="dv">25</span>) <span class="sc">*</span> <span class="fl">0.01</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>mh_data<span class="sc">$</span>wait_time_days <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rlnorm</span>(n_services, </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">meanlog =</span> log_mean <span class="sc">+</span> deprivation_effect, </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">sdlog =</span> log_sd))</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>mh_data<span class="sc">$</span>wait_time_days <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">30</span>, <span class="fu">pmin</span>(<span class="dv">250</span>, mh_data<span class="sc">$</span>wait_time_days))</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mh_data, <span class="st">"mental_health_wait_times.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"✓ Generated: mental_health_wait_times.csv</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✓ Generated: mental_health_wait_times.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 4: Medication Safety</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>n_homes <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>med_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">home_id =</span> <span class="fu">sprintf</span>(<span class="st">"CH%02d"</span>, <span class="dv">1</span><span class="sc">:</span>n_homes),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">home_name =</span> <span class="fu">paste</span>(<span class="st">"Care Home"</span>, LETTERS[<span class="dv">1</span><span class="sc">:</span>n_homes]),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">beds =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n_homes, <span class="dv">20</span>, <span class="dv">80</span>))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>med_data<span class="sc">$</span>incidents_before <span class="ot">&lt;-</span> <span class="fu">round</span>(med_data<span class="sc">$</span>beds <span class="sc">*</span> <span class="fu">runif</span>(n_homes, <span class="fl">0.08</span>, <span class="fl">0.15</span>), <span class="dv">1</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>reduction_pct <span class="ot">&lt;-</span> <span class="fu">runif</span>(n_homes, <span class="fl">0.20</span>, <span class="fl">0.35</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>reduction_pct[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fl">0.65</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>med_data<span class="sc">$</span>incidents_after <span class="ot">&lt;-</span> <span class="fu">round</span>(med_data<span class="sc">$</span>incidents_before <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> reduction_pct), <span class="dv">1</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>med_data<span class="sc">$</span>difference <span class="ot">&lt;-</span> med_data<span class="sc">$</span>incidents_after <span class="sc">-</span> med_data<span class="sc">$</span>incidents_before</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(med_data, <span class="st">"medication_safety_data.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"✓ Generated: medication_safety_data.csv</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✓ Generated: medication_safety_data.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 5: Regional A&amp;E Performance</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>n_trusts_per_ics <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>north_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trust_code =</span> <span class="fu">sprintf</span>(<span class="st">"RN%03d"</span>, <span class="dv">1</span><span class="sc">:</span>n_trusts_per_ics),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">trust_name =</span> <span class="fu">paste</span>(<span class="st">"North Trust"</span>, <span class="dv">1</span><span class="sc">:</span>n_trusts_per_ics),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ics =</span> <span class="st">"North"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">monthly_attendances =</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n_trusts_per_ics, <span class="dv">12000</span>, <span class="dv">5000</span>)),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">deprivation_score =</span> <span class="fu">runif</span>(n_trusts_per_ics, <span class="dv">15</span>, <span class="dv">35</span>),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">beds =</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n_trusts_per_ics, <span class="dv">500</span>, <span class="dv">200</span>))</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>south_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">trust_code =</span> <span class="fu">sprintf</span>(<span class="st">"RS%03d"</span>, <span class="dv">1</span><span class="sc">:</span>n_trusts_per_ics),</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">trust_name =</span> <span class="fu">paste</span>(<span class="st">"South Trust"</span>, <span class="dv">1</span><span class="sc">:</span>n_trusts_per_ics),</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">ics =</span> <span class="st">"South"</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">monthly_attendances =</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n_trusts_per_ics, <span class="dv">12000</span>, <span class="dv">5000</span>)),</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">deprivation_score =</span> <span class="fu">runif</span>(n_trusts_per_ics, <span class="dv">15</span>, <span class="dv">35</span>),</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">beds =</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n_trusts_per_ics, <span class="dv">500</span>, <span class="dv">200</span>))</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>ae_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(north_data, south_data)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>ae_data<span class="sc">$</span>monthly_attendances <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">5000</span>, <span class="fu">pmin</span>(<span class="dv">25000</span>, ae_data<span class="sc">$</span>monthly_attendances))</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>ae_data<span class="sc">$</span>beds <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">200</span>, <span class="fu">pmin</span>(<span class="dv">1000</span>, ae_data<span class="sc">$</span>beds))</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>base_performance <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ae_data<span class="sc">$</span>ics <span class="sc">==</span> <span class="st">"North"</span>, <span class="dv">75</span>, <span class="dv">72</span>)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>deprivation_effect <span class="ot">&lt;-</span> (ae_data<span class="sc">$</span>deprivation_score <span class="sc">-</span> <span class="dv">25</span>) <span class="sc">*</span> <span class="sc">-</span><span class="fl">0.15</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>ae_data<span class="sc">$</span>ae_performance <span class="ot">&lt;-</span> base_performance <span class="sc">+</span> deprivation_effect <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(ae_data), <span class="dv">0</span>, <span class="dv">4</span>)</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>ae_data<span class="sc">$</span>ae_performance <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">60</span>, <span class="fu">pmin</span>(<span class="dv">85</span>, ae_data<span class="sc">$</span>ae_performance))</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(ae_data, <span class="st">"ae_performance_data.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"✓ Generated: ae_performance_data.csv</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✓ Generated: ae_performance_data.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================================</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 6: Ambulance Handover Delays</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================================</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>n_months <span class="ot">&lt;-</span> <span class="dv">18</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate monthly handover delays with increasing trend and winter peaks</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>months <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n_months</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>dates <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"2023-01-01"</span>), <span class="at">by =</span> <span class="st">"month"</span>, <span class="at">length.out =</span> n_months)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Base level with increasing trend</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>base_delays <span class="ot">&lt;-</span> <span class="dv">150</span> <span class="sc">+</span> (months <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">5</span>  <span class="co"># Increasing by ~5 per month</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Add winter peaks (Dec-Feb)</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>month_of_year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(dates, <span class="st">"%m"</span>))</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>winter_effect <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(month_of_year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dv">40</span>, <span class="dv">0</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Add random variation</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>handover_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">month =</span> months,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> dates,</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">delays_over_30min =</span> <span class="fu">round</span>(base_delays <span class="sc">+</span> winter_effect <span class="sc">+</span> <span class="fu">rnorm</span>(n_months, <span class="dv">0</span>, <span class="dv">15</span>))</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Add special causes</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>handover_data<span class="sc">$</span>delays_over_30min[<span class="dv">8</span>] <span class="ot">&lt;-</span> <span class="dv">280</span>  <span class="co"># August: IT system failure</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>handover_data<span class="sc">$</span>delays_over_30min[<span class="dv">15</span>] <span class="ot">&lt;-</span> <span class="dv">310</span>  <span class="co"># December: flu outbreak</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure positive values</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>handover_data<span class="sc">$</span>delays_over_30min <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">100</span>, handover_data<span class="sc">$</span>delays_over_30min)</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(handover_data, <span class="st">"ambulance_handovers.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"✓ Generated: ambulance_handovers.csv</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✓ Generated: ambulance_handovers.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================================</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 7: Infection Rates in Care Homes</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================================</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>n_homes <span class="ot">&lt;-</span> <span class="dv">80</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>infection_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">home_id =</span> <span class="fu">sprintf</span>(<span class="st">"CH%03d"</span>, <span class="dv">1</span><span class="sc">:</span>n_homes),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">home_name =</span> <span class="fu">paste</span>(<span class="st">"Care Home"</span>, <span class="dv">1</span><span class="sc">:</span>n_homes),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">residents =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n_homes, <span class="dv">20</span>, <span class="dv">100</span>)),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">staff_ratio =</span> <span class="fu">runif</span>(n_homes, <span class="fl">0.3</span>, <span class="fl">0.7</span>),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">cqc_rating =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Outstanding"</span>, <span class="st">"Good"</span>, <span class="st">"Requires Improvement"</span>, <span class="st">"Inadequate"</span>), </span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                     n_homes, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.70</span>, <span class="fl">0.20</span>, <span class="fl">0.05</span>))</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate infection counts (Poisson-like, related to size and quality)</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>base_rate <span class="ot">&lt;-</span> <span class="fl">0.03</span>  <span class="co"># Base infection rate per resident</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>quality_effect <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(infection_data<span class="sc">$</span>cqc_rating <span class="sc">==</span> <span class="st">"Outstanding"</span>, <span class="sc">-</span><span class="fl">0.01</span>,</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">ifelse</span>(infection_data<span class="sc">$</span>cqc_rating <span class="sc">==</span> <span class="st">"Good"</span>, <span class="dv">0</span>,</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">ifelse</span>(infection_data<span class="sc">$</span>cqc_rating <span class="sc">==</span> <span class="st">"Requires Improvement"</span>, <span class="fl">0.01</span>, <span class="fl">0.02</span>)))</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>infection_data<span class="sc">$</span>infections <span class="ot">&lt;-</span> <span class="fu">rpois</span>(n_homes, </span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>                                   infection_data<span class="sc">$</span>residents <span class="sc">*</span> (base_rate <span class="sc">+</span> quality_effect))</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate rate per 100 residents</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>infection_data<span class="sc">$</span>infection_rate <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> infection_data<span class="sc">$</span>infections <span class="sc">/</span> infection_data<span class="sc">$</span>residents, <span class="dv">2</span>)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(infection_data, <span class="st">"infection_rates.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"✓ Generated: infection_rates.csv</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✓ Generated: infection_rates.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================================</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Example 8: DoLS Application Trends</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================================</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>n_las <span class="ot">&lt;-</span> <span class="dv">150</span>  <span class="co"># Local authorities</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>n_quarters <span class="ot">&lt;-</span> <span class="dv">12</span>  <span class="co"># 3 years of quarterly data</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create panel data</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>dols_data <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">la_code =</span> <span class="fu">sprintf</span>(<span class="st">"LA%03d"</span>, <span class="dv">1</span><span class="sc">:</span>n_las),</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">quarter =</span> <span class="dv">1</span><span class="sc">:</span>n_quarters</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Add LA characteristics</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>la_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">la_code =</span> <span class="fu">sprintf</span>(<span class="st">"LA%03d"</span>, <span class="dv">1</span><span class="sc">:</span>n_las),</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">la_name =</span> <span class="fu">paste</span>(<span class="st">"Local Authority"</span>, <span class="dv">1</span><span class="sc">:</span>n_las),</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">population_65plus =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n_las, <span class="dv">20000</span>, <span class="dv">150000</span>)),</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">region =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"North East"</span>, <span class="st">"North West"</span>, <span class="st">"Yorkshire"</span>, <span class="st">"East Midlands"</span>, </span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"West Midlands"</span>, <span class="st">"East"</span>, <span class="st">"London"</span>, <span class="st">"South East"</span>, <span class="st">"South West"</span>), </span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>                 n_las, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">deprivation_score =</span> <span class="fu">runif</span>(n_las, <span class="dv">10</span>, <span class="dv">40</span>)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>dols_data <span class="ot">&lt;-</span> <span class="fu">merge</span>(dols_data, la_info, <span class="at">by =</span> <span class="st">"la_code"</span>)</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate DoLS applications with trend and variation</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Policy change at quarter 7 causes spike</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>base_rate <span class="ot">&lt;-</span> <span class="dv">50</span>  <span class="co"># Applications per 10,000 population 65+</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>trend <span class="ot">&lt;-</span> (dols_data<span class="sc">$</span>quarter <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">2</span>  <span class="co"># Increasing trend</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>policy_spike <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dols_data<span class="sc">$</span>quarter <span class="sc">&gt;=</span> <span class="dv">7</span>, <span class="dv">30</span>, <span class="dv">0</span>)  <span class="co"># Policy change effect</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>dols_data<span class="sc">$</span>applications <span class="ot">&lt;-</span> <span class="fu">round</span>(</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  (dols_data<span class="sc">$</span>population_65plus <span class="sc">/</span> <span class="dv">10000</span>) <span class="sc">*</span> </span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>  (base_rate <span class="sc">+</span> trend <span class="sc">+</span> policy_spike <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(dols_data), <span class="dv">0</span>, <span class="dv">10</span>))</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure positive</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>dols_data<span class="sc">$</span>applications <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">10</span>, dols_data<span class="sc">$</span>applications)</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate rate per 10,000 population 65+</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>dols_data<span class="sc">$</span>rate_per_10k <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="dv">10000</span> <span class="sc">*</span> dols_data<span class="sc">$</span>applications <span class="sc">/</span> dols_data<span class="sc">$</span>population_65plus, <span class="dv">1</span>)</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Add date (add quarters manually)</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>dols_data<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2022-01-01"</span>) <span class="sc">+</span> (dols_data<span class="sc">$</span>quarter <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">90</span>  <span class="co"># Approximately 3 months</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort</span></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>dols_data <span class="ot">&lt;-</span> dols_data[<span class="fu">order</span>(dols_data<span class="sc">$</span>la_code, dols_data<span class="sc">$</span>quarter), ]</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(dols_data, <span class="st">"dols_applications.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"✓ Generated: dols_applications.csv</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✓ Generated: dols_applications.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">✅ All example datasets generated successfully!</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+✅ All example datasets generated successfully!</code></pre>
+</div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

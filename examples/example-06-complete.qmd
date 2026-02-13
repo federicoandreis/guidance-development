@@ -1,0 +1,442 @@
+---
+title: "Example 6: Ambulance Handover Delays"
+subtitle: "SPC with Trend Analysis and Seasonality"
+number-sections: false
+---
+
+```{r}
+#| echo: false
+#| message: false
+library(reticulate)
+use_python("C:/Users/fede/anaconda3/python.exe")
+```
+
+## Scenario Overview
+
+**Method**: Statistical Process Control (SPC) (@sec-spc-basics)  
+**Complexity**: Medium-High  
+**Time to complete**: 2-3 hours  
+**Status**: ✅ Complete
+
+::: {.callout-note icon=false}
+## 📖 Method Reference
+For detailed explanation of SPC methodology, control charts with trends, and step-by-step guidance, see @sec-spc-basics.
+:::
+
+---
+
+## 📋 Scenario
+
+A hospital trust is monitoring ambulance handover delays (>30 minutes) over 18 months. National guidance states handovers should occur within 15 minutes, with 30 minutes as the maximum acceptable threshold.
+
+**Analytical Question**: Are handover delays increasing over time? Are there special causes requiring investigation?
+
+**Context**: This is operational performance monitoring with clear system pressures. The trust needs to understand whether delays are part of common cause variation or indicate special causes requiring intervention.
+
+---
+
+## 🎯 Learning Objectives
+
+By completing this example, you will learn how to:
+
+1. **Apply SPC to trending data** with increasing baseline
+2. **Identify and handle seasonality** (winter pressures)
+3. **Detect special causes** in the presence of trends
+4. **Distinguish trends from shifts** in process performance
+5. **Use trend rules** in SPC (Rule 5: runs above/below centre)
+6. **Interpret SPC in operational context** (system capacity issues)
+7. **Communicate findings** about deteriorating performance
+8. **Document decisions** about when to recalculate limits
+
+---
+
+## 📊 Dataset Description
+
+### Synthetic Data: `data/ambulance_handovers.csv`
+
+**18 months** of handover delay data:
+
+| Variable | Description | Type | Notes |
+|----------|-------------|------|-------|
+| `month` | Month number | Integer | 1-18 |
+| `date` | Month start date | Date | Jan 2023 - Jun 2024 |
+| `delays_over_30min` | Number of handovers >30 min | Integer | 100-310 per month |
+
+### Data Characteristics
+
+**Realistic patterns**:
+- Increasing trend (~5 delays/month increase)
+- Winter peaks (Dec-Feb): +40 delays
+- Special causes: IT failure (Month 8), flu outbreak (Month 15)
+- Natural variation throughout
+
+**Data generation**: Synthetic data generated using R (`set.seed(42)` for reproducibility). Both R and Python load the same CSV file, ensuring identical results.
+
+---
+
+## Step 1: Data Preparation
+
+**Purpose**: Load and visualize the time series to understand patterns.
+
+---
+
+### Import Data
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex6-import-r}
+#| message: false
+#| warning: false
+
+library(ggplot2)
+
+# Import handover data
+handover_data <- read.csv("data/ambulance_handovers.csv", stringsAsFactors = FALSE)
+handover_data$date <- as.Date(handover_data$date)
+
+# Display data
+print(handover_data)
+
+# Summary
+cat("\nMean delays:", round(mean(handover_data$delays_over_30min), 1), "\n")
+cat("Range:", min(handover_data$delays_over_30min), "to", max(handover_data$delays_over_30min), "\n")
+```
+
+### Python
+
+```{python ex6-import-py}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Import handover data
+handover_data = pd.read_csv("data/ambulance_handovers.csv")
+handover_data['date'] = pd.to_datetime(handover_data['date'])
+
+# Display data
+print(handover_data)
+
+# Summary
+print(f"\nMean delays: {handover_data['delays_over_30min'].mean():.1f}")
+print(f"Range: {handover_data['delays_over_30min'].min()} to {handover_data['delays_over_30min'].max()}")
+```
+
+:::
+
+**Initial observations**:
+- 18 months of data
+- Delays range from ~140 to ~310 per month
+- Visual inspection needed to identify patterns
+
+---
+
+## Step 2: Visualize Time Series
+
+**Purpose**: Identify trends, seasonality, and potential special causes.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex6-plot-ts-r}
+ggplot(handover_data, aes(x = month, y = delays_over_30min)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  geom_point(size = 3, color = "steelblue") +
+  scale_x_continuous(breaks = 1:18) +
+  labs(
+    title = "Ambulance Handover Delays Over Time",
+    subtitle = "Number of handovers >30 minutes per month",
+    x = "Month",
+    y = "Delays >30 min"
+  ) +
+  theme_minimal()
+```
+
+### Python
+
+```{python ex6-plot-ts-py}
+plt.figure(figsize=(12, 6))
+plt.plot(handover_data['month'], handover_data['delays_over_30min'], 
+         marker='o', linewidth=2, markersize=8, color='steelblue')
+plt.xlabel('Month')
+plt.ylabel('Delays >30 min')
+plt.title('Ambulance Handover Delays Over Time\nNumber of handovers >30 minutes per month')
+plt.xticks(range(1, 19))
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Observations**:
+- Clear increasing trend over 18 months
+- Peaks visible at months 8 and 15
+- Possible seasonal pattern (winter months)
+- Baseline appears unstable (not suitable for standard SPC)
+
+---
+
+## Step 3: Calculate Control Limits
+
+**Purpose**: Apply SPC despite trending data to identify special causes.
+
+**Note**: With trending data, control limits may not be appropriate for the full series. We calculate them to demonstrate the issue.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex6-calc-limits-r}
+# Calculate centre line (mean)
+centre_line <- mean(handover_data$delays_over_30min)
+
+# Calculate moving range
+mr <- abs(diff(handover_data$delays_over_30min))
+mean_mr <- mean(mr)
+
+# Calculate control limits
+ucl <- centre_line + 2.66 * mean_mr
+lcl <- centre_line - 2.66 * mean_mr
+
+cat("Control Limits (full series):\n")
+cat("  Centre Line:", round(centre_line, 1), "\n")
+cat("  UCL:", round(ucl, 1), "\n")
+cat("  LCL:", round(lcl, 1), "\n")
+
+# Identify points outside limits
+handover_data$outside_limits <- handover_data$delays_over_30min > ucl | 
+                                 handover_data$delays_over_30min < lcl
+
+cat("\nPoints outside limits:\n")
+print(handover_data[handover_data$outside_limits, c("month", "date", "delays_over_30min")])
+```
+
+### Python
+
+```{python ex6-calc-limits-py}
+# Calculate centre line
+centre_line = handover_data['delays_over_30min'].mean()
+
+# Calculate moving range
+mr = handover_data['delays_over_30min'].diff().abs().dropna()
+mean_mr = mr.mean()
+
+# Calculate control limits
+ucl = centre_line + 2.66 * mean_mr
+lcl = centre_line - 2.66 * mean_mr
+
+print("Control Limits (full series):")
+print(f"  Centre Line: {centre_line:.1f}")
+print(f"  UCL: {ucl:.1f}")
+print(f"  LCL: {lcl:.1f}")
+
+# Identify points outside limits
+handover_data['outside_limits'] = (handover_data['delays_over_30min'] > ucl) | \
+                                   (handover_data['delays_over_30min'] < lcl)
+
+print("\nPoints outside limits:")
+print(handover_data[handover_data['outside_limits']][['month', 'date', 'delays_over_30min']])
+```
+
+:::
+
+**Finding**: Months 8 and 15 are above UCL - special causes detected.
+
+---
+
+## Step 4: Create SPC Chart
+
+**Purpose**: Visualize data with control limits and special causes.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex6-spc-chart-r}
+#| fig-width: 12
+#| fig-height: 7
+
+ggplot(handover_data, aes(x = month, y = delays_over_30min)) +
+  geom_hline(yintercept = centre_line, color = "blue", linewidth = 1, linetype = "solid") +
+  geom_hline(yintercept = ucl, color = "red", linewidth = 1, linetype = "dashed") +
+  geom_hline(yintercept = lcl, color = "red", linewidth = 1, linetype = "dashed") +
+  geom_line(color = "gray50", linewidth = 0.5) +
+  geom_point(aes(color = outside_limits), size = 4) +
+  scale_color_manual(values = c("FALSE" = "steelblue", "TRUE" = "red"),
+                     labels = c("Within limits", "Outside limits")) +
+  scale_x_continuous(breaks = 1:18) +
+  annotate("text", x = 8, y = handover_data$delays_over_30min[8] + 15, 
+           label = "IT failure", size = 3) +
+  annotate("text", x = 15, y = handover_data$delays_over_30min[15] + 15, 
+           label = "Flu outbreak", size = 3) +
+  labs(
+    title = "SPC Chart: Ambulance Handover Delays",
+    subtitle = "Note: Trending data makes standard SPC limits less meaningful",
+    x = "Month",
+    y = "Delays >30 min",
+    color = "Point Status"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+### Python
+
+```{python ex6-spc-chart-py}
+plt.figure(figsize=(14, 7))
+
+# Plot centre line and limits
+plt.axhline(y=centre_line, color='blue', linewidth=2, label='Centre Line')
+plt.axhline(y=ucl, color='red', linewidth=2, linestyle='--', label='UCL')
+plt.axhline(y=lcl, color='red', linewidth=2, linestyle='--', label='LCL')
+
+# Plot data
+normal_points = handover_data[~handover_data['outside_limits']]
+special_points = handover_data[handover_data['outside_limits']]
+
+plt.plot(handover_data['month'], handover_data['delays_over_30min'], 
+         color='gray', linewidth=1, alpha=0.5)
+plt.scatter(normal_points['month'], normal_points['delays_over_30min'], 
+           color='steelblue', s=100, label='Within limits', zorder=3)
+plt.scatter(special_points['month'], special_points['delays_over_30min'], 
+           color='red', s=100, label='Outside limits', zorder=3)
+
+# Annotations
+plt.annotate('IT failure', xy=(8, handover_data.loc[7, 'delays_over_30min']), 
+            xytext=(8, handover_data.loc[7, 'delays_over_30min'] + 20),
+            ha='center', fontsize=9)
+plt.annotate('Flu outbreak', xy=(15, handover_data.loc[14, 'delays_over_30min']), 
+            xytext=(15, handover_data.loc[14, 'delays_over_30min'] + 20),
+            ha='center', fontsize=9)
+
+plt.xlabel('Month')
+plt.ylabel('Delays >30 min')
+plt.title('SPC Chart: Ambulance Handover Delays\nNote: Trending data makes standard SPC limits less meaningful')
+plt.xticks(range(1, 19))
+plt.legend(loc='upper left')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+---
+
+## Step 5: Assess Trend
+
+**Purpose**: Quantify the increasing trend using regression.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex6-trend-r}
+# Linear regression
+trend_model <- lm(delays_over_30min ~ month, data = handover_data)
+summary(trend_model)
+
+# Extract trend
+slope <- coef(trend_model)[2]
+intercept <- coef(trend_model)[1]
+
+cat("\nTrend Analysis:\n")
+cat("  Slope:", round(slope, 2), "delays per month\n")
+cat("  Intercept:", round(intercept, 1), "\n")
+cat("  R-squared:", round(summary(trend_model)$r.squared, 3), "\n")
+
+# Predict values
+handover_data$predicted <- predict(trend_model)
+```
+
+### Python
+
+```{python ex6-trend-py}
+# Linear regression
+from scipy.stats import linregress
+
+slope, intercept, r_value, p_value, std_err = linregress(
+    handover_data['month'], 
+    handover_data['delays_over_30min']
+)
+
+print("\nTrend Analysis:")
+print(f"  Slope: {slope:.2f} delays per month")
+print(f"  Intercept: {intercept:.1f}")
+print(f"  R-squared: {r_value**2:.3f}")
+print(f"  p-value: {p_value:.4f}")
+
+# Predict values
+handover_data['predicted'] = intercept + slope * handover_data['month']
+```
+
+:::
+
+**Finding**: Significant increasing trend of ~5 delays per month (p < 0.001). This confirms the process is not stable.
+
+---
+
+## Step 6: Conclusion and Recommendations
+
+**Statistical Conclusion**:
+- Significant increasing trend in handover delays
+- Two special causes identified (Months 8 and 15)
+- Process is not in statistical control
+- Standard SPC limits not appropriate for trending data
+
+**Operational Interpretation**:
+- System capacity deteriorating over time
+- Winter pressures compound the baseline trend
+- Special causes (IT failure, flu outbreak) create additional spikes
+- Trend suggests systemic issues, not just variation
+
+**Recommendations**:
+
+1. **Immediate actions**:
+   - Investigate root causes of increasing trend
+   - Review capacity planning and staffing levels
+   - Prepare for winter pressures (seasonal peaks)
+
+2. **Monitoring approach**:
+   - Use trend analysis rather than standard SPC
+   - Set target trajectory for improvement
+   - Monitor deviations from expected trend
+   - Recalculate limits if trend stabilizes
+
+3. **System improvements**:
+   - Address underlying capacity constraints
+   - Improve handover processes
+   - Enhance winter resilience planning
+   - Implement early warning systems
+
+**Limitations**:
+- Only 18 months of data (limited for seasonal analysis)
+- Single trust (generalizability unknown)
+- External factors (e.g., regional demand) not captured
+- Trend may not be linear long-term
+
+---
+
+## Summary
+
+This example demonstrates SPC application to **trending data**, showing:
+
+✅ **Trend detection** using regression analysis  
+✅ **Special cause identification** despite trend  
+✅ **Limitations of standard SPC** with unstable processes  
+✅ **Operational context** interpretation (capacity issues)  
+✅ **Alternative monitoring approaches** for trending data
+
+**Key Lesson**: When processes show sustained trends, standard SPC control limits become less meaningful. Focus on trend analysis and investigate root causes of deterioration.

@@ -1,0 +1,678 @@
+---
+title: "Example 2: Care Home Falls Monitoring"
+subtitle: "Statistical Process Control with Intervention"
+number-sections: false
+---
+
+```{r}
+#| include: false
+# Setup Python environment
+library(reticulate)
+use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
+```
+
+## Scenario Overview
+
+**Method**: Statistical Process Control (SPC) (@sec-spc-basics)  
+**Complexity**: Medium  
+**Time to complete**: 2-3 hours  
+**Status**: ✅ Complete
+
+::: {.callout-note icon=false}
+## 📖 Method Reference
+For detailed explanation of SPC methodology, control charts, and step-by-step guidance, see @sec-spc-basics.
+:::
+
+---
+
+## 📋 Scenario
+
+You are a CQC analyst monitoring falls rates at Oakwood Care Home over 24 months. A falls prevention program was implemented in January 2024 (Month 13). Your task is to determine whether the intervention reduced falls rates and whether the improvement is sustained.
+
+**Analytical Question**: Did the falls prevention program reduce falls rates at Oakwood Care Home?
+
+**Context**: Falls are a key quality indicator for care homes. Oakwood Care Home has been tracking monthly falls for 2 years and implemented a comprehensive falls prevention program including staff training, environmental modifications, and enhanced monitoring.
+
+---
+
+## 🎯 Learning Objectives
+
+By working through this example, you will learn to:
+
+1. **Set up control charts** from scratch using I-chart methodology
+2. **Calculate control limits** correctly (centre line, UCL, LCL)
+3. **Identify special causes** and decide when to exclude them
+4. **Detect intervention effects** using SPC detection rules
+5. **Apply detection rules** (Rule 1: outside limits, Rule 4: runs)
+6. **Assess process stability** before and after intervention
+7. **Evaluate sustainability** of improvements
+8. **Communicate SPC results** to non-technical stakeholders
+
+---
+
+## 📊 Dataset Description
+
+### Synthetic Data: `data/falls_data.csv`
+
+**24 months** of falls data with the following variables:
+
+| Variable | Description | Type | Notes |
+|----------|-------------|------|-------|
+| `month` | Month number | Integer | 1-24 |
+| `date` | Month start date | Date | Jan 2023 - Dec 2024 |
+| `falls_count` | Number of falls | Integer | 8-26 per month |
+| `phase` | Analysis phase | String | Baseline / Post-intervention |
+
+### Data Characteristics
+
+**Realistic patterns included**:
+- Baseline mean: ~17.6 falls/month (excluding Month 8)
+- Special cause event: Month 8 (flu outbreak, 26 falls)
+- Intervention point: Month 13
+- Post-intervention mean: ~10.7 falls/month (~40% reduction)
+- Natural variation throughout
+
+**Data generation**: Synthetic data generated using R (`set.seed(42)` for reproducibility). The data includes a special cause event and demonstrates a sustained intervention effect. Both R and Python load the same CSV file, ensuring identical results.
+
+---
+
+## Step 1: Data Preparation
+
+**Purpose**: Load and prepare the falls data for SPC analysis.
+
+---
+
+### Setup
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-setup-r}
+#| message: false
+#| warning: false
+
+library(ggplot2)
+
+# Import falls data
+falls_data <- read.csv("data/falls_data.csv", stringsAsFactors = FALSE)
+
+# Convert date column to Date type
+falls_data$date <- as.Date(falls_data$date)
+
+# Display first few rows
+head(falls_data)
+```
+
+### Python
+
+```{python ex2-setup-py}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Import falls data
+falls_data = pd.read_csv("data/falls_data.csv")
+
+# Convert date column to datetime
+falls_data['date'] = pd.to_datetime(falls_data['date'])
+
+# Display first few rows
+print(falls_data.head())
+```
+
+:::
+
+---
+
+### Visualize Time Series
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-plot-ts-r}
+#| fig-width: 14
+#| fig-height: 8
+
+ggplot(falls_data, aes(x = month, y = falls_count)) +
+  geom_line(color = "steelblue", size = 1) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_vline(xintercept = 12.5, color = "purple", linetype = "dashed", size = 1) +
+  annotate("text", x = 12.5, y = max(falls_data$falls_count), 
+           label = "Intervention", angle = 90, hjust = -0.1, color = "purple") +
+  scale_x_continuous(breaks = seq(0, 24, 3)) +
+  labs(
+    title = "Monthly Falls Count: Oakwood Care Home",
+    subtitle = "24 months (Jan 2023 - Dec 2024)",
+    x = "Month",
+    y = "Falls Count"
+  ) +
+  theme_minimal()
+```
+
+### Python
+
+```{python ex2-plot-ts-py}
+
+plt.figure(figsize=(14, 8))
+plt.plot(falls_data['month'], falls_data['falls_count'], '-o', color='steelblue', linewidth=2, markersize=8)
+plt.axvline(12.5, color='purple', linestyle='--', linewidth=2)
+plt.text(12.5, falls_data['falls_count'].max(), 'Intervention', rotation=90, ha='right', va='top', color='purple')
+plt.xlabel('Month')
+plt.ylabel('Falls Count')
+plt.title('Monthly Falls Count: Oakwood Care Home\n24 months (Jan 2023 - Dec 2024)')
+plt.xticks(range(0, 25, 3))
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Observations**:
+- Baseline period (Months 1-12) shows variation around 17-18 falls/month
+- Month 8 shows spike (26 falls) - potential special cause
+- Post-intervention (Months 13-24) appears lower
+
+---
+
+## Step 2: Baseline SPC
+
+**Purpose**: Establish baseline control limits and assess process stability.
+
+---
+
+### Calculate Control Limits (Including All Data)
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-calc-limits-all-r}
+# Baseline data (Months 1-12)
+baseline_all <- falls_data[falls_data$month <= 12, ]
+
+# Calculate centre line (mean)
+centre_line_all <- mean(baseline_all$falls_count)
+
+# Calculate moving range
+mr <- abs(diff(baseline_all$falls_count))
+mean_mr <- mean(mr)
+
+# Calculate control limits (±3σ)
+ucl_all <- centre_line_all + 2.66 * mean_mr
+lcl_all <- centre_line_all - 2.66 * mean_mr
+
+cat("Baseline Control Limits (including all data):\n")
+cat("  Centre Line:", round(centre_line_all, 2), "\n")
+cat("  UCL:", round(ucl_all, 2), "\n")
+cat("  LCL:", round(lcl_all, 2), "\n")
+```
+
+### Python
+
+```{python ex2-calc-limits-all-py}
+
+# Baseline data
+baseline_all = falls_data[falls_data['month'] <= 12]
+
+# Calculate centre line
+centre_line_all = baseline_all['falls_count'].mean()
+
+# Calculate moving range
+mr = baseline_all['falls_count'].diff().abs().dropna()
+mean_mr = mr.mean()
+
+# Calculate control limits
+ucl_all = centre_line_all + 2.66 * mean_mr
+lcl_all = centre_line_all - 2.66 * mean_mr
+
+print("Baseline Control Limits (including all data):")
+print(f"  Centre Line: {centre_line_all:.2f}")
+print(f"  UCL: {ucl_all:.2f}")
+print(f"  LCL: {lcl_all:.2f}")
+```
+
+:::
+
+---
+
+### Identify Special Causes
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-identify-special-r}
+# Check for points outside limits
+baseline_all$outside_limits <- baseline_all$falls_count > ucl_all | baseline_all$falls_count < lcl_all
+
+# Display special causes
+special_causes <- baseline_all[baseline_all$outside_limits, c("month", "date", "falls_count")]
+print(special_causes)
+```
+
+### Python
+
+```{python ex2-identify-special-py}
+
+# Check for points outside limits
+baseline_all['outside_limits'] = (baseline_all['falls_count'] > ucl_all) | (baseline_all['falls_count'] < lcl_all)
+
+# Display special causes
+special_causes = baseline_all[baseline_all['outside_limits']][['month', 'date', 'falls_count']]
+print(special_causes)
+```
+
+:::
+
+**Finding**: No points outside control limits when calculated with all baseline data. However, Month 8 (26 falls) shows a notable spike and is a documented special cause (flu outbreak).
+
+**Decision**: Exclude Month 8 from control limit calculation to establish limits based on normal process variation only.
+
+---
+
+### Recalculate Control Limits (Excluding Month 8)
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-calc-limits-excl-r}
+# Baseline excluding Month 8
+baseline_clean <- falls_data[falls_data$month <= 12 & falls_data$month != 8, ]
+
+# Recalculate
+centre_line <- mean(baseline_clean$falls_count)
+mr_clean <- abs(diff(baseline_clean$falls_count))
+mean_mr_clean <- mean(mr_clean)
+ucl <- centre_line + 2.66 * mean_mr_clean
+lcl <- centre_line - 2.66 * mean_mr_clean
+
+cat("Final Baseline Control Limits (excluding Month 8):\n")
+cat("  Centre Line:", round(centre_line, 2), "\n")
+cat("  UCL:", round(ucl, 2), "\n")
+cat("  LCL:", round(lcl, 2), "\n")
+
+# Baseline parameters calculated
+baseline_params <- data.frame(
+  centre_line = centre_line,
+  ucl = ucl,
+  lcl = lcl
+)
+```
+
+### Python
+
+```{python ex2-calc-limits-excl-py}
+
+# Baseline excluding Month 8
+baseline_clean = falls_data[(falls_data['month'] <= 12) & (falls_data['month'] != 8)]
+
+# Recalculate
+centre_line = baseline_clean['falls_count'].mean()
+mr_clean = baseline_clean['falls_count'].diff().abs().dropna()
+mean_mr_clean = mr_clean.mean()
+ucl = centre_line + 2.66 * mean_mr_clean
+lcl = centre_line - 2.66 * mean_mr_clean
+
+print("Final Baseline Control Limits (excluding Month 8):")
+print(f"  Centre Line: {centre_line:.2f}")
+print(f"  UCL: {ucl:.2f}")
+print(f"  LCL: {lcl:.2f}")
+
+# Baseline parameters calculated
+baseline_params = pd.DataFrame({
+    'centre_line': [centre_line],
+    'ucl': [ucl],
+    'lcl': [lcl]
+})
+```
+
+:::
+
+---
+
+### Plot Baseline Control Chart
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-plot-baseline-r}
+#| fig-width: 14
+#| fig-height: 8
+
+baseline_all$point_type <- ifelse(baseline_all$month == 8, "Special Cause", "Regular")
+
+ggplot(baseline_all, aes(x = month, y = falls_count)) +
+  geom_line(color = "gray50", size = 1) +
+  geom_point(aes(color = point_type, size = point_type)) +
+  scale_color_manual(values = c("Regular" = "steelblue", "Special Cause" = "red")) +
+  scale_size_manual(values = c("Regular" = 3, "Special Cause" = 5)) +
+  geom_hline(yintercept = centre_line, color = "blue", size = 1) +
+  geom_hline(yintercept = ucl, color = "red", linetype = "dashed", size = 1) +
+  geom_hline(yintercept = lcl, color = "red", linetype = "dashed", size = 1) +
+  annotate("text", x = 2, y = centre_line, label = paste("CL =", round(centre_line, 1)), 
+           hjust = 0, vjust = -0.5, color = "blue") +
+  annotate("text", x = 2, y = ucl, label = paste("UCL =", round(ucl, 1)), 
+           hjust = 0, vjust = -0.5, color = "red") +
+  annotate("text", x = 2, y = lcl, label = paste("LCL =", round(lcl, 1)), 
+           hjust = 0, vjust = 1.5, color = "red") +
+  scale_x_continuous(breaks = seq(1, 12, 1)) +
+  labs(
+    title = "Baseline Control Chart (Months 1-12)",
+    subtitle = "Control limits calculated excluding Month 8 special cause",
+    x = "Month",
+    y = "Falls Count",
+    color = "Point Type"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+### Python
+
+```{python ex2-plot-baseline-py}
+
+plt.figure(figsize=(14, 8))
+
+# Plot data
+regular = baseline_all[baseline_all['month'] != 8]
+special = baseline_all[baseline_all['month'] == 8]
+
+plt.plot(baseline_all['month'], baseline_all['falls_count'], '-', color='gray', linewidth=1, alpha=0.5)
+plt.plot(regular['month'], regular['falls_count'], 'o', color='steelblue', markersize=8, label='Regular')
+plt.plot(special['month'], special['falls_count'], 'o', color='red', markersize=12, label='Special Cause')
+
+# Control limits
+plt.axhline(centre_line, color='blue', linewidth=2, label=f'CL = {centre_line:.1f}')
+plt.axhline(ucl, color='red', linestyle='--', linewidth=2, label=f'UCL = {ucl:.1f}')
+plt.axhline(lcl, color='red', linestyle='--', linewidth=2, label=f'LCL = {lcl:.1f}')
+
+plt.xlabel('Month')
+plt.ylabel('Falls Count')
+plt.title('Baseline Control Chart (Months 1-12)\nControl limits calculated excluding Month 8 special cause')
+plt.xticks(range(1, 13))
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Assessment**: Baseline is stable (excluding Month 8 special cause). Ready to extend limits to post-intervention period.
+
+---
+
+## Step 3: Intervention Analysis
+
+**Purpose**: Determine if the falls prevention program reduced falls rates.
+
+---
+
+### Full Control Chart with Intervention
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-full-chart-r}
+#| fig-width: 14
+#| fig-height: 8
+
+falls_data$point_type <- "Regular"
+falls_data$point_type[falls_data$month == 8] <- "Special Cause"
+falls_data$point_type[falls_data$month >= 13] <- "Post-Intervention"
+
+ggplot(falls_data, aes(x = month, y = falls_count)) +
+  geom_line(color = "gray50", size = 1) +
+  geom_point(aes(color = point_type, size = point_type)) +
+  scale_color_manual(values = c("Regular" = "steelblue", 
+                                 "Special Cause" = "red",
+                                 "Post-Intervention" = "darkgreen")) +
+  scale_size_manual(values = c("Regular" = 3, "Special Cause" = 5, "Post-Intervention" = 3)) +
+  geom_hline(yintercept = centre_line, color = "blue", size = 1) +
+  geom_hline(yintercept = ucl, color = "red", linetype = "dashed", size = 1) +
+  geom_hline(yintercept = lcl, color = "red", linetype = "dashed", size = 1) +
+  geom_vline(xintercept = 12.5, color = "purple", linetype = "solid", size = 1.5) +
+  annotate("text", x = 12.5, y = max(falls_data$falls_count), 
+           label = "Intervention Start", angle = 90, hjust = -0.1, 
+           color = "purple", fontface = "bold") +
+  scale_x_continuous(breaks = seq(0, 24, 3)) +
+  labs(
+    title = "Full Control Chart: Baseline and Post-Intervention",
+    subtitle = "Baseline limits extended to post-intervention period",
+    x = "Month",
+    y = "Falls Count",
+    color = "Point Type"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+### Python
+
+```{python ex2-full-chart-py}
+
+plt.figure(figsize=(14, 8))
+
+baseline = falls_data[falls_data['month'] <= 12]
+post = falls_data[falls_data['month'] >= 13]
+special = falls_data[falls_data['month'] == 8]
+
+plt.plot(falls_data['month'], falls_data['falls_count'], '-', color='gray', linewidth=1, alpha=0.5)
+plt.plot(baseline[baseline['month'] != 8]['month'], baseline[baseline['month'] != 8]['falls_count'], 
+         'o', color='steelblue', markersize=8, label='Baseline')
+plt.plot(special['month'], special['falls_count'], 'o', color='red', markersize=12, label='Special Cause')
+plt.plot(post['month'], post['falls_count'], 'o', color='darkgreen', markersize=8, label='Post-Intervention')
+
+plt.axhline(centre_line, color='blue', linewidth=2)
+plt.axhline(ucl, color='red', linestyle='--', linewidth=2)
+plt.axhline(lcl, color='red', linestyle='--', linewidth=2)
+plt.axvline(12.5, color='purple', linestyle='-', linewidth=2)
+
+plt.xlabel('Month')
+plt.ylabel('Falls Count')
+plt.title('Full Control Chart: Baseline and Post-Intervention\nBaseline limits extended to post-intervention period')
+plt.xticks(range(0, 25, 3))
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+---
+
+### Detect Points Outside Limits
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-detect-outside-r}
+post_intervention <- falls_data[falls_data$month >= 13, ]
+
+outside_lcl <- post_intervention[post_intervention$falls_count < lcl, ]
+
+cat("Post-Intervention Points Below LCL (indicating improvement):\n")
+print(outside_lcl[, c("month", "date", "falls_count")])
+cat("\nTotal:", nrow(outside_lcl), "of", nrow(post_intervention), "months\n")
+```
+
+### Python
+
+```{python ex2-detect-outside-py}
+
+post_intervention = falls_data[falls_data['month'] >= 13]
+
+outside_lcl = post_intervention[post_intervention['falls_count'] < lcl]
+
+print("Post-Intervention Points Below LCL (indicating improvement):")
+print(outside_lcl[['month', 'date', 'falls_count']])
+print(f"\nTotal: {len(outside_lcl)} of {len(post_intervention)} months")
+```
+
+:::
+
+---
+
+### Apply Detection Rule 4
+
+**Rule 4**: 8+ consecutive points one side of centre line indicates process shift.
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-rule4-r}
+post_intervention$below_centre <- post_intervention$falls_count < centre_line
+
+cat("Rule 4: 8+ consecutive points one side of centre line\n\n")
+cat("Post-intervention points below baseline centre line:\n")
+cat("  Total:", sum(post_intervention$below_centre), "of", nrow(post_intervention), "\n")
+
+consecutive_below <- rle(post_intervention$below_centre)
+max_run <- max(consecutive_below$lengths[consecutive_below$values])
+
+cat("  Longest consecutive run below centre:", max_run, "\n")
+
+if (max_run >= 8) {
+  cat("\n✅ Rule 4 TRIGGERED: Process has shifted\n")
+  cat("   Strong evidence of sustained improvement\n")
+}
+```
+
+### Python
+
+```{python ex2-rule4-py}
+
+post_intervention['below_centre'] = post_intervention['falls_count'] < centre_line
+
+print("Rule 4: 8+ consecutive points one side of centre line\n")
+print(f"Post-intervention points below baseline centre line: {post_intervention['below_centre'].sum()} of {len(post_intervention)}")
+
+from itertools import groupby
+runs = [(k, len(list(g))) for k, g in groupby(post_intervention['below_centre'])]
+max_run = max([length for value, length in runs if value], default=0)
+
+print(f"Longest consecutive run below centre: {max_run}")
+
+if max_run >= 8:
+    print("\n✅ Rule 4 TRIGGERED: Process has shifted")
+    print("   Strong evidence of sustained improvement")
+```
+
+:::
+
+---
+
+### Statistical Comparison
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex2-statistical-comparison-r}
+baseline_data <- falls_data[falls_data$phase == "Baseline" & falls_data$month != 8, ]
+post_data <- falls_data[falls_data$phase == "Post-intervention", ]
+
+cat("Statistical Comparison:\n\n")
+cat("Baseline (excluding Month 8):\n")
+cat("  Mean:", round(mean(baseline_data$falls_count), 2), "falls/month\n")
+cat("  SD:", round(sd(baseline_data$falls_count), 2), "\n")
+
+cat("\nPost-Intervention:\n")
+cat("  Mean:", round(mean(post_data$falls_count), 2), "falls/month\n")
+cat("  SD:", round(sd(post_data$falls_count), 2), "\n")
+
+reduction <- mean(baseline_data$falls_count) - mean(post_data$falls_count)
+pct_reduction <- 100 * reduction / mean(baseline_data$falls_count)
+
+cat("\nDifference:\n")
+cat("  Absolute reduction:", round(reduction, 2), "falls/month\n")
+cat("  Percentage reduction:", round(pct_reduction, 1), "%\n")
+
+t_result <- t.test(baseline_data$falls_count, post_data$falls_count)
+cat("\nTwo-sample t-test: p =", format.pval(t_result$p.value, digits = 3), "\n")
+```
+
+### Python
+
+```{python ex2-statistical-comparison-py}
+
+from scipy import stats
+
+baseline_data = falls_data[(falls_data['phase'] == 'Baseline') & (falls_data['month'] != 8)]
+post_data = falls_data[falls_data['phase'] == 'Post-intervention']
+
+print("Statistical Comparison:\n")
+print(f"Baseline: Mean = {baseline_data['falls_count'].mean():.2f}, SD = {baseline_data['falls_count'].std():.2f}")
+print(f"Post-Intervention: Mean = {post_data['falls_count'].mean():.2f}, SD = {post_data['falls_count'].std():.2f}")
+
+reduction = baseline_data['falls_count'].mean() - post_data['falls_count'].mean()
+pct_reduction = 100 * reduction / baseline_data['falls_count'].mean()
+
+print(f"\nReduction: {reduction:.2f} falls/month ({pct_reduction:.1f}%)")
+
+t_stat, p_value = stats.ttest_ind(baseline_data['falls_count'], post_data['falls_count'])
+print(f"Two-sample t-test: p = {p_value:.4f}")
+```
+
+:::
+
+---
+
+## Step 4: Summary and Recommendations
+
+### Intervention Effect Detected
+
+**Evidence**:
+- ✅ Multiple points below baseline LCL
+- ✅ Rule 4 triggered (12 consecutive below centre)
+- ✅ Statistical significance (p < 0.001)
+- ✅ Clinically significant reduction (~7 falls/month, 40%)
+- ✅ Improvement sustained throughout 12-month post-intervention period
+
+**Evidence Strength**: **STRONG**
+
+---
+
+### Recommendations
+
+1. **Continue program**: Falls prevention program has demonstrably reduced falls
+2. **Ongoing monitoring**: Continue monthly SPC charting
+3. **Share best practice**: Document program components for sector-wide rollout
+4. **Investigate further improvements**: Can we reduce further?
+
+---
+
+### Limitations
+
+- Single care home (generalizability unknown)
+- No control group (external factors possible)
+- 12-month follow-up (longer-term sustainability unknown)
+- Month 8 special cause excluded from limits
+
+---
+
+**SPC Analysis Complete** ✅
+
+---
+
+### Summary
+
+This example demonstrates a complete SPC workflow for intervention evaluation, including:
+
+✅ Time-series visualization and data preparation  
+✅ Baseline control chart with special cause handling  
+✅ Control limit calculation (I-chart method)  
+✅ Intervention effect detection using SPC rules  
+✅ Statistical confirmation and sustainability assessment  
+✅ Stakeholder-ready reporting and recommendations  
+
+**For full QA documentation, see**: `docs/qa-checklist.md`, `docs/decisions-log.md`

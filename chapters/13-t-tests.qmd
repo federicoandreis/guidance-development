@@ -1,0 +1,850 @@
+---
+title: "Comparing Two Groups: t-tests"
+---
+
+```{r}
+#| include: false
+# Setup Python environment
+library(reticulate)
+# Use system Python (where pandas is installed)
+use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
+```
+
+::: {.callout-tip icon=false}
+## Problem This Method Solves
+
+You need to test whether two groups have different average values, or whether one group differs from a target value. For example:
+
+- Do waiting times differ between two regions?
+- Has average length of stay changed after an intervention?
+- Is a provider's mean performance different from a national target?
+
+t-tests provide a statistical test for differences in means between groups or against a target value.
+:::
+
+## What t-tests Do {#sec-t-tests}
+
+t-tests compare means (averages) and determine whether observed differences are statistically significant or likely due to chance.
+
+**Key advantages**:
+- Simple, well-understood method
+- Works with small sample sizes (unlike z-tests)
+- Provides clear yes/no answer about statistical significance
+- Widely used and accepted
+
+**What they do NOT do**:
+- Compare multiple providers simultaneously (use z-scoring for that, see @sec-z-scoring)
+- Account for varying sample sizes across providers fairly
+- Monitor changes over time (use SPC for that, see @sec-spc-basics)
+- Prove causation (only association)
+
+## When to Use t-tests vs Other Methods
+
+### t-tests vs z-tests: The Key Distinction
+
+**The fundamental difference**:
+- **z-tests**: Assume you know the population standard deviation (σ)
+- **t-tests**: Estimate the standard deviation from your sample (s)
+
+**In practice at CQC**:
+- **z-scoring** uses national data to calculate expected variation, making it appropriate for provider comparison
+- **t-tests** estimate variation from the sample itself, making them appropriate for comparing two groups
+
+**Use t-tests when**:
+- Comparing exactly two groups (or one group vs target)
+- Sample sizes are small to moderate (typically <100 per group)
+- You don't have population-level data to estimate variation
+- You need a formal significance test for a specific comparison
+- Groups are clearly defined and independent
+
+**Use z-scoring instead when** (@sec-z-scoring):
+- Comparing many providers against national benchmark
+- Sample sizes vary widely across providers
+- You need to rank or band providers
+- You have population-level data to estimate expected variation
+- **This is the most common CQC use case for provider comparison**
+
+**Use SPC instead when** (@sec-spc-basics):
+- Monitoring one provider/system over time
+- Detecting when change occurred
+- Ongoing process monitoring
+
+**Critical point**: At CQC, z-scoring is usually more appropriate than t-tests for provider comparison because we have national data. t-tests are mainly for:
+- Thematic analysis comparing two groups
+- Pilot evaluations (before/after)
+- Research questions involving exactly two groups
+- Situations where you don't have population-level comparison data
+
+## Before You Start
+
+Check these requirements before applying t-tests:
+
+### Data Requirements
+- [ ] **Data type**: Continuous data only
+- [ ] **Sample size**: At least 5-10 observations per group (preferably more)
+- [ ] **Independence**: Observations independent unless using paired t-test
+- [ ] **Normality**: Data approximately normally distributed (or large enough for CLT)
+- [ ] **Quality checks**: Completed pre-analysis QA (see @sec-qa-principles)
+
+### When t-tests May Not Be Appropriate
+- **Comparing >2 groups**: Use ANOVA (beyond this guide, consult Guild)
+- **Many providers**: Use z-scoring instead
+- **Highly skewed data**: Consider transformation or non-parametric tests
+- **Very small samples** (<5 per group): Results unreliable
+- **Categorical outcomes**: Use different methods (Chi-squared, etc.)
+
+### What You Need
+- Continuous outcome variable
+- Group membership variable (for two-sample) or target value (for one-sample)
+- Statistical software (R recommended, examples provided)
+
+::: {.callout-note icon=false}
+## 📖 Complete Worked Examples
+
+**Example 4: Medication Safety Pilot** demonstrates paired t-tests with realistic CQC data:
+
+- Comparing before/after measurements
+- Handling paired data correctly
+- Checking normality assumptions
+- Calculating and interpreting effect sizes
+- Reporting results with confidence intervals
+
+**Time**: 2-3 hours | **Complexity**: Medium
+
+[View Example 4: Medication Safety Pilot →](../examples/example-04-complete.qmd)
+
+**Example 5: Regional A&E Performance** demonstrates two-sample t-tests:
+
+- Comparing two independent groups
+- Checking equal variance assumption
+- Choosing between pooled and Welch's t-test
+- Interpreting practical vs statistical significance
+
+**Time**: 2-3 hours | **Complexity**: Medium
+
+[View Example 5: Regional A&E Performance →](../examples/example-05-complete.qmd)
+:::
+
+## Types of t-tests
+
+### One-Sample t-test
+**Use for**: Comparing one group's mean to a known target value
+
+**Example**: Is average waiting time at a hospital different from the 4-hour target?
+
+**Null hypothesis**: Group mean equals target value
+
+### Two-Sample t-test (Independent)
+**Use for**: Comparing means of two independent groups
+
+**Example**: Do waiting times differ between Region A and Region B?
+
+**Null hypothesis**: Both groups have the same mean
+
+### Paired t-test (Dependent)
+**Use for**: Comparing means of the same group measured twice
+
+**Example**: Did average satisfaction scores change after an intervention?
+
+**Null hypothesis**: Mean difference between paired measurements is zero
+
+## Step-by-Step Guide: One-Sample t-test
+
+### Step 1: State Your Hypotheses
+
+**Null hypothesis (H₀)**: The group mean equals the target value (μ = μ₀)
+
+**Alternative hypothesis (H₁)**: The group mean differs from the target value (μ ≠ μ₀)
+
+**Example**: Testing if average waiting time equals 4-hour target
+- H₀: Mean waiting time = 4.0 hours
+- H₁: Mean waiting time ≠ 4.0 hours
+
+### Step 2: Check Assumptions
+
+**Normality**: Data should be approximately normally distributed
+
+**How to check**:
+1. **Visual inspection**: Create histogram or Q-Q plot
+   - Histogram should be roughly bell-shaped
+   - Q-Q plot points should follow diagonal line
+
+2. **Formal test**: Shapiro-Wilk test
+   - If p > 0.05, data consistent with normality
+   - If p < 0.05, consider transformation or non-parametric alternative
+
+**Independence**: Observations should be independent
+- Each measurement from different unit (e.g., different patients)
+- No repeated measures or clustering
+
+**Sample size**: At least 20-30 observations recommended
+- Smaller samples: Harder to assess normality, less power
+- Larger samples: More robust to normality violations
+
+### Step 3: Calculate the t-statistic
+
+**Formula**:
+$$t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}$$
+
+Where:
+- $\bar{x}$ = sample mean
+- $\mu_0$ = target value (from null hypothesis)
+- $s$ = sample standard deviation
+- $n$ = sample size
+
+**Degrees of freedom**: df = n - 1
+
+**Using software**: Most statistical packages have built-in one-sample t-test functions
+- R: `t.test(data, mu = target)`
+- Python: `scipy.stats.ttest_1samp(data, target)`
+
+### Step 4: Interpret Results
+
+**p-value interpretation**:
+- p < 0.05: Reject null hypothesis (mean significantly different from target)
+- p ≥ 0.05: Fail to reject null hypothesis (insufficient evidence of difference)
+
+**Confidence interval**: 95% CI for the mean
+- If CI doesn't include target value → significant difference
+- If CI includes target value → no significant difference
+
+**Effect size**: Calculate difference from target
+- Absolute difference: $\bar{x} - \mu_0$
+- Standardized difference (Cohen's d): $(\bar{x} - \mu_0) / s$
+
+**Report**:
+- Sample mean and SD
+- t-statistic and degrees of freedom
+- p-value
+- 95% confidence interval
+- Practical interpretation in context
+
+## Step-by-Step Guide: Two-Sample t-test
+
+### Step 1: State Your Hypotheses
+
+**Null hypothesis (H₀)**: Both groups have the same mean (μ₁ = μ₂)
+
+**Alternative hypothesis (H₁)**: Groups have different means (μ₁ ≠ μ₂)
+
+**Example**: Comparing waiting times between two regions
+- H₀: Mean waiting time in Region A = Mean waiting time in Region B
+- H₁: Mean waiting time in Region A ≠ Mean waiting time in Region B
+
+### Step 2: Check Assumptions
+
+**Normality**: Both groups should be approximately normally distributed
+
+**How to check**:
+1. **Visual inspection**: Create histograms or Q-Q plots for each group
+2. **Formal test**: Shapiro-Wilk test for each group
+   - If both p > 0.05, data consistent with normality
+
+**Equal variances**: Both groups should have similar spread
+
+**How to check**:
+1. **Visual inspection**: Compare box plots or histograms
+   - Similar spread suggests equal variances
+2. **Formal test**: Levene's test or F-test
+   - If p > 0.05, variances are similar
+   - If p < 0.05, use Welch's t-test (doesn't assume equal variances)
+
+**Independence**: 
+- Observations within each group are independent
+- Groups are independent of each other (no pairing or matching)
+
+### Step 3: Calculate the t-statistic
+
+**Formula (equal variances)**:
+$$t = \frac{\bar{x}_1 - \bar{x}_2}{s_p \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}$$
+
+Where:
+- $\bar{x}_1$, $\bar{x}_2$ = sample means
+- $n_1$, $n_2$ = sample sizes
+- $s_p$ = pooled standard deviation
+
+**Pooled standard deviation**:
+$$s_p = \sqrt{\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1 + n_2 - 2}}$$
+
+**Degrees of freedom**: df = n₁ + n₂ - 2
+
+**Using software**:
+- R: `t.test(group1, group2, var.equal = TRUE)` (or `FALSE` for Welch's)
+- Python: `scipy.stats.ttest_ind(group1, group2, equal_var=True)`
+
+### Step 4: Interpret Results
+
+**p-value interpretation**:
+- p < 0.05: Reject null hypothesis (groups have significantly different means)
+- p ≥ 0.05: Fail to reject null hypothesis (insufficient evidence of difference)
+
+**Confidence interval**: 95% CI for the difference between means
+- If CI doesn't include 0 → significant difference
+- If CI includes 0 → no significant difference
+
+**Effect size**: Cohen's d for standardized difference
+$$d = \frac{\bar{x}_1 - \bar{x}_2}{s_p}$$
+
+Interpretation:
+- |d| < 0.2: Negligible
+- |d| = 0.2-0.5: Small
+- |d| = 0.5-0.8: Medium
+- |d| > 0.8: Large
+
+**Report**:
+- Means and SDs for both groups
+- Difference between means
+- t-statistic and degrees of freedom
+- p-value
+- 95% confidence interval for difference
+- Effect size (Cohen's d)
+- Practical interpretation
+
+## Step-by-Step Guide: Paired t-test
+
+### Step 1: State Your Hypotheses
+
+**Null hypothesis (H₀)**: Mean difference between paired measurements is zero (μ_d = 0)
+
+**Alternative hypothesis (H₁)**: Mean difference is not zero (μ_d ≠ 0)
+
+**Example**: Testing if satisfaction scores changed after intervention
+- H₀: Mean change in satisfaction = 0
+- H₁: Mean change in satisfaction ≠ 0
+
+### Step 2: Check Assumptions
+
+**Normality of differences**: The *differences* (not the original values) should be approximately normally distributed
+
+**How to check**:
+1. **Calculate differences**: For each pair, compute difference = after - before
+2. **Visual inspection**: Create histogram or Q-Q plot of differences
+   - Histogram should be roughly bell-shaped
+3. **Formal test**: Shapiro-Wilk test on differences
+   - If p > 0.05, differences consistent with normality
+
+**Pairing is appropriate**: Each pair represents the same unit measured twice
+- Same patient before/after
+- Same practice in two time periods
+- Matched pairs (e.g., matched controls)
+
+**Independence of pairs**: Different pairs should be independent
+- Pair 1's measurements don't affect Pair 2's measurements
+
+### Step 3: Calculate the t-statistic
+
+**Formula**:
+$$t = \frac{\bar{d}}{s_d / \sqrt{n}}$$
+
+Where:
+- $\bar{d}$ = mean of differences
+- $s_d$ = standard deviation of differences
+- $n$ = number of pairs
+
+**Degrees of freedom**: df = n - 1 (where n = number of pairs)
+
+**Using software**:
+- R: `t.test(after, before, paired = TRUE)`
+- Python: `scipy.stats.ttest_rel(after, before)`
+
+### Step 4: Interpret Results
+
+**p-value interpretation**:
+- p < 0.05: Reject null hypothesis (significant change)
+- p ≥ 0.05: Fail to reject null hypothesis (insufficient evidence of change)
+
+**Confidence interval**: 95% CI for the mean difference
+- If CI doesn't include 0 → significant change
+- If CI includes 0 → no significant change
+
+**Effect size**: Cohen's d for paired data
+$$d = \frac{\bar{d}}{s_d}$$
+
+Interpretation:
+- |d| < 0.2: Negligible
+- |d| = 0.2-0.5: Small
+- |d| = 0.5-0.8: Medium
+- |d| > 0.8: Large
+
+**Report**:
+- Mean before and after
+- Mean difference and SD of differences
+- t-statistic and degrees of freedom
+- p-value
+- 95% confidence interval for mean difference
+- Effect size (Cohen's d)
+- Practical interpretation in context
+
+## Worked Example: Evaluating a Pilot Intervention
+
+**Scenario**: A care coordination pilot was implemented in 10 GP practices, with 10 control practices for comparison. We want to determine if the pilot significantly improved patient experience scores (measured on a 0-100 scale).
+
+### Step 1: Load and Visualize Data
+
+::: {.panel-tabset}
+## R
+```{r}
+#| echo: false
+# Patient experience scores (0-100 scale)
+pilot_practices <- c(78, 82, 75, 80, 77, 81, 79, 76, 80, 78)
+control_practices <- c(72, 70, 73, 71, 69, 72, 70, 71, 73, 70)
+
+data <- data.frame(
+  score = c(pilot_practices, control_practices),
+  group = rep(c("Pilot", "Control"), each = 10)
+)
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+# Visualize the data
+boxplot(score ~ group, data = data,
+        main = "Patient Experience Scores by Group",
+        ylab = "Score (0-100)",
+        col = c("lightcoral", "lightblue"))
+```
+
+## Python
+```{python}
+#| echo: false
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+pilot_practices = np.array([78, 82, 75, 80, 77, 81, 79, 76, 80, 78])
+control_practices = np.array([72, 70, 73, 71, 69, 72, 70, 71, 73, 70])
+
+data = pd.DataFrame({
+    'score': np.concatenate([pilot_practices, control_practices]),
+    'group': ['Pilot']*10 + ['Control']*10
+})
+```
+
+```{python}
+#| fig-width: 8
+#| fig-height: 5
+# Visualize the data
+data.boxplot(column='score', by='group', figsize=(8, 5))
+plt.title('Patient Experience Scores by Group')
+plt.suptitle('')
+plt.ylabel('Score (0-100)')
+plt.show()
+```
+:::
+
+**Initial observation**: Pilot practices appear to have higher scores than control practices.
+
+### Step 2: Descriptive Statistics
+
+::: {.panel-tabset}
+## R
+```{r}
+# Create summary table
+summary_stats <- data.frame(
+  Group = c("Pilot", "Control"),
+  N = c(length(pilot_practices), length(control_practices)),
+  Mean = c(mean(pilot_practices), mean(control_practices)),
+  SD = c(sd(pilot_practices), sd(control_practices)),
+  Min = c(min(pilot_practices), min(control_practices)),
+  Max = c(max(pilot_practices), max(control_practices))
+)
+
+knitr::kable(summary_stats, digits = 2, 
+             caption = "Descriptive Statistics by Group")
+```
+
+## Python
+```{python}
+# Create summary table
+summary_stats = pd.DataFrame({
+    'Group': ['Pilot', 'Control'],
+    'N': [len(pilot_practices), len(control_practices)],
+    'Mean': [np.mean(pilot_practices), np.mean(control_practices)],
+    'SD': [np.std(pilot_practices, ddof=1), np.std(control_practices, ddof=1)],
+    'Min': [np.min(pilot_practices), np.min(control_practices)],
+    'Max': [np.max(pilot_practices), np.max(control_practices)]
+})
+
+print(summary_stats.to_string(index=False))
+```
+:::
+
+**Observation**: Pilot practices have higher mean scores (difference ≈ 7.5 points) with slightly more variability.
+
+### Step 3: Check Assumptions
+
+::: {.panel-tabset}
+## R
+```{r}
+# Test normality for both groups
+shapiro_pilot <- shapiro.test(pilot_practices)
+shapiro_control <- shapiro.test(control_practices)
+
+# Test equal variances
+var_test <- var.test(pilot_practices, control_practices)
+
+# Create assumption check table
+assumption_checks <- data.frame(
+  Test = c("Normality (Pilot)", "Normality (Control)", "Equal Variances"),
+  Statistic = c(shapiro_pilot$statistic, shapiro_control$statistic, var_test$statistic),
+  p_value = c(shapiro_pilot$p.value, shapiro_control$p.value, var_test$p.value),
+  Result = c(
+    ifelse(shapiro_pilot$p.value > 0.05, "Pass", "Fail"),
+    ifelse(shapiro_control$p.value > 0.05, "Pass", "Fail"),
+    ifelse(var_test$p.value > 0.05, "Pass", "Fail")
+  )
+)
+
+knitr::kable(assumption_checks, digits = 4,
+             caption = "Assumption Checks (p > 0.05 = Pass)")
+```
+
+## Python
+```{python}
+# Test normality for both groups
+stat_p, p_p = stats.shapiro(pilot_practices)
+stat_c, p_c = stats.shapiro(control_practices)
+
+# Test equal variances
+stat_var, p_var = stats.levene(pilot_practices, control_practices)
+
+# Create assumption check table
+assumption_checks = pd.DataFrame({
+    'Test': ['Normality (Pilot)', 'Normality (Control)', 'Equal Variances'],
+    'Statistic': [stat_p, stat_c, stat_var],
+    'p-value': [p_p, p_c, p_var],
+    'Result': [
+        'Pass' if p_p > 0.05 else 'Fail',
+        'Pass' if p_c > 0.05 else 'Fail',
+        'Pass' if p_var > 0.05 else 'Fail'
+    ]
+})
+
+print(assumption_checks.to_string(index=False))
+```
+:::
+
+**Conclusion**: All assumptions met (all p-values > 0.05). We can proceed with standard two-sample t-test.
+
+### Step 4: Perform t-test
+
+::: {.panel-tabset}
+## R
+```{r}
+# Two-sample t-test
+result <- t.test(pilot_practices, control_practices, var.equal = TRUE)
+
+# Calculate effect size (Cohen's d)
+pooled_sd <- sqrt(((9 * var(pilot_practices)) + (9 * var(control_practices))) / 18)
+cohens_d <- (mean(pilot_practices) - mean(control_practices)) / pooled_sd
+
+# Create results table
+results_table <- data.frame(
+  Metric = c("Difference in Means", "95% CI Lower", "95% CI Upper", 
+             "t-statistic", "df", "p-value", "Cohen's d"),
+  Value = c(
+    mean(pilot_practices) - mean(control_practices),
+    result$conf.int[1],
+    result$conf.int[2],
+    result$statistic,
+    result$parameter,
+    result$p.value,
+    cohens_d
+  )
+)
+
+knitr::kable(results_table, digits = 4,
+             caption = "Two-Sample t-test Results")
+```
+
+## Python
+```{python}
+# Two-sample t-test
+result = stats.ttest_ind(pilot_practices, control_practices, equal_var=True)
+
+# Calculate effect size (Cohen's d)
+pooled_sd = np.sqrt(((9 * np.var(pilot_practices, ddof=1)) + 
+                     (9 * np.var(control_practices, ddof=1))) / 18)
+cohens_d = (np.mean(pilot_practices) - np.mean(control_practices)) / pooled_sd
+
+# Calculate 95% CI for difference
+diff = np.mean(pilot_practices) - np.mean(control_practices)
+pooled_se = np.sqrt(stats.sem(pilot_practices)**2 + stats.sem(control_practices)**2)
+ci = stats.t.interval(0.95, len(pilot_practices) + len(control_practices) - 2,
+                      loc=diff, scale=pooled_se)
+
+# Create results table
+results_table = pd.DataFrame({
+    'Metric': ['Difference in Means', '95% CI Lower', '95% CI Upper',
+               't-statistic', 'df', 'p-value', "Cohen's d"],
+    'Value': [diff, ci[0], ci[1], result.statistic, 
+              len(pilot_practices) + len(control_practices) - 2,
+              result.pvalue, cohens_d]
+})
+
+print(results_table.to_string(index=False))
+```
+:::
+
+### Interpretation
+
+**Statistical Conclusion**:
+- Pilot practices scored **7.5 points higher** on average (95% CI: 5.8 to 9.2)
+- This difference is **statistically significant** (p < 0.001)
+- Effect size is **very large** (Cohen's d = 4.06)
+
+**Practical Significance**:
+- On a 0-100 scale, a 7.5-point improvement represents a **meaningful change**
+- All pilot practices scored above all control practices (no overlap)
+- Effect size of 4.06 is exceptionally large (>0.8 is considered large)
+
+**Recommendation**: The pilot intervention shows strong evidence of effectiveness. Consider rolling out to additional practices, while noting:
+- Small sample size (N=10 per group) limits generalizability
+- No information on implementation costs or sustainability
+- Need to monitor whether improvements persist over time
+
+## Understanding p-values and Significance
+
+**p-value**: Probability of observing this difference (or more extreme) if the null hypothesis were true.
+
+**p < 0.05**: Conventional threshold for "statistical significance"
+- Means: <5% chance of seeing this difference by random chance alone
+- Does NOT mean the difference is large or clinically important
+- Does NOT prove causation
+
+**p ≥ 0.05**: "Not statistically significant"
+- Does NOT mean groups are the same
+- Could be due to small sample size (low power)
+- Absence of evidence ≠ evidence of absence
+
+**Confidence intervals**: Often more informative than p-values
+- 95% CI: Range likely to contain the true difference
+- If CI includes zero, difference not significant at p < 0.05
+- Width of CI indicates precision of estimate
+
+## Common Pitfalls
+
+**Pitfall 1: Using t-tests for multiple provider comparison**
+- t-tests compare exactly two groups
+- For many providers, use z-scoring (@sec-z-scoring)
+- Multiple t-tests inflate false positive rate
+
+**Pitfall 2: Confusing statistical and clinical significance**
+- p < 0.05 doesn't mean the difference matters
+- Small differences can be "significant" with large samples
+- Large differences can be "non-significant" with small samples
+- Always report effect size and confidence intervals
+
+**Pitfall 3: Ignoring assumptions**
+- Normality matters more with small samples
+- Unequal variances affect results
+- Non-independence invalidates the test
+- Check assumptions, don't just assume they're met
+
+**Pitfall 4: Misinterpreting non-significance**
+- p > 0.05 doesn't prove groups are the same
+- May just lack power to detect difference
+- Report confidence intervals to show uncertainty
+
+**Pitfall 5: Using wrong test type**
+- Independent t-test for paired data → wrong
+- Paired t-test for independent data → wrong
+- Match test to study design
+
+## Documenting Your Analysis
+
+For QA purposes, record:
+
+**Data**:
+- What you're comparing and why
+- Sample sizes for each group
+- Any exclusions or data quality issues
+
+**Assumptions**:
+- Normality checks performed (visual and/or tests)
+- Variance equality checks
+- How violations were handled
+
+**Results**:
+- Means and SDs for each group
+- t-statistic, degrees of freedom, p-value
+- 95% confidence interval for difference
+- Effect size (Cohen's d or similar)
+
+**Interpretation**:
+- Statistical significance
+- Clinical/practical significance
+- Limitations and caveats
+- What the results do and don't tell you
+
+::: {.callout-note icon=false}
+## Rethinking: t-tests in Regulatory Context
+
+t-tests are common in research but less common in CQC's routine provider comparison. Why?
+
+**Research context**: Comparing two well-defined groups (treatment vs control, intervention vs usual care). t-tests are perfect for this.
+
+**CQC context**: Usually comparing many providers against national benchmark, or monitoring trends over time. t-tests aren't designed for this.
+
+**When CQC uses t-tests**:
+- **Pilot evaluations**: Comparing pilot sites vs controls
+- **Thematic analysis**: Comparing two provider types or regions
+- **Research questions**: Testing specific hypotheses about two groups
+- **Before/after studies**: Paired t-tests for intervention evaluation
+
+**When CQC uses z-scoring instead**:
+- **Provider comparison**: Comparing all GP practices, care homes, hospitals
+- **Performance monitoring**: Identifying outliers for investigation
+- **Routine indicators**: Most regular analytical work
+
+**Exploratory vs confirmatory**: Most CQC t-tests are exploratory (thematic analysis, pilot evaluation) rather than confirmatory (pre-registered trials). This means:
+- Results guide further investigation, not definitive proof
+- p-values should be interpreted cautiously (optimistic due to analytical flexibility)
+- Look for consistency across multiple analyses and data sources
+- Document analytical decisions and their rationale
+
+**Key lesson**: t-tests answer "are these two groups different?" Z-scoring answers "which providers are unusual?" These are different questions requiring different methods.
+
+**Practical implication**: If you're comparing providers for regulatory purposes, you probably want z-scoring, not t-tests. If you're evaluating a specific intervention or comparing two defined groups, t-tests may be appropriate.
+:::
+
+::: {.callout-warning icon=false}
+## Overthinking: Assumption Violations and Alternatives
+
+**Normality assumption**:
+
+**When it matters**: More important with small samples (<30 per group). With larger samples, Central Limit Theorem means t-test is robust to non-normality.
+
+**How to check**:
+- Visual: Histogram, Q-Q plot
+- Formal: Shapiro-Wilk test (but overly sensitive with large samples)
+
+**If violated**:
+- Transform data (log, square root) if skewed
+- Use non-parametric alternative (Mann-Whitney U for two-sample, Wilcoxon signed-rank for paired)
+- Increase sample size if possible
+- Consult Guild for guidance
+
+**Equal variance assumption** (two-sample t-test):
+
+**When it matters**: When variances differ by >3-4 fold and sample sizes unequal.
+
+**How to check**:
+- Visual: Side-by-side boxplots
+- Formal: F-test or Levene's test
+
+**If violated**:
+- Use Welch's t-test (var.equal = FALSE in R)
+- This is actually the default in R's t.test()
+- More conservative, doesn't assume equal variances
+
+**Independence assumption**:
+
+**Critical**: If violated, results completely invalid.
+
+**Common violations**:
+- Repeated measures on same subjects (use paired t-test or mixed models)
+- Clustered data (patients within providers, use multilevel models)
+- Time series data (use SPC methods instead)
+
+**If violated**: Don't use standard t-test. Consult Guild for appropriate method.
+
+**Small sample sizes**:
+
+**Problem**: With <5-10 observations per group, t-test has low power and assumptions hard to check.
+
+**Options**:
+- Increase sample size if possible
+- Use non-parametric tests (more robust but less powerful)
+- Report results as exploratory/hypothesis-generating
+- Acknowledge limitations clearly
+
+**Multiple comparisons**:
+
+**Problem**: If you run many t-tests, some will be "significant" by chance.
+
+**Example**: Testing 20 indicators, expect 1 false positive at p < 0.05.
+
+**Solutions**:
+- Bonferroni correction (divide α by number of tests)
+- False Discovery Rate control
+- Focus on pre-specified primary outcome
+- Report all tests performed, not just significant ones
+
+**When to escalate**: If you're unsure whether assumptions are met, or how to handle violations, consult the Guild. Getting this wrong invalidates your results.
+:::
+
+## Related Approaches
+
+**For different analytical questions**:
+- **Many providers to compare** → Z-scoring (@sec-z-scoring) is more appropriate
+- **Monitoring over time** → SPC (@sec-spc-basics) for time series
+- **Before/after with time series** → SPC with intervention point (Example 2)
+- **Non-normal data** → See Overthinking box above for alternatives
+
+**For advanced comparisons**:
+- **More than two groups** → ANOVA (future section, or consult Guild)
+- **Confounding variables** → ANCOVA or regression (Guild consultation)
+- **Repeated measures** → Mixed models (Guild consultation)
+
+**For foundational concepts**:
+- **Understanding variation** → @sec-variation-uncertainty
+- **Effect sizes and power** → @sec-variation-uncertainty (Overthinking boxes)
+- **Data quality checks** → @sec-qa-principles
+
+**For complete workflows**:
+- **Medication Safety Pilot** → Example 4 (paired t-test)
+- **Regional A&E Performance** → Example 5 (two-sample t-test)
+
+## When to Escalate to the Guild
+
+Escalate to the Quantitative Guild when:
+
+- **Assumption violations**: Data is severely non-normal or variances very unequal, and you're unsure about alternatives
+- **Multiple groups**: Need to compare more than two groups (requires ANOVA, not t-tests)
+- **Repeated measures**: Same providers measured multiple times (requires paired or repeated measures methods)
+- **Unequal sample sizes with unequal variances**: Welch's t-test may be needed but you're unsure
+- **Complex study designs**: Crossover designs, cluster randomization, or other specialized designs
+- **Non-parametric alternatives**: Data doesn't meet assumptions and you need Mann-Whitney or Wilcoxon tests
+- **Power calculations**: Need to determine required sample size before conducting study
+- **Equivalence testing**: Want to show groups are similar (not just fail to show difference)
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **t-tests compare means** of two groups or one group vs target
+2. **Choose the right type**: One-sample, two-sample, or paired based on study design
+3. **Check assumptions**: Normality, equal variances (for two-sample), independence
+4. **p-values aren't everything**: Report effect sizes and confidence intervals
+5. **For CQC provider comparison, usually use z-scoring instead**: t-tests are for specific two-group comparisons
+6. **Statistical significance ≠ practical significance**: Always consider context
+7. **When in doubt, consult the Guild**: Especially for assumption violations or complex designs
+
+t-tests are useful for specific two-group comparisons but are not CQC's primary provider comparison method. Understand when they're appropriate and when z-scoring or SPC is better suited to your question.
+:::
+
+## Further Reading
+
+**Internal CQC Resources**:
+
+- **QA Framework**: Documentation standards for comparative analyses
+- **Guild Terms of Reference**: When and how to escalate for specialist support
+
+**External Guidance**:
+
+- **Altman DG** (1991). *Practical Statistics for Medical Research*. Chapman & Hall. (Chapter 9: Comparison of groups - comprehensive coverage)
+- **AQuA Book** (Chapter on Uncertainty): Interpreting statistical tests and confidence intervals
+- **Bland JM, Altman DG** (1995). "Multiple significance tests: the Bonferroni method." *BMJ*, 310(6973), 170. (When testing multiple comparisons)
+
+**Online Resources**:
+
+- Understanding t-tests: https://www.statology.org/t-test/
+- One-sample t-test: https://www.statology.org/one-sample-t-test-excel/
+- Two-sample t-test: https://www.statology.org/two-sample-t-test-excel/
+- Paired t-test: https://www.statology.org/paired-samples-t-test-excel/
+- Effect sizes (Cohen's d): https://www.statology.org/cohens-d/
+- Checking normality assumption: https://www.statology.org/test-for-normality-in-r/

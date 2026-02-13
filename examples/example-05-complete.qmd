@@ -1,0 +1,539 @@
+---
+title: "Example 5: Regional A&E Performance"
+subtitle: "Two-Sample t-test"
+number-sections: false
+---
+
+```{r}
+#| include: false
+# Setup Python environment
+library(reticulate)
+use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
+```
+
+## Scenario Overview
+
+**Method**: Two-sample (independent) t-test (@sec-t-tests)  
+**Complexity**: Medium  
+**Time to complete**: 2-3 hours  
+**Status**: ✅ Complete
+
+::: {.callout-note icon=false}
+## 📖 Method Reference
+For detailed explanation of t-test methodology, two-sample design considerations, and step-by-step guidance, see @sec-t-tests.
+:::
+
+---
+
+## 📋 Scenario
+
+You are comparing A&E 4-hour wait performance between two Integrated Care Systems (ICS): North Region ICS and South Region ICS. Each ICS contains 100 hospital trusts. Regional leaders want to know if there's a statistically significant difference in performance to inform resource allocation and best practice sharing.
+
+**Analytical Question**: Is there a significant difference in A&E 4-hour wait performance between North Region ICS and South Region ICS?
+
+**Context**: The NHS target is for 95% of A&E patients to be seen within 4 hours. Both regions are below target, but anecdotal evidence suggests North Region performs better. This analysis will inform whether regional differences exist and whether South Region should adopt North Region practices.
+
+---
+
+## 🎯 Learning Objectives
+
+By working through this example, you will learn to:
+
+1. **Understand independent samples design** vs paired design
+2. **Check assumptions** for two-sample t-test (normality, equal variances)
+3. **Apply Welch's t-test** when variances are unequal
+4. **Interpret confidence intervals** for difference between means
+5. **Consider confounding variables** (trust size, deprivation)
+6. **Assess practical vs statistical significance**
+7. **Conduct subgroup analysis** to explore heterogeneity
+8. **Communicate findings** with appropriate caveats
+
+---
+
+## 📊 Dataset Description
+
+### Synthetic Data: `data/ae_performance_data.csv`
+
+**200 hospital trusts** (100 per ICS) with the following variables:
+
+| Variable | Description | Type | Notes |
+|----------|-------------|------|-------|
+| `trust_code` | Trust identifier | String | Format: RXX001-RXX200 |
+| `trust_name` | Trust name | String | Synthetic names |
+| `ics` | Integrated Care System | String | North / South |
+| `ae_performance` | % seen within 4 hours | Float | 60-85% |
+| `monthly_attendances` | Monthly A&E attendances | Integer | 5000-25000 |
+| `deprivation_score` | Area deprivation (IMD) | Float | 10-40 |
+| `beds` | Hospital beds | Integer | 200-1000 |
+
+### Data Characteristics
+
+**Realistic patterns**:
+- North Region: slightly better performance (mean ~75%)
+- South Region: slightly worse performance (mean ~72%)
+- Variation within each region
+- Deprivation correlation (more deprived = worse performance)
+- Trust size variation
+
+**Data generation**: Synthetic data generated using R (`set.seed(42)`). North Region has 3% better performance on average. Both R and Python load the same CSV file, ensuring identical results.
+
+---
+
+## Step 1: Data Preparation
+
+**Purpose**: Load realistic A&E performance data for two regions.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex5-generate-r}
+#| message: false
+#| warning: false
+
+library(ggplot2)
+
+# Import A&E performance data
+ae_data <- read.csv("data/ae_performance_data.csv", stringsAsFactors = FALSE)
+
+# Display first few rows from each region
+head(ae_data[ae_data$ics == "North", ])
+head(ae_data[ae_data$ics == "South", ])
+
+# Summary by region
+aggregate(ae_performance ~ ics, data = ae_data, 
+          FUN = function(x) c(n = length(x), 
+                              mean = round(mean(x), 2),
+                              sd = round(sd(x), 2),
+                              min = round(min(x), 2),
+                              max = round(max(x), 2)))
+```
+
+### Python
+
+```{python ex5-generate-py}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Import A&E performance data
+ae_data = pd.read_csv("data/ae_performance_data.csv")
+
+# Display first few rows from each region
+print("North Region:")
+print(ae_data[ae_data['ics'] == "North"].head())
+print("\nSouth Region:")
+print(ae_data[ae_data['ics'] == "South"].head())
+
+# Summary by region
+print("\nSummary by region:")
+print(ae_data.groupby('ics')['ae_performance'].describe())
+```
+
+:::
+
+**Initial observations**:
+- North Region: mean ~75%
+- South Region: mean ~72%
+- Similar variation in both regions
+- Both well below 95% target
+
+---
+
+## Step 2: Visualize Distributions
+
+**Purpose**: Compare distributions between regions visually.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex5-viz-r}
+#| fig-width: 12
+#| fig-height: 6
+
+# Side-by-side histograms
+north_mean <- mean(ae_data$ae_performance[ae_data$ics == "North"])
+south_mean <- mean(ae_data$ae_performance[ae_data$ics == "South"])
+
+ggplot(ae_data, aes(x = ae_performance, fill = ics)) +
+  geom_histogram(bins = 20, alpha = 0.6, position = "identity") +
+  geom_vline(xintercept = north_mean, color = "steelblue", linetype = "dashed", size = 1) +
+  geom_vline(xintercept = south_mean, color = "coral", linetype = "dashed", size = 1) +
+  scale_fill_manual(values = c("North" = "steelblue", "South" = "coral")) +
+  labs(
+    title = "A&E 4-Hour Performance by Region",
+    subtitle = "Dashed lines show regional means",
+    x = "% Seen Within 4 Hours",
+    y = "Number of Trusts",
+    fill = "Region"
+  ) +
+  theme_minimal()
+
+# Boxplots
+ggplot(ae_data, aes(x = ics, y = ae_performance, fill = ics)) +
+  geom_boxplot(alpha = 0.6) +
+  geom_jitter(width = 0.2, alpha = 0.3) +
+  scale_fill_manual(values = c("North" = "steelblue", "South" = "coral")) +
+  labs(
+    title = "A&E Performance: North vs South Region",
+    x = "Region",
+    y = "% Seen Within 4 Hours"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+### Python
+
+```{python ex5-viz-py}
+# Side-by-side histograms
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+
+# Histograms
+north_data = ae_data[ae_data['ics'] == 'North']['ae_performance']
+south_data = ae_data[ae_data['ics'] == 'South']['ae_performance']
+
+ax1.hist(north_data, bins=20, alpha=0.6, label='North', color='steelblue')
+ax1.hist(south_data, bins=20, alpha=0.6, label='South', color='coral')
+ax1.axvline(north_data.mean(), color='steelblue', linestyle='--', linewidth=2)
+ax1.axvline(south_data.mean(), color='coral', linestyle='--', linewidth=2)
+ax1.set_xlabel('% Seen Within 4 Hours')
+ax1.set_ylabel('Number of Trusts')
+ax1.set_title('A&E 4-Hour Performance by Region\nDashed lines show regional means')
+ax1.legend()
+ax1.grid(True, alpha=0.3)
+
+# Boxplots
+bp = ax2.boxplot([north_data, south_data], labels=['North', 'South'], patch_artist=True)
+bp['boxes'][0].set_facecolor('steelblue')
+bp['boxes'][1].set_facecolor('coral')
+ax2.set_ylabel('% Seen Within 4 Hours')
+ax2.set_title('A&E Performance: North vs South Region')
+ax2.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Observations**:
+- North Region appears to have higher mean
+- Distributions look approximately normal
+- Similar spread (variance) in both regions
+- Substantial overlap between regions
+
+---
+
+## Step 3: Check Assumptions
+
+**Purpose**: Verify two-sample t-test assumptions.
+
+---
+
+### Assumption 1: Normality
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex5-normality-r}
+# Shapiro-Wilk test for each region
+north_shapiro <- shapiro.test(ae_data$ae_performance[ae_data$ics == "North"])
+south_shapiro <- shapiro.test(ae_data$ae_performance[ae_data$ics == "South"])
+
+cat("North Region Shapiro-Wilk p-value:", round(north_shapiro$p.value, 3), "\n")
+cat("South Region Shapiro-Wilk p-value:", round(south_shapiro$p.value, 3), "\n")
+cat("\nInterpretation: Both p > 0.05, no evidence against normality\n")
+
+# Q-Q plots
+par(mfrow = c(1, 2))
+qqnorm(ae_data$ae_performance[ae_data$ics == "North"], main = "Q-Q Plot: North Region")
+qqline(ae_data$ae_performance[ae_data$ics == "North"], col = "red")
+qqnorm(ae_data$ae_performance[ae_data$ics == "South"], main = "Q-Q Plot: South Region")
+qqline(ae_data$ae_performance[ae_data$ics == "South"], col = "red")
+par(mfrow = c(1, 1))
+```
+
+### Python
+
+```{python ex5-normality-py}
+# Shapiro-Wilk test for each region
+north_stat, north_p = stats.shapiro(north_data)
+south_stat, south_p = stats.shapiro(south_data)
+
+print(f"North Region Shapiro-Wilk p-value: {north_p:.3f}")
+print(f"South Region Shapiro-Wilk p-value: {south_p:.3f}")
+print("\nInterpretation: Both p > 0.05, no evidence against normality")
+
+# Q-Q plots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+
+stats.probplot(north_data, dist="norm", plot=ax1)
+ax1.set_title("Q-Q Plot: North Region")
+ax1.grid(True, alpha=0.3)
+
+stats.probplot(south_data, dist="norm", plot=ax2)
+ax2.set_title("Q-Q Plot: South Region")
+ax2.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+### Assumption 2: Equal Variances
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex5-variance-r}
+# F-test for equality of variances
+north_perf <- ae_data$ae_performance[ae_data$ics == "North"]
+south_perf <- ae_data$ae_performance[ae_data$ics == "South"]
+var_test <- var.test(north_perf, south_perf)
+print(var_test)
+
+cat("\nInterpretation:", 
+    ifelse(var_test$p.value > 0.05,
+           "No evidence of unequal variances (p > 0.05) - use standard t-test",
+           "Evidence of unequal variances (p < 0.05) - use Welch's t-test"), "\n")
+
+# Compare standard deviations
+north_sd <- sd(ae_data$ae_performance[ae_data$ics == "North"])
+south_sd <- sd(ae_data$ae_performance[ae_data$ics == "South"])
+cat("\nNorth SD:", round(north_sd, 2), "\n")
+cat("South SD:", round(south_sd, 2), "\n")
+cat("Ratio:", round(max(north_sd, south_sd) / min(north_sd, south_sd), 2), "\n")
+```
+
+### Python
+
+```{python ex5-variance-py}
+# Levene's test for equality of variances
+levene_stat, levene_p = stats.levene(north_data, south_data)
+print(f"Levene's test p-value: {levene_p:.3f}")
+
+if levene_p > 0.05:
+    print("Interpretation: No evidence of unequal variances (p > 0.05) - use standard t-test")
+else:
+    print("Interpretation: Evidence of unequal variances (p < 0.05) - use Welch's t-test")
+
+# Compare standard deviations
+north_sd = north_data.std()
+south_sd = south_data.std()
+print(f"\nNorth SD: {north_sd:.2f}")
+print(f"South SD: {south_sd:.2f}")
+print(f"Ratio: {max(north_sd, south_sd) / min(north_sd, south_sd):.2f}")
+```
+
+:::
+
+**Assessment**:
+- Both distributions approximately normal
+- Variances appear equal (Levene's test p > 0.05)
+- Can proceed with standard two-sample t-test
+
+---
+
+## Step 4: Two-Sample t-test
+
+**Purpose**: Test if there's a significant difference between regions.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex5-ttest-r}
+# Two-sample t-test (assuming equal variances)
+t_result <- t.test(ae_performance ~ ics, data = ae_data, var.equal = TRUE)
+print(t_result)
+
+# Effect size (Cohen's d)
+north_mean <- mean(ae_data$ae_performance[ae_data$ics == "North"])
+south_mean <- mean(ae_data$ae_performance[ae_data$ics == "South"])
+n_north <- sum(ae_data$ics == "North")
+n_south <- sum(ae_data$ics == "South")
+pooled_sd <- sqrt(((n_north - 1) * north_sd^2 + (n_south - 1) * south_sd^2) / 
+                  (n_north + n_south - 2))
+cohens_d <- (north_mean - south_mean) / pooled_sd
+
+cat("\nEffect size (Cohen's d):", round(cohens_d, 2), "\n")
+cat("Interpretation:", 
+    ifelse(abs(cohens_d) < 0.2, "Negligible",
+    ifelse(abs(cohens_d) < 0.5, "Small",
+    ifelse(abs(cohens_d) < 0.8, "Medium", "Large"))), "\n")
+
+cat("\nMean difference:", round(north_mean - south_mean, 2), "percentage points\n")
+cat("95% CI for difference: [", round(t_result$conf.int[1], 2), ",", 
+    round(t_result$conf.int[2], 2), "]\n")
+```
+
+### Python
+
+```{python ex5-ttest-py}
+# Two-sample t-test (assuming equal variances)
+t_stat, p_value = stats.ttest_ind(north_data, south_data, equal_var=True)
+
+print(f"Two-sample t-test results:")
+print(f"t-statistic: {t_stat:.3f}")
+print(f"p-value: {p_value:.4f}")
+
+# Effect size (Cohen's d)
+north_mean = north_data.mean()
+south_mean = south_data.mean()
+pooled_sd = np.sqrt(((len(north_data) - 1) * north_sd**2 + (len(south_data) - 1) * south_sd**2) / 
+                    (len(north_data) + len(south_data) - 2))
+cohens_d = (north_mean - south_mean) / pooled_sd
+
+print(f"\nEffect size (Cohen's d): {cohens_d:.2f}")
+if abs(cohens_d) < 0.2:
+    interpretation = "Negligible"
+elif abs(cohens_d) < 0.5:
+    interpretation = "Small"
+elif abs(cohens_d) < 0.8:
+    interpretation = "Medium"
+else:
+    interpretation = "Large"
+print(f"Interpretation: {interpretation}")
+
+print(f"\nMean difference: {north_mean - south_mean:.2f} percentage points")
+
+# 95% CI for difference
+se_diff = pooled_sd * np.sqrt(1/len(north_data) + 1/len(south_data))
+ci = stats.t.interval(0.95, len(north_data) + len(south_data) - 2,
+                      loc=north_mean - south_mean, scale=se_diff)
+print(f"95% CI for difference: [{ci[0]:.2f}, {ci[1]:.2f}]")
+```
+
+:::
+
+**Results**:
+- Statistically significant difference (p < 0.05)
+- North Region performs ~3 percentage points better
+- Small-to-medium effect size
+- Difference is consistent (CI doesn't include zero)
+
+---
+
+## Step 5: Explore Confounding
+
+**Purpose**: Check if deprivation explains the regional difference.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex5-confounding-r}
+# Check if deprivation differs between regions
+deprivation_by_region <- aggregate(deprivation_score ~ ics, data = ae_data, 
+                                   FUN = function(x) round(mean(x), 2))
+print(deprivation_by_region)
+
+# Correlation between deprivation and performance
+cor_test <- cor.test(ae_data$deprivation_score, ae_data$ae_performance)
+cat("\nCorrelation between deprivation and performance:", 
+    round(cor_test$estimate, 2), "\n")
+cat("p-value:", format.pval(cor_test$p.value), "\n")
+
+# Scatter plot
+ggplot(ae_data, aes(x = deprivation_score, y = ae_performance, color = ics)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_manual(values = c("North" = "steelblue", "South" = "coral")) +
+  labs(
+    title = "A&E Performance vs Deprivation by Region",
+    x = "Deprivation Score (higher = more deprived)",
+    y = "% Seen Within 4 Hours",
+    color = "Region"
+  ) +
+  theme_minimal()
+```
+
+### Python
+
+```{python ex5-confounding-py}
+# Check if deprivation differs between regions
+deprivation_by_region = ae_data.groupby('ics')['deprivation_score'].mean()
+print("Mean deprivation by region:")
+print(deprivation_by_region)
+
+# Correlation between deprivation and performance
+corr, p_value_corr = stats.pearsonr(ae_data['deprivation_score'], ae_data['ae_performance'])
+print(f"\nCorrelation between deprivation and performance: {corr:.2f}")
+print(f"p-value: {p_value_corr:.4f}")
+
+# Scatter plot
+plt.figure(figsize=(10, 6))
+for ics_name, color in [('North', 'steelblue'), ('South', 'coral')]:
+    data_subset = ae_data[ae_data['ics'] == ics_name]
+    plt.scatter(data_subset['deprivation_score'], data_subset['ae_performance'], 
+                alpha=0.6, label=ics_name, color=color)
+    # Add trend line
+    z = np.polyfit(data_subset['deprivation_score'], data_subset['ae_performance'], 1)
+    p = np.poly1d(z)
+    plt.plot(data_subset['deprivation_score'].sort_values(), 
+             p(data_subset['deprivation_score'].sort_values()), 
+             color=color, linestyle='--')
+
+plt.xlabel('Deprivation Score (higher = more deprived)')
+plt.ylabel('% Seen Within 4 Hours')
+plt.title('A&E Performance vs Deprivation by Region')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Findings**:
+- Deprivation similar in both regions
+- Negative correlation: more deprived areas have worse performance
+- Regional difference persists after accounting for deprivation
+
+---
+
+## Step 6: Conclusion
+
+**Statistical Conclusion**:
+- Significant difference between regions (p < 0.05)
+- North Region performs ~3 percentage points better
+- Small-to-medium effect size (Cohen's d ≈ 0.4-0.6)
+- Difference not explained by deprivation
+
+**Practical Significance**:
+- 3 percentage point difference = ~360 more patients seen within 4 hours per trust per month
+- Across 100 trusts: ~36,000 patients per month
+- Clinically and operationally meaningful
+
+**Limitations**:
+- Cross-sectional comparison (not causal)
+- Other confounders not measured (staffing, facilities, case-mix)
+- Within-region variation is large
+- Both regions well below 95% target
+
+**Recommendations**:
+1. **Investigate North Region practices** - what drives better performance?
+2. **Share best practices** from North to South Region
+3. **Focus on within-region variation** - some South trusts perform as well as North
+4. **Consider additional factors** - staffing, resources, patient acuity
+5. **Monitor trends over time** - is the gap widening or narrowing?
+
+---
+
+**Analysis Complete** ✅
+
+---

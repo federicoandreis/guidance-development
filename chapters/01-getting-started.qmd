@@ -1,0 +1,168 @@
+---
+title: "Getting Started"
+---
+
+## What This Guidance Is {#sec-getting-started}
+
+This book provides practical statistical guidance for CQC analysts working under deadline pressure. Use it to:
+
+-   **Select appropriate methods** for regulatory analytical questions
+-   **Execute standard methods correctly** with step-by-step procedures
+-   **Recognise edge cases** that need specialist input
+-   **Document decisions** to meet QA framework requirements
+
+This guidance serves as both a quick reference when you need an answer now, and a systematic learning pathway when you have time to build capability.
+
+## What This Guidance Is NOT
+
+This is not a statistics textbook. It will not teach you statistical theory from first principles, refer to external courses for that. It will not cover cutting-edge methods requiring specialist expertise, consult the Guild for those. It will not provide software-specific tutorials, we have separate technical guides for that.
+
+Most importantly, this guidance does not provide mechanical rules that eliminate professional judgment. Statistical decisions in regulatory context require you to balance technical correctness, operational feasibility, and stakeholder trust. This guidance helps you make those judgments, it doesn't make them for you.
+
+## How to Use This Book
+
+### Three Ways to Read This Guidance
+
+**Strategy 1: Systematic learner** (New analyst, limited stats background)
+
+Start with the building blocks (Sections 2-5) to establish foundations. Read them sequentially, including the "Rethinking" boxes. Then move to methods sections as your work requires them. You can skip the "Overthinking" boxes initially, return to them when you encounter problems or feel you are ready to advance your understanding.
+
+**Strategy 2: Quick reference** (Experienced analyst, confident with basics)
+
+Jump directly to the method you need using the Quick Reference page or table of contents. Skim the main text to refresh your memory, then focus on the worked example. Check the "Overthinking" boxes if you hit edge cases.
+
+**Strategy 3: Deep dive** (Practice Lead, Guild member, specialist)
+
+Read comprehensively including all "Overthinking" boxes. Use "Rethinking" boxes to understand CQC's organisational context and why we've made specific methodological choices. Consider how consultation patterns might inform updates.
+
+All three strategies are equally valid. Use the approach that matches your current need.
+
+### Understanding the Structure
+
+**Building blocks** (Chapters 3-5): Foundational concepts referenced throughout the methods sections. Read these first if you're new to statistical analysis or need a refresher.
+
+**Methods sections** (Sections 6+): Specific techniques for specific problems. Each section is independently usable, you don't need to read them in order.
+
+**Quick Reference**: Fastest entry point. Maps common analytical problems directly to relevant sections.
+
+**Appendices**: Glossary of terms and list of resources for further learning.
+
+### The Three-Layer Approach
+
+Each methods section uses three layers of depth:
+
+**Main text**: Minimum content needed to execute the method correctly for standard cases. If you only read this, you can apply the method.
+
+**Rethinking boxes**: Context that aids professional judgment. Why CQC uses this method, how it fits our regulatory context, what trade-offs we've accepted. Read these to understand the "why" behind the "how".
+
+**Overthinking boxes**: Technical details for edge cases and assumption violations. When standard approaches fail, when to escalate to the Guild, what advanced methods exist. Read these when you encounter problems or need deeper understanding.
+
+You can skip boxes and still use the method. The main text is complete on its own.
+
+## Finding the Right Section
+
+### Start with Your Question
+
+Don't start with "what statistical test should I use?" Start with "what am I trying to find out?"
+
+-   Comparing provider performance against national benchmarks? → @sec-z-scoring
+-   Monitoring whether something is changing over time? → @sec-spc-basics
+-   Testing whether two groups differ? → @sec-t-tests
+-   Not sure what your data type is? → @sec-data-types
+-   Worried about data quality? → @sec-qa-principles
+
+### Use the Quick Reference
+
+The Quick Reference page (immediately after this section) maps common analytical problems to relevant sections. Start there if you know what you're trying to do but not which method to use.
+
+### Check Your Data Type
+
+Different methods work for different data types. If you're unsure whether your data is continuous, discrete, or categorical, read @sec-data-types first. It includes a table mapping data types to appropriate methods.
+
+## When to Seek Guild Help
+
+This guidance covers standard cases. Seek Guild consultation when:
+
+-   **Your situation doesn't match the examples**: The worked examples use typical CQC indicators. If your data structure is fundamentally different, check with the Guild.
+
+-   **Assumptions are violated**: Each method section lists key assumptions. If yours are violated and the "Overthinking" boxes don't address your specific case, escalate.
+
+-   **Results seem wrong**: If you've followed the steps but results don't make sense, don't just report them. Check with the Guild.
+
+-   **Stakes are high**: If your analysis will inform major regulatory decisions or public-facing reports, have the Guild review your approach.
+
+-   **You're doing something new**: If you're the first person at CQC to analyse this type of data or answer this type of question, consult before finalising your approach.
+
+### How to Get Help
+
+**Champion Hours**: Bi-weekly drop-in sessions for statistical support. Bring your data and your question.
+
+**Quantitative Analytics Guild**: Community of practice for quantitative analysts and statisticians. Post questions, share approaches, learn from others.
+
+**Practice Lead for Quantitative Analytics & Statistics**: For complex methodological questions or when you need formal review.
+
+Don't wait until you're stuck. Early consultation prevents wasted effort.
+
+## Integration with QA Framework
+
+Every methods section shows how to document your decisions to meet QA framework requirements. Look for:
+
+-   **"Before you start" checklists**: Data quality checks required before analysis
+-   **"Documenting your analysis" boxes**: What to record for QA purposes\
+-   **Assumption checks**: What to verify and how to record it
+-   **Interpretation guidance**: How to communicate uncertainty appropriately
+
+The QA framework isn't bureaucracy—it's how we ensure our analysis is defensible. This guidance integrates QA requirements into the analytical workflow so they become natural steps, not afterthoughts.
+
+## Multiple Lines of Evidence
+
+**No single analysis should stand alone.** Scientific inference requires building a case through multiple sources of evidence, not blessing a single study with a p-value.
+
+**Why this matters**: Any individual analysis can be affected by: - Data quality issues specific to that time period or source - Analytical choices (researcher degrees of freedom) - Chance patterns in that particular dataset - Unmeasured confounding factors
+
+**CQC practice for building robust evidence**:
+
+1.  **Multiple time periods**: Does the pattern hold across different months/quarters/years? Or is it specific to one period?
+
+2.  **Multiple data sources**: Do different indicators or datasets tell the same story? Or do they contradict?
+
+3.  **Multiple providers**: Is this a pattern across many providers? Or an isolated case?
+
+4.  **Multiple methods**: Do different analytical approaches reach similar conclusions? Or are results method-dependent?
+
+5.  **Qualitative triangulation**: Do inspection findings, stakeholder feedback, and quantitative analysis align?
+
+**Example**: If z-scoring flags a provider as an outlier: - Check trends over time (SPC) - is this persistent or a one-off? - Check related indicators - is it just one metric or a pattern? - Check inspection history - do qualitative findings align? - Check data quality - could this be a reporting issue?
+
+**Key principle**: Replication and consistency across multiple lines of evidence provide stronger support for conclusions than statistical significance in a single analysis. Use statistics to guide investigation, not as definitive proof.
+
+**When to escalate**: If different lines of evidence contradict each other, or if you're unsure how to weight different sources of evidence, consult the Guild.
+
+## A Note on Professional Judgment
+
+Statistical analysis in regulatory context is not mechanical. You will face situations where:
+
+-   Multiple methods are technically valid but have different interpretations
+-   Technical correctness conflicts with operational feasibility\
+-   Stakeholder trust requires different communication than statistical precision
+-   Fairness to providers requires different thresholds than statistical significance
+
+This guidance helps you navigate these trade-offs by explaining CQC's reasoning, showing worked examples in regulatory context, and being explicit about what we don't know.
+
+When in doubt, document your reasoning and consult the Guild. Good judgment comes from experience, and experience comes from making decisions and learning from them.
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **This is practical guidance, not a textbook**: Focus on execution and decision-making, not theory
+2. **Use the right entry point**: Systematic learning, quick reference, or deep dive depending on your needs
+3. **Three-layer structure**: Main text for essentials, "Rethinking" for context, "Overthinking" for edge cases
+4. **Methods sections are independent**: Read them in any order based on your analytical needs
+5. **Professional judgment is essential**: Statistics provides tools, you provide context and decision-making
+6. **Documentation is non-negotiable**: Every analysis requires clear QA documentation
+7. **Know when to escalate**: The Guild exists to support complex cases, not replace your judgment
+
+This guidance supports your work but doesn't replace statistical thinking, regulatory expertise, or consultation when needed.
+:::

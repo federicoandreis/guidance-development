@@ -1,0 +1,152 @@
+---
+title: "Quick Reference"
+number-sections: false
+---
+
+**Find the right statistical method for your analytical question.**
+
+This page provides the fastest route to the right method for experienced analysts. If you're new to statistical analysis, start with [@sec-getting-started].
+
+## Common Analyst Scenarios
+
+**Jump directly to the section you need:**
+
+| I need to... | Go to Section |
+|--------------|---------------|
+| Compare one provider to national average | Z-scoring [@sec-z-scoring] |
+| Compare many providers to national average | Z-scoring [@sec-z-scoring] |
+| Track performance over time | SPC Basics [@sec-spc-basics] |
+| Detect when a change occurred | SPC Basics [@sec-spc-basics] |
+| Compare two groups of providers | t-tests [@sec-t-tests] |
+| Test before/after an intervention | t-tests [@sec-t-tests] |
+| Understand relationship between two measures | Correlation [@sec-correlation] |
+| Identify extreme outliers systematically | Outlier Methods [@sec-outlier-methods] |
+| Investigate unusual values | Unusual Observations [@sec-unusual-observations] |
+| Handle missing data | Missing Data Methods [@sec-missing-data-handling] |
+| Understand why data is missing | Missing Data Foundations [@sec-missing-data-foundations] |
+| Set up QA documentation | QA Principles [@sec-qa-principles] |
+| Understand my data type | Data Types [@sec-data-types] |
+| Calculate summary statistics | Describing Data [@sec-describing-data] |
+| Understand confidence intervals | Statistical Inference [@sec-statistical-inference] |
+
+## Method Selection
+
+| Your Question | Method | When to Use | Chapter |
+|---------------|--------|-------------|---------|
+| Compare many providers to benchmark | **Z-scoring** | 10+ providers vs national average | 11 [@sec-z-scoring] |
+| Monitor performance over time | **SPC charts** | Detect changes in time series | 12 [@sec-spc-basics] |
+| Compare two groups | **t-tests** | Pilot vs control, before vs after | 13 [@sec-t-tests] |
+| Explore relationships | **Correlation** | Association between variables | 14 [@sec-correlation] |
+| Investigate unusual values | **Outlier methods** | Extreme observations requiring investigation | 15 [@sec-outlier-methods] |
+| Handle missing data | **Missing data methods** | Substantial missingness | 16 [@sec-missing-data-handling] |
+
+## By Data Type and Sample Size
+
+**Choose your method based on what you're measuring and how much data you have:**
+
+| Data Type | Sample Size | Comparison Type | Recommended Method | Chapter |
+|-----------|-------------|-----------------|-------------------|---------|
+| **Continuous** | Any | Single provider vs benchmark | Z-scoring | [@sec-z-scoring] |
+| **Continuous** | Any | Many providers vs benchmark | Z-scoring | [@sec-z-scoring] |
+| **Continuous** | ≥30 per group | Two groups | t-test (independent) | [@sec-t-tests] |
+| **Continuous** | ≥30 pairs | Before/after (paired) | t-test (paired) | [@sec-t-tests] |
+| **Continuous** | Time series | Trend detection | SPC (I-chart) | [@sec-spc-basics] |
+| **Continuous** | ≥30 | Relationship between variables | Correlation | [@sec-correlation] |
+| **Counts** | Time series | Trend detection | SPC (C-chart, U-chart) | [@sec-spc-basics] |
+| **Counts** | ≥100 total | vs benchmark | Z-scoring (with continuity correction) | [@sec-z-scoring] |
+| **Proportions** | ≥100 total | vs benchmark | Z-scoring | [@sec-z-scoring] |
+| **Proportions** | Time series | Trend detection | SPC (P-chart) | [@sec-spc-basics] |
+| **Binary** | ≥100 total | Two groups | t-test on proportions | [@sec-t-tests] |
+| **Ordinal** | Any | Any | Consult Guild (specialized methods) | - |
+| **Nominal** | Any | Group comparisons | Consult Guild (Chi-squared, etc.) | - |
+
+**Notes:**
+- Sample sizes are guidelines, not rigid thresholds. See individual method chapters for detailed requirements.
+- For small samples (<30), consult [@sec-statistical-inference] and consider Guild support.
+- For very small numbers (<5 events), see Overthinking boxes in method chapters.
+
+**See [@sec-data-types] for detailed guidance on identifying and working with different data types.**
+
+## Common Workflows
+
+::: {style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin: 1.5em 0;"}
+::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #e53e3e;"}
+**Profile Provider Performance**
+
+1. Check data quality and data type ([@sec-data-types])
+2. Explore distributions ([@sec-describing-data], [@sec-variation-uncertainty], [@sec-distribution-shape])
+3. Apply z-scoring ([@sec-z-scoring])
+4. Investigate unusual observations ([@sec-unusual-observations], [@sec-outlier-methods])
+5. Document methods, assumptions, and limitations
+:::
+
+::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #3182ce;"}
+**Evaluate Intervention or Policy Change**
+
+1. Check data quality, data type, and baseline comparability ([@sec-data-types])
+2. Understand statistical inference principles ([@sec-statistical-inference])
+3. Assess assumptions (normality, equal variance)
+4. Apply paired or two-sample t-test ([@sec-t-tests])
+5. Report effect size, confidence interval, and p-value
+6. Interpret in context (practical vs statistical significance)
+7. Document for QA review
+:::
+
+::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #38a169;"}
+**Monitor Trends and Detect Changes**
+
+1. Check data quality, data type, and temporal completeness ([@sec-data-types])
+2. Understand variation ([@sec-variation-uncertainty]) and common vs special cause
+3. Select appropriate chart type based on data type ([@sec-spc-basics])
+4. Create SPC chart with control limits
+5. Identify special cause signals (rules-based or visual)
+6. Investigate flagged periods (root cause, context)
+7. Update baselines when sustained changes confirmed
+:::
+:::
+
+## Quick Decision Tree
+
+::: {style="background-color: #edf2f7; padding: 1.5em; border-radius: 5px; margin: 1em 0;"}
+**Step 1: What are you comparing?**
+
+- **Single value vs benchmark** → Z-scoring [@sec-z-scoring]
+- **Many values vs benchmark** → Z-scoring [@sec-z-scoring]
+- **Time series (one provider over time)** → SPC [@sec-spc-basics]
+- **Two groups** → t-test [@sec-t-tests]
+- **Two variables (relationship)** → Correlation [@sec-correlation]
+- **Nothing (just investigating unusual values)** → Outlier Methods [@sec-outlier-methods]
+
+**Step 2: Check your data** (do this BEFORE analysis)
+
+1. **Data type** → [@sec-data-types] (continuous, counts, proportions?)
+2. **Quality checks** → [@sec-qa-principles] (errors, outliers, missing data)
+3. **Distribution** → [@sec-describing-data], [@sec-distribution-shape] (shape, skewness)
+4. **Sample size** → [@sec-statistical-inference] (enough data for method?)
+
+**Step 3: Run analysis**
+
+- Go to relevant method chapter (see table above)
+- Follow step-by-step guide
+- Check assumptions
+- Interpret in context
+
+**Step 4: Document** → [@sec-qa-principles]
+
+- Methods used and why
+- Assumptions checked
+- Limitations and caveats
+- Interpretation for decision-makers
+
+**Throughout**: Check for unusual observations ([@sec-unusual-observations]), assess missing data ([@sec-missing-data-foundations]), verify assumptions, document decisions.
+:::
+
+## Escalate to Guild When
+
+- Designing new indicators | Complex missing data | Methodology challenged | Method unclear | Need specialist support
+
+**Contact**: [Quantitative Analytics and Statistics Practice Lead](mailto:federico.andreis@cqc.org.uk)
+
+---
+
+**Key principles**: Check data quality first • Match method to question • Report completely (n, effect size, CI, limits) • Document decisions • Statistical ≠ practical significance

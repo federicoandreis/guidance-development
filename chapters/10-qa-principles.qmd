@@ -1,0 +1,643 @@
+---
+title: "Quality Assurance Principles"
+---
+
+## Why QA Matters {#sec-qa-principles}
+
+The 2024 Penny Dash review of CQC's analytical quality identified concerns about "lack of clear description of statistical analysis applied" and "inconsistency in how evidence categories used." These aren't just technical issues—they affect CQC's credibility, regulatory effectiveness, and ability to defend decisions.
+
+Quality assurance isn't bureaucracy. It's how we ensure our analysis is defensible, reproducible, and fit for regulatory decisions that affect patients, providers, and the healthcare system.
+
+**What poor QA leads to**:
+- Invalid conclusions that waste inspection resources
+- Missed problems that put patients at risk
+- Reputational damage when errors are discovered
+- Wasted analyst time redoing work
+- Inability to defend analysis when challenged
+
+**What good QA achieves**:
+- Catches errors early, before they affect decisions
+- Builds confidence in analysis across the organization
+- Enables effective review by colleagues and stakeholders
+- Creates organizational learning from what works and what doesn't
+- Supports transparent, defensible regulatory action
+
+This chapter provides the **principles** underpinning CQC's QA Framework for quantitative analysis. For detailed checklists and method-specific requirements, see individual methods chapters. For the full QA Framework document, consult the [QA Framework](mailto:federico.andreis@cqc.org.uk).
+
+## The QA Framework: Five Key Questions
+
+CQC's Quantitative Analytics and Statistics Quality Assurance (QASQA) Framework structures QA around five questions that span the analytical lifecycle. These questions apply to all quantitative analysis informing regulatory decisions, with proportionate application based on risk and complexity.
+
+### 1. Engagement and Scoping
+
+**How well have the requirements been understood and the analytical approach specified?**
+
+**Core principle**: Clear question → appropriate method → useful answer. If the question is vague or the approach poorly specified, even perfect execution produces unusable analysis.
+
+**What this means**:
+
+**Understand the need**:
+- What decision will this analysis inform?
+- Who needs the analysis and what will they do with it?
+- What question are we actually trying to answer?
+- How does quantitative analysis fit with other evidence?
+
+**Define the boundaries**:
+- What's in scope and what's out?
+- What's the time period?
+- Which providers or populations?
+- What indicators or metrics?
+
+**Specify the approach**:
+- Which statistical methods are appropriate for this question?
+- What data sources will we use?
+- What are the assumptions and limitations?
+- What level of precision do we need?
+
+**Agree on standards**:
+- What level of QA is appropriate for this analysis? (see Proportionality below)
+- What documentation is required?
+- Who will review?
+- What's the timeline?
+
+**Why it matters**: Most analytical problems start here. If you're answering the wrong question, or using inappropriate methods, no amount of careful execution helps. Scoping poorly wastes everyone's time.
+
+**CQC context**: Commissioners (those requesting analysis) and analysts must agree on what's being delivered before work starts. This prevents "that's not what I asked for" at the end.
+
+**Red flags**:
+- Vague analytical question ("tell me about quality")
+- No discussion of limitations or assumptions upfront
+- Analyst unclear on how findings will be used
+- No agreement on QA level or timeline
+
+### 2. Design
+
+**How defensible is the analytical design and methodology?**
+
+**Core principle**: Method fits question and data. Assumptions are understood and checked. Design is robust enough for its purpose.
+
+**What this means**:
+
+**Justify method choice**:
+- Why is this method appropriate for this question?
+- What assumptions does it make?
+- What alternatives were considered?
+- Why were they not chosen?
+
+**Specify data requirements**:
+- What data do we need?
+- Is it available? Accessible? Appropriate?
+- What quality issues exist?
+- How will we handle missing data, outliers, errors?
+
+**Plan for uncertainty**:
+- How will we quantify uncertainty?
+- What sensitivity analyses are needed?
+- How will we test robustness?
+- What could go wrong?
+
+**Design for reproducibility**:
+- Can someone else replicate this analysis?
+- Is the approach clearly documented?
+- Are assumptions explicit?
+- Is code version-controlled?
+
+**Consider bias and confounding**:
+- What might distort our findings?
+- How will we identify and address potential biases?
+- Are there confounders we need to account for?
+- What causal claims can and can't we make?
+
+**Why it matters**: A poorly designed analysis can't be rescued by careful execution. If your method doesn't suit your data or question, your conclusions will be wrong regardless of technical correctness.
+
+**CQC context**: Statistical methods have assumptions (normality, independence, etc.). If you ignore these, your results may be invalid. Design phase is where you think through whether your method suits your data.
+
+**Red flags**:
+- Method chosen because "that's what we always use"
+- No discussion of assumptions
+- No plan for handling missing data or outliers
+- Data quality not assessed before selecting method
+
+### 3. Analysis
+
+**How well has the quantitative analysis been executed and assured?**
+
+**Core principle**: Implement as designed. Verify calculations. Validate results. Document deviations.
+
+**What this means**:
+
+**Execute as specified**:
+- Follow the analytical plan
+- Apply methods correctly
+- Use appropriate software
+- Check calculations
+
+**Verify technical correctness**:
+- Check code for errors
+- Replicate key calculations
+- Automate where possible to reduce manual errors
+- Peer review code and calculations
+
+**Validate substantive plausibility**:
+- Do results make sense?
+- Are they consistent with expectations or prior knowledge?
+- Do they pass basic sanity checks?
+- Have you tested edge cases?
+
+**Handle departures from plan**:
+- If you deviate from the design, document why
+- If assumptions aren't met, address it (transform data, use robust methods, report limitation)
+- If you discover problems mid-analysis, revise the plan (don't just plow ahead)
+
+**Manage analytical decisions**:
+- Every analysis involves choices (variable selection, outlier handling, transformation)
+- Document what you decided and why
+- For key decisions, test sensitivity (do conclusions change if you choose differently?)
+- Avoid "researcher degrees of freedom" being exploited unconsciously
+
+**Why it matters**: Even a well-designed analysis can be undermined by implementation errors—miscoded variables, calculation mistakes, software bugs, copy-paste errors.
+
+**CQC context**: Verification (is the calculation correct?) and validation (does the result make sense?) are both needed. Code review catches technical errors; subject-matter review catches substantive errors.
+
+**Red flags**:
+- No code review or calculation checks
+- Results not compared to previous estimates or expectations
+- Assumptions violated but not addressed
+- Deviations from plan not documented
+
+### 4. Delivery and Communication
+
+**How clearly and appropriately are the methods, results, and limitations communicated?**
+
+**Core principle**: Transparent explanation. Appropriate for audience. Limitations clearly stated. Results don't overstate certainty.
+
+**What this means**:
+
+**Explain methods clearly**:
+- What did you do? (understandable to intended audience)
+- Why did you do it that way?
+- What assumptions did you make?
+- What are the alternatives and why weren't they used?
+
+**Present results appropriately**:
+- Use correct statistical terminology but explain it
+- Include uncertainty (confidence intervals, p-values where relevant, caveats)
+- Visualize effectively (charts that clarify, not confuse)
+- Distinguish statistical significance from practical importance
+
+**State limitations explicitly**:
+- What can this analysis NOT tell you?
+- What assumptions were required?
+- What data quality issues exist?
+- How might results be biased or uncertain?
+
+**Provide appropriate caveats**:
+- Don't overstate certainty
+- Acknowledge alternative interpretations
+- Explain sensitivity of results to analytical choices
+- Clarify what is conclusion vs speculation
+
+**Support decision-making**:
+- Answer the original question
+- Connect findings to regulatory action
+- Explain practical significance, not just statistical
+- Provide context for interpretation
+
+**Why it matters**: Brilliant analysis is useless if stakeholders misunderstand it or don't trust it. Clear communication prevents misinterpretation and builds confidence.
+
+**CQC context**: Many stakeholders don't have statistical training. Communicate uncertainty without undermining conclusions. "We're 95% confident the rate is between X and Y" is clearer than just quoting a p-value.
+
+**Red flags**:
+- Methods described in jargon without explanation
+- No uncertainty quantified or discussed
+- Limitations buried or omitted
+- Results presented as more certain than they are
+
+### 5. Fitness for Purpose
+
+**Do the quantitative findings meet the objectives, and are they credible and appropriately caveated?**
+
+**Core principle**: Does this analysis do what it set out to do? Is it good enough for its intended use? Can it withstand scrutiny?
+
+**What this means**:
+
+**Address the original question**:
+- Did you answer what was asked?
+- Are findings relevant to the decision?
+- Is the analysis comprehensive enough?
+- Or did scope creep lead you elsewhere?
+
+**Ensure credibility**:
+- Are findings supported by data and methods?
+- Do results make substantive sense?
+- Are they consistent with other evidence?
+- Can you defend them if challenged?
+
+**Test coherence**:
+- Do findings fit with broader knowledge?
+- If they contradict previous work, is that explained?
+- Are internal contradictions resolved?
+- Do the pieces fit together into a sensible story?
+
+**Appropriate uncertainty quantification**:
+- Is uncertainty properly represented?
+- Are confidence intervals or other measures appropriate?
+- Is sensitivity to assumptions tested?
+- Are limitations clearly stated?
+
+**Match conclusions to evidence strength**:
+- Are recommendations proportionate to certainty?
+- Do you distinguish strong findings from weak signals?
+- Are caveats appropriate?
+- Is language appropriately tentative or confident?
+
+**Ensure reproducibility**:
+- Could another analyst replicate this work?
+- Is documentation sufficient?
+- Is code and data available (within data governance constraints)?
+- Is there an audit trail of decisions?
+
+**Why it matters**: This is the final check. Technically correct analysis that doesn't answer the question, or that overstates certainty, fails its purpose.
+
+**CQC context**: Fitness for purpose includes regulatory defensibility. If your analysis will be challenged—by providers, in court, by media—can you defend it? Have you been transparent about limitations?
+
+**Red flags**:
+- Analysis drifted from original question
+- Findings don't match what was requested
+- Results inconsistent with other evidence without explanation
+- Recommendations stronger than evidence supports
+
+## Roles and Responsibilities
+
+The QA Framework defines four roles aligned with the AQuA Book (Government guidance on analytical quality assurance):
+
+### Commissioner
+
+**Defines the need, agrees on approach, and accepts final analysis.**
+
+- Requests the analysis and sets out requirements
+- Ensures end-user needs are incorporated
+- Agrees that analyst's approach will satisfy the need
+- Accepts the analysis and assurance as meeting requirements
+- May commission on behalf of end-users (e.g., Director commissioning for inspectors)
+
+**Key responsibility**: Clear specification of what's needed and why.
+
+### Analyst
+
+**Designs, conducts, and self-assures the analysis.**
+
+- Designs the approach (including the assurance plan)
+- Agrees approach with commissioner
+- Carries out the analysis
+- Self-assures their work (first line of QA)
+- Responds to assurer feedback
+- May be a group (lead analyst responsible)
+
+**Key responsibility**: Analytical quality and self-awareness of limitations.
+
+### Assurer
+
+**Independently reviews and validates the analyst's work.**
+
+- Reviews the analyst's self-assurance
+- Carries out further validation and verification as appropriate
+- Undertakes repeated reviews as needed
+- Confirms work is appropriately scoped, executed, validated, verified, and documented
+- Reports errors and improvements to analyst
+- Confirms to approver that work is sound
+- **Must be independent from the analyst** (not involved in the analysis)
+
+**Key responsibility**: Independent quality check before sign-off.
+
+### Approver
+
+**Final scrutiny and sign-off.**
+
+- Scrutinizes work of analyst and assurer
+- Confirms to analyst, assurer, and commissioner that work is appropriately assured
+- Provides organizational accountability for quality
+- Typically a Senior Responsible Officer or equivalent
+
+**Key responsibility**: Final accountability for quality.
+
+**Critical principle**: Analyst and assurer must be different people to ensure independence.
+
+## Proportionality: Matching QA to Risk
+
+Not all analysis needs the same level of QA. The Framework uses a **proportionate approach** based on complexity and risk.
+
+### Determining Appropriate QA Level
+
+**Factors to consider**:
+
+**Business criticality**:
+- What decisions will this inform?
+- Financial, legal, operational, political, reputational consequences?
+- High-stakes regulatory decisions require enhanced QA
+
+**Relevance to decision**:
+- Is this analysis one piece of evidence or the main driver?
+- If it's one input among many, less intensive QA for this component
+- If decision heavily depends on these statistics, more QA needed
+
+**Statistical complexity**:
+- Routine descriptive statistics with experienced analysts: less QA
+- Advanced techniques (causal inference, multilevel models, geospatial methods): more QA
+- Novel methods at CQC: enhanced QA, possibly external review
+
+**Novelty of approach**:
+- First use of a method at CQC requires more assurance
+- Established methods with repeated application require less
+- Precedent-setting work needs comprehensive documentation
+
+**Reuse or adaptation**:
+- Reusing existing analysis needs validation (are assumptions still appropriate?)
+- Has population, policy, or data changed since original work?
+- Change control processes for ongoing work
+
+**Precision required**:
+- Order-of-magnitude estimates: less rigorous uncertainty quantification
+- Precise confidence intervals for regulatory decisions: more rigorous
+- Depends on acceptable margin of error
+
+**Longevity and reuse**:
+- One-off analysis: standard QA
+- Repeated use (e.g., performance dashboards): robust change control, periodic validation
+- Foundation for future work: enhanced documentation
+
+**Public impact**:
+- Public-facing statistics (e.g., provider ratings, State of Care): enhanced QA
+- Internal exploratory work: basic QA
+- Consider direct effects (regulatory action) and indirect effects (public perception)
+
+### Risk Categorization
+
+**Low risk**:
+- Routine operations, descriptive statistics
+- Internal use only, limited decision impact
+- Experienced teams, adequate time
+- Example: routine data queries, exploratory analysis, ad hoc information requests
+
+**Medium risk**:
+- Routine but important reporting
+- Moderate statistical complexity within team capabilities
+- Internal decision-making with cross-functional impact
+- Tight deadlines, external sharing without publication
+- Example: regular inspection outcome analysis, performance monitoring, established survey methods
+
+**High risk**:
+- Policy-informing decisions, public scrutiny or publication
+- Advanced statistical methods, sensitive data
+- Precedent-setting approaches
+- High-stakes decisions (resource allocation, enforcement)
+- Example: State of Care analysis, risk models for inspection targeting, novel methodologies
+
+**When uncertain**: Err toward higher risk categorization to ensure appropriate assurance.
+
+### Documentation Expectations
+
+**Low risk**: Lightweight documentation (brief analytical plans, verbal feedback, summary notes) but still address all five key questions.
+
+**Medium risk**: Standard documentation (specification documents, QA logs, code review notes where applicable).
+
+**High risk**: Comprehensive documentation across all stages of the analytical cycle. Full audit trail.
+
+**Principle**: Documentation should be proportionate but complete. Don't create paperwork for its own sake, but do record enough to reproduce and defend the work.
+
+## Pre-Analysis Checklist
+
+Before applying any statistical method, verify these fundamentals. This is not bureaucracy—it's catching errors before they propagate.
+
+### 1. Data Provenance
+
+- [ ] **Source identified**: Where did this data come from?
+- [ ] **Extraction documented**: How was it extracted? When? By whom?
+- [ ] **Version controlled**: Which version are you using?
+- [ ] **Access permissions**: Are you authorized?
+
+**Why it matters**: Using the wrong data version or unauthorized data undermines everything downstream.
+
+### 2. Data Structure
+
+- [ ] **Unit of analysis clear**: What does each row represent?
+- [ ] **Time period defined**: What period does this cover?
+- [ ] **Completeness checked**: Do you have all expected records?
+- [ ] **Duplicates identified**: Are duplicates legitimate?
+
+**Why it matters**: Analyzing the wrong unit or including duplicates gives nonsensical results.
+
+### 3. Variable Definitions
+
+- [ ] **Variables understood**: What does each column measure?
+- [ ] **Data types verified**: Continuous, discrete, categorical? (@sec-data-types)
+- [ ] **Coding schemes documented**: What do codes mean?
+- [ ] **Derived variables documented**: How were calculated fields created?
+
+**Why it matters**: Misunderstanding variables leads to wrong interpretations.
+
+### 4. Data Quality Checks
+
+- [ ] **Range checks**: Are values within expected ranges?
+- [ ] **Missing data assessed**: How much? Why? (@sec-missing-data-foundations)
+- [ ] **Unusual observations investigated**: Errors or real? (@sec-unusual-observations)
+- [ ] **Consistency checks**: Do related fields agree?
+
+**Why it matters**: Garbage in, garbage out.
+
+### 5. Analytical Appropriateness
+
+- [ ] **Question defined**: What are you trying to find out?
+- [ ] **Method appropriate**: Does this method suit your data and question?
+- [ ] **Assumptions understood**: What does this method assume?
+- [ ] **Sample size adequate**: Do you have enough data? (@sec-variation-uncertainty)
+
+**Why it matters**: Right question + wrong method = wrong answer.
+
+## Researcher Degrees of Freedom and Reproducibility
+
+Every analysis involves decisions: which variables to include, how to handle unusual observations, what transformations to apply, which model to use. These **researcher degrees of freedom** are necessary for flexible, context-appropriate analysis—but they create opportunities for results to be influenced by analytical choices rather than by data.
+
+**Common decisions that affect results**:
+- Variable selection (which indicators?)
+- Transformations (log scale? standardize?)
+- Unusual observation handling (remove? keep? investigate?) (@sec-unusual-observations)
+- Missing data approach (exclude? impute? sensitivity?) (@sec-missing-data-foundations)
+- Model specification (linear? interactions?)
+- Subgroup definitions (how to group providers?)
+- Time period selection (which months/years?)
+
+**The challenge**: Each decision is defensible in isolation, but collectively they offer many paths through the analysis. Different analysts making different (equally reasonable) choices might reach different conclusions from the same data.
+
+**CQC practice for reproducibility**:
+
+1. **Document your decisions**: Record what you did and why, not just what you found. Include decisions that didn't work out.
+
+2. **Justify your choices**: Explain reasoning. "We excluded unusual observations >3 SD because investigation showed they were data errors" not just "We excluded outliers."
+
+3. **Sensitivity analysis**: For critical decisions, test whether results change under alternative reasonable choices. "Results were similar when we included all observations" or "Results were sensitive to time period selection."
+
+4. **Pre-specify when possible**: For high-stakes analysis, document your planned approach before seeing the data. This limits researcher degrees of freedom.
+
+5. **Peer review**: Have someone else review your analytical choices before finalizing. Fresh eyes catch issues.
+
+**Key principle**: Flexibility is necessary, but transparency is essential. Document your path through the analysis so others (including future you) can understand and reproduce your work.
+
+## Data Quality Red Flags
+
+Stop and investigate if you see:
+
+- **Impossible values**: Percentages >100%, negative counts, future dates
+- **Suspicious patterns**: All round numbers, too many zeros, implausible uniformity
+- **Inconsistencies**: Numerator > denominator, conflicting fields
+- **Sudden changes**: Abrupt distribution shifts between time periods
+- **Too good to be true**: Results that perfectly match expectations
+- **Unexpected missingness**: Variables that should be complete have gaps
+
+These often indicate data quality issues, not real patterns.
+
+## Documentation Requirements
+
+For every analysis, document:
+
+**Data**:
+- Source, extraction date, version
+- Time period covered
+- Unit of analysis
+- Sample size (before and after exclusions)
+- Exclusions made and why
+
+**Quality checks**:
+- Missing data assessment and decisions (@sec-missing-data-foundations)
+- Unusual observations investigated and decisions (@sec-unusual-observations)
+- Assumption checks performed
+- Limitations identified
+
+**Methods**:
+- Why you chose this method
+- What assumptions it makes
+- Whether assumptions were met
+- What alternatives you considered
+
+**Results**:
+- Key findings
+- Uncertainty quantified
+- Limitations and caveats
+- What results do and don't tell you
+
+**Purpose**: QA review, reproducibility, organizational memory, defending decisions if challenged.
+
+::: {.callout-note icon=false}
+## Rethinking: Why the Penny Dash Review Matters
+
+The 2024 Penny Dash review found CQC's analytical quality was variable, with concerns about:
+- Lack of clear description of statistical methods
+- Inconsistent application of evidence standards
+- Insufficient documentation of analytical decisions
+
+These findings weren't just academic. They affect:
+
+**Credibility**: When analysis is questioned, can we show our working and explain our reasoning?
+
+**Defensibility**: Can we defend analytical choices if challenged by providers, in court, or in media?
+
+**Consistency**: Are we applying similar standards across teams and analyses?
+
+**Learning**: Can we learn from what works and what doesn't if we don't document it?
+
+**The QA Framework addresses these issues**:
+- Structured around five key questions that cover the analytical cycle
+- Proportionate application based on risk
+- Clear roles and responsibilities
+- Documentation expectations matched to stakes
+- Integration into analytical workflow, not bolted on afterward
+
+**Key shift**: QA isn't about creating paperwork. It's about building quality into the analytical process from the start. Document as you go, not as an afterthought. It's faster and more accurate.
+
+**Cultural change**: QA is everyone's responsibility. Analysts self-assure. Assurers provide independent check. Approvers provide final accountability. Commissioners ensure clarity of need. This is collaborative quality, not top-down policing.
+:::
+
+::: {.callout-warning icon=false}
+## Overthinking: When to Escalate to the Guild
+
+The Quantitative Analytics and Statistics Guild provides specialist support for complex or novel analytical challenges. Escalate when:
+
+**Methodological uncertainty**:
+- Novel method you haven't used before
+- Unclear which method is most appropriate
+- Conflicting guidance from different sources
+- Method available only in one software package you're unfamiliar with
+
+**Assumptions violated**:
+- Data violates method assumptions and you're unsure how to proceed
+- Robust alternatives exist but you're uncertain which to use
+- Transformation helps but changes interpretation substantially
+
+**High-stakes novelty**:
+- First use of a method for a particular regulatory purpose
+- Precedent-setting analysis that will be repeated
+- Likely to be challenged and you want methodological defensibility
+- Public-facing statistics using new approaches
+
+**Unexpected results**:
+- Results contradict previous findings without obvious explanation
+- Findings are politically or operationally sensitive
+- Results don't make substantive sense even after checking
+- Large analytical decisions (missing data >30%, many unusual observations, model selection unclear)
+
+**Resource constraints**:
+- Analysis requires specialist software or techniques you don't have capacity to learn in time
+- Deadline pressure but methodological complexity high
+- Need external peer review for credibility
+
+**Don't escalate for**:
+- Routine application of established methods
+- Minor analytical decisions (you have judgment to make these)
+- General statistical questions covered in this guidance
+- Requests to do your analysis for you
+
+**How to escalate**:
+- Contact early (during design phase, not after analysis complete)
+- Provide context (what's the decision? Why does this matter?)
+- Be specific (what's the methodological challenge?)
+- Share data and preliminary work if possible
+
+**Guild purpose**: Specialist support, not gatekeeping. Use it strategically for genuine complexity.
+
+Contact: [Quantitative Analytics and Statistics Practice Lead](mailto:federico.andreis@cqc.org.uk)
+:::
+
+## Integration with Methods Chapters
+
+This chapter provides QA principles. Individual methods chapters integrate QA throughout:
+
+- **"Before you start" sections**: Data quality requirements specific to each method
+- **Assumption checking**: How to verify method assumptions are met
+- **"Documenting your analysis" sections**: What to record for QA purposes
+- **"When to escalate" sections**: When to consult the Guild
+
+Use this chapter for general QA principles, then refer to method-specific guidance (@sec-z-scoring, @sec-spc-basics, @sec-t-tests, @sec-correlation, @sec-outlier-methods, @sec-missing-data-handling) for detailed requirements.
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **Five key questions structure QA**: Engagement & scoping → Design → Analysis → Delivery → Fitness for purpose. Address all five for every analysis.
+
+2. **Proportionate approach**: Match QA intensity to risk and complexity. Low/medium/high risk determine documentation depth and review requirements.
+
+3. **Roles are distinct**: Analyst (designs and executes), Assurer (independent review), Approver (final accountability), Commissioner (defines need). Analyst and Assurer must be different people.
+
+4. **Document as you go**: Recording decisions during analysis is easier and more accurate than reconstructing them later.
+
+5. **Researcher degrees of freedom require transparency**: Every analysis involves choices. Document what you decided and why. Test sensitivity for critical decisions.
+
+6. **QA catches errors early**: Pre-analysis checks (data provenance, structure, quality) prevent problems from propagating.
+
+7. **Integration, not bolt-on**: QA is built into workflow from scoping through delivery. It's not a final checklist.
+
+8. **Escalate strategically**: Guild consultation is for genuine complexity, novel methods, high stakes. Use it early in design, not after analysis complete.
+
+Good QA makes analysis defensible, reproducible, and trustworthy. It's time well spent and critical for regulatory credibility.
+:::

@@ -1,0 +1,344 @@
+---
+title: "Central Tendency and Position"
+---
+
+## Where Is the Middle? {#sec-describing-data}
+
+Before comparing providers or detecting outliers, you need to describe where your data sits. Is the typical waiting time 2 hours or 20 hours? Is the average incident rate 5 per month or 50? These questions about location, central tendency, and typical values are fundamental to regulatory analysis.
+
+**This chapter focuses on concepts, not calculations.** The methods chapters (Part II) provide computational details.
+
+## Three Classes of Location Measures
+
+All measures in this chapter answer "where is the middle?" but they differ in what question they help you answer:
+
+1. **Means**: "What's the average?" (arithmetic, geometric, harmonic, weighted)
+2. **Quantiles**: "Where does this sit in the distribution?" (median, percentiles, quartiles)
+3. **Mode**: "What's most common?" (for categorical or discrete data)
+
+Each class serves different analytical purposes. Understanding when to use each is more important than memorizing formulas.
+
+## Class 1: Means
+
+**Analytical question**: What's the average value?
+
+**Key insight**: "Average" isn't one thing. Different types of means suit different data structures.
+
+### The Most Common Means
+
+Choose your mean based on what you're averaging:
+
+| Mean Type | How It's Calculated | Best For | CQC Example |
+|-----------|---------------------|----------|-------------|
+| **Arithmetic** | Sum all values ÷ count | Additive quantities, symmetric data | Average waiting time, incident counts |
+| **Geometric** | Multiply all values, take nth root (where n = number of values) | Multiplicative processes, growth rates, ratios | Year-on-year percentage changes |
+| **Harmonic** | Reciprocal of (average of reciprocals) | Rates with varying denominators | Incidents per 1,000 bed-days across different-sized providers |
+| **Weighted arithmetic** | Sum of (value × weight) ÷ sum of weights | Aggregating across different sizes or precision | National benchmarks weighted by provider size |
+
+**Example: Geometric mean** - If you have 3 annual growth rates (1.05, 1.10, 1.03), multiply them (1.05 × 1.10 × 1.03 = 1.189), then take the cube root (∛1.189 = 1.059). This gives the average growth rate that compounds correctly over time.
+
+**Example: Harmonic mean** - If Provider A has 10 incidents in 100 bed-days (10%) and Provider B has 1 incident in 5 bed-days (20%), the arithmetic mean (15%) ignores that most data comes from Provider A. The harmonic mean correctly accounts for the different denominator sizes.
+
+### Weighting: Provider-Centered vs Patient-Centered
+
+Any mean can be **weighted** to give different observations different importance.
+
+**Unweighted** (standard mean):
+- Each provider counts the same
+- Answers: "What's typical for a provider?"
+- Use for: Provider-centered metrics, fairness assessments
+- Example: Average provider rating across all care homes
+
+**Weighted by size**:
+- Larger providers count more
+- Answers: "What's typical for a patient?"
+- Use for: Patient-centered metrics, resource planning
+- Example: National average incident rate weighted by bed-days
+
+**Other weighting schemes**:
+- **By precision**: More reliable estimates count more (meta-analysis)
+- **By time**: Recent data counts more (trend monitoring)
+
+**CQC example**: Calculating "national average incident rate"
+- **Unweighted**: 100-bed and 10-bed providers contribute equally → Provider perspective
+- **Weighted by bed-days**: 100-bed provider contributes 10× more → Patient perspective
+
+**Which is right?** Both are valid—they answer different questions. Choose based on your regulatory purpose.
+
+::: {.callout-note icon=false}
+## Rethinking: Why Different Means Matter for Regulation
+
+In academic statistics, the arithmetic mean dominates because of its mathematical properties (unbiased estimator, efficient, etc.). But regulatory analysis often involves rates, ratios, and aggregations across providers of different sizes.
+
+Consider comparing hospital readmission rates. A large hospital with 10,000 admissions and 500 readmissions (5%) carries far more information than a small unit with 20 admissions and 2 readmissions (10%). The arithmetic mean of 5% and 10% is 7.5%, but this treats both equally. The appropriately weighted or harmonic approach accounts for the different information content.
+
+The choice of mean affects:
+
+- Which providers appear as outliers
+- Whether national benchmarks are meaningful
+- How to aggregate performance across different provider types
+
+When in doubt, calculate multiple measures and understand why they differ. If the arithmetic and harmonic means diverge substantially, you have heterogeneity in your denominator sizes, and you need to think carefully about which measure answers your regulatory question.
+:::
+
+::: {.callout-warning icon=false}
+## Overthinking: The Generalized Mean Formula
+
+All these means are special cases of the **generalized mean** (also called power mean), defined by:
+
+$$M_p(x_1, ..., x_n) = \left( \frac{1}{n} \sum_{i=1}^{n} x_i^p \right)^{1/p}$$
+
+In words:
+1. Raise each value to power *p*
+2. Take the arithmetic mean of these powered values
+3. Take the *p*th root of the result
+
+Different values of *p* give different means:
+- *p* = 1: Arithmetic mean
+- *p* → 0: Geometric mean (limit as *p* approaches 0)
+- *p* = -1: Harmonic mean
+- *p* = 2: Quadratic mean (root mean square)
+
+**Why this matters**: Understanding that these are all the same formula with different *p* values shows they're not arbitrary choices—they're a continuum of measures that emphasize different aspects of your data. Larger *p* values give more weight to larger values; smaller *p* values give more weight to smaller values.
+
+**For CQC work**: You rarely need to think about the *p* parameter. Just remember:
+- Additive data → arithmetic (*p* = 1)
+- Multiplicative data → geometric (*p* → 0)
+- Rates with varying denominators → harmonic (*p* = -1)
+
+**When to escalate**: If you're considering a generalized mean with *p* ≠ {-1, 0, 1, 2}, consult the Quantitative Guild. These are rarely needed and require careful justification.
+:::
+
+::: {.callout-warning icon=false}
+## Overthinking: Weighted Generalized Means
+
+The generalized mean formula can be extended to include weights:
+
+$$M_p(x_1, ..., x_n; w_1, ..., w_n) = \left( \frac{\sum_{i=1}^{n} w_i x_i^p}{\sum_{i=1}^{n} w_i} \right)^{1/p}$$
+
+This unifies both dimensions:
+- **Power parameter** (*p*): Determines combination rule (additive, multiplicative, rate-based)
+- **Weights** (*w*): Determine relative importance of each observation
+
+**Special cases**:
+- *p* = 1, equal weights: Standard arithmetic mean
+- *p* = 1, size weights: Weighted arithmetic mean (patient-centered)
+- *p* = -1, equal weights: Harmonic mean
+- *p* = -1, size weights: Weighted harmonic mean
+
+**Why this matters**: Every mean you use is a choice of *p* and *w*. When you use an "unweighted" arithmetic mean, you're choosing *p* = 1 and *wᵢ* = 1 for all *i*. When you weight by provider size, you're choosing *wᵢ* = bed-daysᵢ. These aren't different types of analysis—they're different parameter choices in the same framework.
+
+**For CQC work**: You don't need to use this formula directly. But understanding that weighting and combination rules are independent dimensions helps you think clearly about:
+- Provider-centered (*w* = 1) vs patient-centered (*w* = size) perspectives
+- Additive (*p* = 1) vs multiplicative (*p* → 0) vs rate-based (*p* = -1) data structures
+
+**When to escalate**: If you need weighted geometric or weighted harmonic means, consult the Quantitative Guild. These are valid but require careful implementation and justification.
+:::
+
+## Class 2: Quantiles {#sec-quantiles}
+
+**Analytical question**: Where does this value sit in the distribution?
+
+**Key insight**: Quantiles describe position, not averages. They answer "what percentage of providers are below this value?"
+
+**Important**: Quantiles work for both **quantitative** and **ordinal** data. Unlike means (which require arithmetic), quantiles only need ordering. You can find the median CQC rating (Inadequate < Requires Improvement < Good < Outstanding) even though you can't calculate a "mean rating."
+
+### The Quantile Family
+
+Quantiles divide your data into equal-sized groups:
+
+- **Percentiles**: 100 groups (1st, 2nd, ..., 99th percentile)
+- **Quartiles**: 4 groups (25th, 50th, 75th percentile = Q1, Q2, Q3)
+- **Quintiles**: 5 groups (20%, 40%, 60%, 80%)
+- **Deciles**: 10 groups (10%, 20%, ..., 90%)
+- **Median**: Special case—the 50th percentile (Q2)
+
+**All quantiles are the same concept**—they differ only in how many divisions you make. The median is just the most commonly used quantile.
+
+### The Median: The 50th Percentile
+
+The **median** splits your data in half: 50% of observations below, 50% above.
+
+**Why the median matters**:
+
+- **Robust to outliers**: One extreme value doesn't shift it
+- **Describes typical experience**: In skewed data, often more representative than mean
+- **Easy to communicate**: "Half of providers have lower rates, half have higher"
+- **Not affected by extreme tails**: Useful when you don't trust extreme values
+
+**CQC examples**:
+
+- Median waiting time: The experience of the middle patient
+- Median provider performance: Half are better, half are worse
+- Median length of stay: Not pulled by very long stays
+
+**When median and mean differ**:
+
+- Mean > Median: Positive skew (long right tail), a few very high values
+- Mean < Median: Negative skew (long left tail), a few very low values
+- Mean ≈ Median: Symmetric distribution
+
+**The difference itself is informative**. If the mean hospital readmission rate is 8% but the median is 5%, you have a skewed distribution. A few providers with very high rates are pulling up the mean. This matters for targeting inspections.
+
+### Other Quantiles: Percentiles and Quartiles
+
+**Percentiles** answer: "What percentage of providers are below this value?"
+
+- 90th percentile: 90% of providers are below this value
+- 25th percentile (Q1): First quartile, 25% below
+- 75th percentile (Q3): Third quartile, 75% below
+
+**Quartiles** divide data into four equal groups, useful for creating performance bands or identifying which quarter of the distribution a provider falls into.
+
+### Why Quantiles Matter for CQC
+
+**Ranking providers**: "This provider is in the top 10% for incident rates" is clearer than "1.5 standard deviations above mean" for non-technical audiences.
+
+**Targeting inspections**: "We'll inspect all providers above the 95th percentile" is a defensible, clear threshold.
+
+**Handling non-normal data**: Quantiles work regardless of distribution shape. The 90th percentile is meaningful whether your data is normal, skewed, or multimodal.
+
+**Works for ordinal data**: Unlike means, quantiles don't require arithmetic. You can find the median CQC rating or the 75th percentile severity level because these only require ordering, not calculation.
+
+### Quantiles vs Means: Different Questions
+
+**Quantiles** (position-based):
+- Question: "Where does this provider rank?"
+- Answer: "20% of providers are worse"
+- Robust to outliers and non-normal distributions
+- Easy to communicate
+
+**Means** (average-based):
+- Question: "What's the typical value?"
+- Answer: "The average is 10 incidents per month"
+- Uses full distribution information
+- Sensitive to outliers
+
+**CQC practice**: Use quantiles for reporting to non-technical stakeholders, use means (and z-scores) for statistical flagging. They complement each other.
+
+### Summary: When to Use Quantiles
+
+| Quantile | Use When | CQC Example |
+|----------|----------|-------------|
+| **Median** | Describing typical experience, skewed data | Median waiting time, median provider performance |
+| **Quartiles** | Dividing into four groups | Performance quartile bands |
+| **Percentiles** | Ranking providers, setting thresholds | "Top 10% for inspection", "Above 95th percentile" |
+| **Deciles** | Coarser grouping than percentiles | Performance decile bands for reporting |
+
+**Key principle**: All quantiles describe position in the distribution. They differ only in how finely you divide the data. Choose based on your communication needs and decision thresholds. **Quantiles work for both quantitative and ordinal data.**
+
+## Class 3: Mode
+
+**Analytical question**: What's the most common value?
+
+**Key insight**: Mode works for all data types, including nominal (unordered categorical) data where neither means nor quantiles apply.
+
+The **mode** is the value that appears most frequently.
+
+**When to use it**:
+
+- **Qualitative data**: What's the most common CQC rating? Mode = "Good"
+- **Discrete data with clustering**: If 40 providers have exactly 10 incidents per month, that's the mode
+- **Bimodal distributions**: When data clusters around two different values
+
+**Limitations**:
+
+- Not always unique (data can be bimodal or multimodal)
+- Doesn't use all information in the data
+- Can be misleading with continuous data (depends on arbitrary binning)
+
+**CQC context**: Mode is less useful than means or median for quantitative metrics, but essential for qualitative outcomes (ratings, compliance status, risk categories).
+
+**Summary**: Mode answers "what's most common?" Use it for categorical data or when frequency matters more than average value.
+
+::: {.callout-warning icon=false}
+## Overthinking: Trimmed and Winsorized Means
+
+Two specialized approaches for handling outliers without discarding them:
+
+**Trimmed mean**: Remove a percentage from each tail, then calculate mean.
+
+- 5% trimmed mean: Drop lowest 5% and highest 5%, average the rest
+- Less sensitive to extreme values than regular mean
+- More efficient than median when outliers are present but rare
+
+**Winsorized mean**: Replace extreme values with less extreme values, then calculate mean.
+
+- 5% winsorization: Replace lowest 5% with the 5th percentile value, replace highest 5% with 95th percentile value
+- Retains all observations but limits their influence
+- Preserves sample size for downstream analyses
+
+**When to consider**: If you have confirmed outliers (data errors, unusual circumstances) but don't want to delete them entirely. However, for most CQC analyses, it's clearer to calculate the standard mean and median, report both, and explain why they differ.
+
+**When to escalate**: If you're considering trimming or winsorization for a high-stakes analysis (e.g., provider ratings, funding allocation), consult the Quantitative Guild. These methods require careful justification.
+:::
+
+::: {.callout-note icon=false}
+## Rethinking: Percentiles Aren't Percentages
+
+A common confusion: "This provider is at the 90th percentile" doesn't mean "90% of their patients experience this outcome." It means "This provider ranks higher than 90% of other providers."
+
+The percentile describes the provider's position in the distribution of providers, not the outcome rate within that provider.
+
+Example: A provider at the 90th percentile for waiting times might have a mean wait of 4 hours. This means 90% of providers have shorter mean waits. But within this provider, some patients might wait 2 hours, some 6 hours. The percentile doesn't tell you about variation within the provider.
+
+For regulatory communication, be explicit: "This provider's incident rate is higher than 90% of similar providers" rather than "This provider is at the 90th percentile."
+:::
+
+## Choosing the Right Class of Measure
+
+No single measure is always best. Choose based on your analytical question:
+
+### By Analytical Question
+
+| Question | Use | Example |
+|----------|-----|----------|
+| "What's the average?" | **Means** | Arithmetic mean for waiting times, harmonic mean for rates |
+| "What's typical?" | **Median** (50th percentile) | Median waiting time, median provider performance |
+| "Where does this rank?" | **Percentiles/quartiles** | "Top 10%", "Above 95th percentile" |
+| "What's most common?" | **Mode** | Most common CQC rating |
+| "Is this unusual?" | **Mean + SD → z-score** | Statistical flagging (see @sec-z-scoring) |
+
+### By Data Characteristics
+
+| Data Type | Recommended Measure | Reason |
+|-----------|---------------------|--------|
+| **Quantitative, symmetric** | Arithmetic mean | Most efficient, familiar |
+| **Quantitative, skewed** | Median or geometric mean | Robust to outliers |
+| **Quantitative, rates** | Harmonic mean (if denominators vary) | Accounts for different sample sizes |
+| **Ordinal** | Median, quartiles, percentiles | Only need ordering, not arithmetic |
+| **Nominal** | Mode | Only option for unordered categories |
+
+### By Audience
+
+| Audience | Recommended Measure | Reason |
+|----------|---------------------|--------|
+| **Technical** | Means, SD, confidence intervals | Precise, supports testing |
+| **Non-technical** | Median, percentiles | Easier to explain |
+| **Regulatory comms** | Both mean and median | Show typical + system-level |
+
+## Position Isn't Everything
+
+This chapter covers where data sits (location, position, central tendency). But location alone is incomplete. Two providers might both have a mean incident rate of 10 per month, but one is consistently 9-11 per month (stable) while the other swings from 0-20 per month (variable).
+
+**Next step**: @sec-variation-uncertainty covers measuring spread, understanding variation, and quantifying uncertainty. Together, location and spread give you a complete picture of provider performance.
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **Three classes of location measures**: Means (averaging), quantiles (position), and mode (most common). Each answers a different question.
+
+2. **Different means for different data**: Arithmetic mean for additive data, geometric mean for multiplicative data, harmonic mean for rates with varying denominators. Any mean can be weighted.
+
+3. **Quantiles are a family**: Percentiles, quartiles, and median are all quantiles—they differ only in how finely you divide the data. All describe position, not averages.
+
+4. **Mean vs median reveals distribution shape**: If they differ substantially, your data is skewed. Report both.
+
+5. **Weight by relevance**: When aggregating across providers, weight by size for patient-centered metrics, unweighted for provider-centered metrics.
+
+6. **Match measure to question**: Average → means. Typical → median. Position → percentiles. Most common → mode. Unusual → mean + SD (z-score).
+
+7. **Location without spread is incomplete**: Knowing the average doesn't tell you about variability. See @sec-variation-uncertainty.
+:::

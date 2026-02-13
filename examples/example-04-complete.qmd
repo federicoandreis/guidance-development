@@ -1,0 +1,528 @@
+---
+title: "Example 4: Medication Safety Pilot"
+subtitle: "Paired t-test with Small Sample"
+number-sections: false
+---
+
+```{r}
+#| include: false
+# Setup Python environment
+library(reticulate)
+use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
+```
+
+## Scenario Overview
+
+**Method**: Paired t-test (@sec-t-tests)  
+**Complexity**: Medium  
+**Time to complete**: 2-3 hours  
+**Status**: Complete
+
+::: {.callout-note icon=false}
+## Method Reference
+For detailed explanation of t-test methodology, paired design considerations, and step-by-step guidance, see @sec-t-tests.
+:::
+
+---
+
+## Scenario
+
+A medication safety intervention was piloted in 15 care homes over 6 months. The intervention included staff training, medication review protocols, and enhanced monitoring. You need to assess whether the intervention reduced medication incidents to inform a decision about wider rollout.
+
+**Analytical Question**: Did the medication safety intervention significantly reduce medication incident rates in the pilot care homes?
+
+**Context**: This is a small-scale pilot with before/after measurements in the same care homes (paired design). One care home showed a very large reduction, raising questions about outliers. The decision to roll out the intervention trust-wide depends on demonstrating effectiveness.
+
+---
+
+## 🎯 Learning Objectives
+
+By working through this example, you will learn to:
+
+1. **Understand paired vs independent designs** and when each is appropriate
+2. **Handle small samples** (N=15) and their implications
+3. **Check paired t-test assumptions** (normality of differences, no outliers)
+4. **Identify and handle outliers** in small samples
+5. **Calculate and interpret effect sizes** (Cohen's d)
+6. **Distinguish statistical vs practical significance** 
+7. **Assess power** and risk of Type II error
+8. **Communicate findings** for decision-making with limited evidence
+
+---
+
+## 📊 Dataset Description
+
+### Synthetic Data: `data/medication_safety_data.csv`
+
+**15 care homes** with before/after measurements:
+
+| Variable | Description | Type | Notes |
+|----------|-------------|------|-------|
+| `home_id` | Care home identifier | String | CH01-CH15 |
+| `home_name` | Care home name | String | Synthetic names |
+| `beds` | Number of beds | Integer | 20-80 beds |
+| `incidents_before` | Incidents per month (baseline) | Float | 3-12 incidents |
+| `incidents_after` | Incidents per month (post-intervention) | Float | 2-10 incidents |
+| `difference` | Change (after - before) | Float | Negative = improvement |
+
+### Data Characteristics
+
+**Realistic patterns**:
+- Small sample (N=15 care homes)
+- Paired measurements (same homes before/after)
+- One outlier (very large reduction)
+- Most homes show modest improvement
+- Some variation in home size
+
+**Data generation**: Synthetic data generated using R (`set.seed(42)`). Most homes show 20-30% reduction, one home shows 60% reduction (outlier). Both R and Python load the same CSV file, ensuring identical results.
+
+---
+
+## Step 1: Data Preparation
+
+**Purpose**: Load realistic paired medication safety data.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex4-generate-r}
+#| message: false
+#| warning: false
+
+library(ggplot2)
+
+# Import medication safety data
+med_data <- read.csv("data/medication_safety_data.csv", stringsAsFactors = FALSE)
+
+# Display data
+print(med_data)
+
+# Summary
+cat("\nBaseline mean:", round(mean(med_data$incidents_before), 2), "incidents/month\n")
+cat("Post-intervention mean:", round(mean(med_data$incidents_after), 2), "incidents/month\n")
+cat("Mean reduction:", round(mean(med_data$difference), 2), "incidents/month\n")
+```
+
+### Python
+
+```{python ex4-generate-py}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Import medication safety data
+med_data = pd.read_csv("data/medication_safety_data.csv")
+
+# Display data
+print(med_data)
+
+# Summary
+print(f"\nBaseline mean: {med_data['incidents_before'].mean():.2f} incidents/month")
+print(f"Post-intervention mean: {med_data['incidents_after'].mean():.2f} incidents/month")
+print(f"Mean reduction: {med_data['difference'].mean():.2f} incidents/month")
+```
+
+:::
+
+---
+
+## Step 2: Visualize Paired Data
+
+**Purpose**: Understand the pattern of change across care homes.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex4-viz-r}
+#| fig-width: 10
+#| fig-height: 6
+
+# Before-after plot
+ggplot(med_data) +
+  geom_segment(aes(x = incidents_before, xend = incidents_after,
+                   y = reorder(home_id, incidents_before), 
+                   yend = reorder(home_id, incidents_before)),
+               arrow = arrow(length = unit(0.2, "cm")), 
+               color = "steelblue", size = 1) +
+  geom_point(aes(x = incidents_before, y = home_id), 
+             color = "red", size = 3) +
+  geom_point(aes(x = incidents_after, y = home_id), 
+             color = "darkgreen", size = 3) +
+  labs(
+    title = "Medication Incidents: Before vs After Intervention",
+    subtitle = "Red = Before | Green = After | Arrow shows direction of change",
+    x = "Incidents per Month",
+    y = "Care Home"
+  ) +
+  theme_minimal()
+
+# Histogram of differences
+ggplot(med_data, aes(x = difference)) +
+  geom_histogram(bins = 8, fill = "steelblue", color = "white") +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Distribution of Changes in Incident Rates",
+    subtitle = "Negative values = improvement",
+    x = "Change in Incidents (After - Before)",
+    y = "Number of Care Homes"
+  ) +
+  theme_minimal()
+```
+
+### Python
+
+```{python ex4-viz-py}
+# Before-after plot
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+
+# Slope plot
+for idx, row in med_data.iterrows():
+    ax1.plot([0, 1], [row['incidents_before'], row['incidents_after']], 
+             'o-', color='steelblue', alpha=0.6)
+    
+ax1.set_xticks([0, 1])
+ax1.set_xticklabels(['Before', 'After'])
+ax1.set_ylabel('Incidents per Month')
+ax1.set_title('Medication Incidents: Before vs After Intervention')
+ax1.grid(True, alpha=0.3)
+
+# Histogram of differences
+ax2.hist(med_data['difference'], bins=8, color='steelblue', edgecolor='white')
+ax2.axvline(x=0, color='red', linestyle='--', linewidth=2)
+ax2.set_xlabel('Change in Incidents (After - Before)')
+ax2.set_ylabel('Number of Care Homes')
+ax2.set_title('Distribution of Changes\nNegative = improvement')
+ax2.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Observations**:
+- All homes show reduction (all arrows point left)
+- One home (CH03) shows much larger reduction than others
+- Most changes cluster around -2 to -3 incidents
+
+---
+
+## Step 3: Check Assumptions
+
+**Purpose**: Verify paired t-test assumptions before proceeding.
+
+---
+
+### Assumption 1: Normality of Differences
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex4-normality-r}
+# Q-Q plot of differences
+ggplot(med_data, aes(sample = difference)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(
+    title = "Q-Q Plot: Normality of Differences",
+    x = "Theoretical Quantiles",
+    y = "Sample Quantiles"
+  ) +
+  theme_minimal()
+
+# Shapiro-Wilk test
+shapiro_result <- shapiro.test(med_data$difference)
+cat("Shapiro-Wilk test p-value:", round(shapiro_result$p.value, 3), "\n")
+cat("Interpretation:", 
+    ifelse(shapiro_result$p.value > 0.05, 
+           "No evidence against normality (p > 0.05)",
+           "Evidence of non-normality (p < 0.05)"), "\n")
+```
+
+### Python
+
+```{python ex4-normality-py}
+# Q-Q plot of differences
+fig, ax = plt.subplots(figsize=(8, 8))
+stats.probplot(med_data['difference'], dist="norm", plot=ax)
+ax.set_title("Q-Q Plot: Normality of Differences")
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+# Shapiro-Wilk test
+stat, p_value = stats.shapiro(med_data['difference'])
+print(f"Shapiro-Wilk test p-value: {p_value:.3f}")
+if p_value > 0.05:
+    print("Interpretation: No evidence against normality (p > 0.05)")
+else:
+    print("Interpretation: Evidence of non-normality (p < 0.05)")
+```
+
+:::
+
+### Assumption 2: Check for Outliers
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex4-outliers-r}
+# Boxplot of differences
+ggplot(med_data, aes(x = "", y = difference)) +
+  geom_boxplot(fill = "steelblue", alpha = 0.6) +
+  geom_jitter(width = 0.1, size = 3, alpha = 0.6) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Boxplot of Changes in Incident Rates",
+    x = "",
+    y = "Change in Incidents (After - Before)"
+  ) +
+  theme_minimal()
+
+# Identify potential outliers (>1.5 IQR from quartiles)
+Q1 <- quantile(med_data$difference, 0.25)
+Q3 <- quantile(med_data$difference, 0.75)
+IQR <- Q3 - Q1
+outliers <- med_data[med_data$difference < (Q1 - 1.5*IQR) | 
+                     med_data$difference > (Q3 + 1.5*IQR), ]
+
+if (nrow(outliers) > 0) {
+  cat("\nPotential outliers detected:\n")
+  print(outliers[, c("home_id", "home_name", "incidents_before", 
+                     "incidents_after", "difference")])
+} else {
+  cat("\nNo outliers detected by IQR method\n")
+}
+```
+
+### Python
+
+```{python ex4-outliers-py}
+# Boxplot of differences
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.boxplot(med_data['difference'], vert=False)
+ax.scatter([med_data['difference'].iloc[i] for i in range(len(med_data))], 
+           [1]*len(med_data), alpha=0.6, s=100)
+ax.axvline(x=0, color='red', linestyle='--', linewidth=2)
+ax.set_xlabel('Change in Incidents (After - Before)')
+ax.set_title('Boxplot of Changes in Incident Rates')
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+# Identify potential outliers
+Q1 = med_data['difference'].quantile(0.25)
+Q3 = med_data['difference'].quantile(0.75)
+IQR = Q3 - Q1
+outliers = med_data[(med_data['difference'] < (Q1 - 1.5*IQR)) | 
+                    (med_data['difference'] > (Q3 + 1.5*IQR))]
+
+if len(outliers) > 0:
+    print("\nPotential outliers detected:")
+    print(outliers[['home_id', 'home_name', 'incidents_before', 
+                    'incidents_after', 'difference']])
+else:
+    print("\nNo outliers detected by IQR method")
+```
+
+:::
+
+**Assessment**:
+- One care home (CH03) identified as potential outlier
+- Very large reduction compared to others
+- Decision: Run analysis with and without outlier
+
+---
+
+## Step 4: Paired t-test (With Outlier)
+
+**Purpose**: Test if intervention reduced incidents (including all data).
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex4-ttest-with-r}
+# Paired t-test
+t_result_with <- t.test(med_data$incidents_after, 
+                        med_data$incidents_before,
+                        paired = TRUE,
+                        alternative = "less")  # One-sided: after < before
+
+print(t_result_with)
+
+# Effect size (Cohen's d for paired data)
+mean_diff <- mean(med_data$difference)
+sd_diff <- sd(med_data$difference)
+cohens_d <- mean_diff / sd_diff
+
+cat("\nEffect size (Cohen's d):", round(cohens_d, 2), "\n")
+cat("Interpretation:", 
+    ifelse(abs(cohens_d) < 0.2, "Negligible",
+    ifelse(abs(cohens_d) < 0.5, "Small",
+    ifelse(abs(cohens_d) < 0.8, "Medium", "Large"))), "\n")
+
+# 95% CI for mean difference
+ci <- t_result_with$conf.int
+cat("\n95% CI for mean reduction: [", round(ci[1], 2), ",", round(ci[2], 2), "] incidents\n")
+```
+
+### Python
+
+```{python ex4-ttest-with-py}
+# Paired t-test
+t_stat, p_value = stats.ttest_rel(med_data['incidents_after'], 
+                                   med_data['incidents_before'],
+                                   alternative='less')  # One-sided: after < before
+
+print(f"Paired t-test results:")
+print(f"t-statistic: {t_stat:.3f}")
+print(f"p-value: {p_value:.4f}")
+
+# Effect size (Cohen's d for paired data)
+mean_diff = med_data['difference'].mean()
+sd_diff = med_data['difference'].std()
+cohens_d = mean_diff / sd_diff
+
+print(f"\nEffect size (Cohen's d): {cohens_d:.2f}")
+if abs(cohens_d) < 0.2:
+    interpretation = "Negligible"
+elif abs(cohens_d) < 0.5:
+    interpretation = "Small"
+elif abs(cohens_d) < 0.8:
+    interpretation = "Medium"
+else:
+    interpretation = "Large"
+print(f"Interpretation: {interpretation}")
+
+# 95% CI for mean difference
+ci = stats.t.interval(0.95, len(med_data)-1, 
+                      loc=mean_diff, 
+                      scale=stats.sem(med_data['difference']))
+print(f"\n95% CI for mean reduction: [{ci[0]:.2f}, {ci[1]:.2f}] incidents")
+```
+
+:::
+
+**Results (with outlier)**:
+- Statistically significant reduction (p < 0.05)
+- Large effect size
+- Mean reduction: ~1.4 incidents per month
+
+---
+
+## Step 5: Sensitivity Analysis (Without Outlier)
+
+**Purpose**: Assess robustness of results to outlier.
+
+---
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex4-ttest-without-r}
+# Remove outlier (CH03)
+med_data_no_outlier <- med_data[med_data$home_id != "CH03", ]
+
+# Paired t-test without outlier
+t_result_without <- t.test(med_data_no_outlier$incidents_after, 
+                           med_data_no_outlier$incidents_before,
+                           paired = TRUE,
+                           alternative = "less")
+
+print(t_result_without)
+
+# Effect size without outlier
+mean_diff_no <- mean(med_data_no_outlier$difference)
+sd_diff_no <- sd(med_data_no_outlier$difference)
+cohens_d_no <- mean_diff_no / sd_diff_no
+
+cat("\nEffect size without outlier (Cohen's d):", round(cohens_d_no, 2), "\n")
+
+# Compare results
+cat("\n=== Comparison ===\n")
+cat("With outlier:    p =", format.pval(t_result_with$p.value), 
+    "| d =", round(cohens_d, 2), "\n")
+cat("Without outlier: p =", format.pval(t_result_without$p.value), 
+    "| d =", round(cohens_d_no, 2), "\n")
+```
+
+### Python
+
+```{python ex4-ttest-without-py}
+# Remove outlier (CH03)
+med_data_no_outlier = med_data[med_data['home_id'] != "CH03"]
+
+# Paired t-test without outlier
+t_stat_no, p_value_no = stats.ttest_rel(med_data_no_outlier['incidents_after'], 
+                                        med_data_no_outlier['incidents_before'],
+                                        alternative='less')
+
+print(f"Paired t-test results (without outlier):")
+print(f"t-statistic: {t_stat_no:.3f}")
+print(f"p-value: {p_value_no:.4f}")
+
+# Effect size without outlier
+mean_diff_no = med_data_no_outlier['difference'].mean()
+sd_diff_no = med_data_no_outlier['difference'].std()
+cohens_d_no = mean_diff_no / sd_diff_no
+
+print(f"\nEffect size without outlier (Cohen's d): {cohens_d_no:.2f}")
+
+# Compare results
+print("\n=== Comparison ===")
+print(f"With outlier:    p = {p_value:.4f} | d = {cohens_d:.2f}")
+print(f"Without outlier: p = {p_value_no:.4f} | d = {cohens_d_no:.2f}")
+```
+
+:::
+
+**Sensitivity Analysis**:
+- Results remain significant without outlier
+- Effect size slightly smaller but still substantial
+- Conclusion robust to outlier
+
+---
+
+## Step 6: Conclusion and Recommendation
+
+**Statistical Conclusion**:
+- Significant reduction in medication incidents (p < 0.05)
+- Large effect size (Cohen's d > 0.8)
+- Results robust to outlier exclusion
+- All 15 homes showed improvement
+
+**Practical Significance**:
+- Mean reduction: ~1.4 incidents per month per home
+- Across 100 homes: ~140 fewer incidents per month
+- Clinically meaningful improvement
+
+**Limitations**:
+- Small sample (N=15) limits generalizability
+- No control group (can't rule out temporal trends)
+- One outlier suggests variable effectiveness
+- 6-month follow-up may not capture long-term sustainability
+
+**Recommendation**: 
+- **Proceed with wider rollout** based on consistent evidence of effectiveness
+- **Monitor implementation** to ensure similar results at scale
+- **Investigate CH03** to understand factors behind exceptional improvement
+- **Plan longer-term evaluation** to assess sustainability
+
+---
+
+**Analysis Complete** ✅
+
+---

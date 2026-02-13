@@ -1,0 +1,496 @@
+---
+title: "Unusual Observations and Extreme Values"
+---
+
+## When Values Stand Out {#sec-unusual-observations}
+
+Not all data points are created equal. In any dataset, some values stand out—waiting times much longer than average, incident rates much higher than peers, staffing levels far below comparators. These **unusual observations** (often called outliers) demand attention, but what makes a value "unusual" is not as straightforward as it might seem.
+
+**The core insight**: There is no universal definition of "unusual." What counts as extreme depends on your question, your data, and your context. The same value might be a concerning outlier for one analysis but perfectly reasonable for another.
+
+This chapter addresses three fundamental questions:
+
+1. **What makes an observation unusual?** Understanding different ways to define "extreme"
+2. **Why do unusual values arise?** Distinguishing errors from genuine extremes
+3. **How should you handle them?** Principled approaches to investigation and decision-making
+
+**This chapter focuses on concepts.** For computational methods (Tukey's fences, modified z-scores, multivariate detection), see @sec-outlier-methods.
+
+**Building on previous chapters**: You need to understand central tendency (@sec-describing-data) and variation (@sec-variation-uncertainty) before you can define what "far from typical" means. You also need to understand statistical inference (@sec-statistical-inference) to interpret whether an unusual value signals a problem.
+
+## Why Unusual Values Arise
+
+Before deciding how to handle an unusual observation, understand why it exists.
+
+### Data Errors
+
+**Most common cause in practice**. Errors create values that are impossible or implausible.
+
+**Examples**:
+- **Entry errors**: "234" instead of "23.4" (decimal point missing)
+- **Unit errors**: Days recorded as hours (72 instead of 3)
+- **System glitches**: Missing data coded as 999
+- **Copy-paste errors**: Values from one provider appearing under another
+- **Measurement failures**: Sensor malfunction, incomplete survey
+
+**CQC implication**: Before investigating a provider for extreme performance, verify the data. Many "outliers" vanish when you correct errors.
+
+### Genuine Extremes
+
+**Real but rare events**. Some values are accurate recordings of unusual situations.
+
+**Examples**:
+- Care home with COVID outbreak has genuinely high mortality for that month
+- Small GP practice with one serious incident has high rate per 1000 patients
+- Hospital specialist unit treats sickest patients, genuinely different outcomes
+- Provider serving unique population (e.g., only high-dependency patients)
+
+**CQC implication**: An unusual value doesn't mean poor quality. It might reflect casemix, population served, or a one-off event. Context matters.
+
+### Different Populations
+
+**The value isn't extreme for its true group, but appears extreme when mixed with others**.
+
+**Examples**:
+- Maternity unit compared to general hospital (different denominators, different populations)
+- Small care home (20 beds) compared to large nursing home (200 beds)—precision and operational models differ
+- Specialist vs generalist providers mixed in same analysis
+- Urban vs rural settings with different resource constraints
+
+**CQC implication**: Check whether you're comparing like with like. Stratify analysis by provider type, size, or setting before flagging outliers.
+
+### Process Changes or Special Causes
+
+**Something genuinely changed**. This is what SPC methods (@sec-spc-basics) are designed to detect.
+
+**Examples**:
+- New infection control protocol reduces incidents (genuine improvement)
+- Staffing crisis leads to temporary spike in complaints (temporary deterioration)
+- Regulatory inspection triggers short-term improvement (Hawthorne effect)
+- Policy change affects reporting practices (artifact, not real change)
+
+**CQC implication**: Time-based unusual values warrant investigation of what changed and whether it's sustained. One unusual month might be a blip; six consecutive unusual months signals a systematic change.
+
+## Defining "Unusual": Multiple Perspectives
+
+There's no single "correct" way to identify unusual observations. Different definitions serve different purposes.
+
+### Distance from Centre
+
+**How far is this value from the typical value?**
+
+**Approaches**:
+- **Z-scores** (@sec-z-scoring): How many standard deviations from the mean?
+- **Distance from median**: How far from the middle value?
+- **Mahalanobis distance**: Multivariate distance accounting for correlations
+
+**Strengths**: Intuitive, quantifiable, directly connected to statistical inference
+
+**Limitations**: Assumes a particular center (mean or median). Sensitive to skewness and distribution shape.
+
+**When to use**: Symmetric or roughly normal data, comparing providers to a benchmark
+
+**CQC example**: A provider's incident rate is 12 per month, mean is 8, SD is 2. Z-score = (12-8)/2 = 2. This provider is 2 standard deviations above average—moderately unusual.
+
+### Position-Based
+
+**Where does this value sit in the ranking?**
+
+**Approaches**:
+- **Percentiles** (@sec-quantiles): Is this in the top 5%? Bottom 10%?
+- **IQR-based** (Tukey's fences): Beyond 1.5 × IQR from quartiles?
+- **Extreme order statistics**: Minimum or maximum value?
+
+**Strengths**: Robust to outliers themselves. Works with skewed data. Easy to communicate.
+
+**Limitations**: Doesn't account for how extreme the value is, just its rank. With small samples, "top 5%" might be very close to median.
+
+**When to use**: Skewed data, ranking providers, when distribution shape unknown
+
+**CQC example**: A care home is in the 95th percentile for falls per bed-day. This means it has more falls than 95% of similar homes. Whether this is concerning depends on how far above the 94th percentile it is and the clinical context.
+
+### Model-Based
+
+**How poorly does this value fit the model?**
+
+**Approaches**:
+- **Residuals**: Difference between observed and predicted values
+- **Leverage**: How much influence this point has on the model
+- **Cook's distance**: Combined influence and residual measure
+
+**Strengths**: Identifies values unusual *for their characteristics*. Accounts for expected variation based on covariates.
+
+**Limitations**: Requires a model. Definition of "unusual" depends on model specification. More complex to explain.
+
+**When to use**: Regression analysis, when you're modeling relationships, when you need to account for casemix or confounders
+
+**CQC example**: You're modeling infection rates accounting for ward type, patient acuity, and staffing levels. A hospital has higher rates than predicted by the model—it's an outlier *after accounting for these factors*. This is more informative than just "high rate" because it's unusual even for its circumstances.
+
+### Domain Knowledge
+
+**Is this value implausible or concerning based on clinical or operational expertise?**
+
+**Approaches**:
+- **Clinical thresholds**: Mortality >50% in a care home warrants investigation regardless of statistical methods
+- **Regulatory standards**: Staffing below minimum requirements
+- **Historical comparison**: This provider's current rate vs their own history
+- **Operational limits**: Waiting times >24 hours for emergency care
+
+**Strengths**: Incorporates expertise and context. Directly linked to regulatory standards. Easy to justify.
+
+**Limitations**: Can miss statistically unusual but not yet extreme values. Threshold-based, doesn't account for natural variation. May not be consistently applied.
+
+**When to use**: Always, as a complement to statistical methods. First line for serious safety concerns.
+
+**CQC example**: A care home reports zero incidents for 6 months. Statistically, this is an outlier (most homes report some incidents). Clinically, it's implausible—likely underreporting rather than perfect safety. Domain knowledge flags this even if statistical methods don't.
+
+## The Investigation Principle
+
+**Never automatically remove or ignore unusual observations. Always investigate first.**
+
+### Investigation Workflow
+
+**Step 1: Verify the data**
+
+- Check original source (is the value recorded correctly?)
+- Check extraction and processing (did any transformations create this?)
+- Check units and definitions (is this measuring what you think?)
+- Check for duplicates or mismatches (is this the right provider?)
+
+**If it's an error**: Correct it if possible, exclude it if not. Document what you did and why.
+
+**Step 2: Understand the context**
+
+- What kind of provider is this? (size, type, population served)
+- What period does this cover? (one-off event or sustained?)
+- What else do we know? (inspection history, complaints, other indicators)
+- Are there related unusual values? (multiple indicators flagged?)
+
+**If context explains it**: Document the context. May still warrant investigation, but for different reasons than data quality.
+
+**Step 3: Consider the pattern**
+
+- Is this value unusual relative to peers? (cross-sectional outlier)
+- Is it unusual relative to this provider's own history? (temporal outlier)
+- Are similar providers also unusual? (systematic pattern suggesting subgroup)
+- Is the unusual value in the same direction across multiple indicators? (consistent signal)
+
+**If pattern is systematic**: May indicate need to stratify analysis or revise comparator group.
+
+**Step 4: Assess regulatory significance**
+
+- Does this value indicate potential patient harm? (safety threshold)
+- Does it trigger inspection criteria? (regulatory action)
+- Is it clinically as well as statistically significant? (practical importance)
+- What are the consequences of action vs inaction? (risk trade-off)
+
+**If regulatory significance is high**: Proceed to investigation or inspection regardless of statistical uncertainty.
+
+### Documenting Your Investigation
+
+For QA purposes (@sec-qa-principles), record:
+
+- **What flagged this value as unusual** (which method, which threshold)
+- **What you checked** (data verification steps)
+- **What you found** (error, genuine extreme, explained by context, unexplained)
+- **What you decided** (keep, correct, exclude, investigate further)
+- **Why you decided that** (rationale based on evidence)
+- **What limitations this creates** (how does this affect your analysis)
+
+This documentation is essential if your analysis is challenged or reviewed.
+
+## Handling Options: Principles
+
+Once you've investigated, you need to decide what to do. No single approach is always right.
+
+### Keep and Document (Default)
+
+**Principle**: Transparency over convenience. Keep the value, report it clearly, document why it's unusual.
+
+**When to use**:
+- Value is verified as accurate
+- Removing it would introduce bias (e.g., removing high performers makes everyone look worse)
+- You're describing what exists, not estimating a population parameter
+- Regulatory context requires seeing all data
+
+**Advantages**:
+- Transparent and defensible
+- No arbitrary decisions
+- Preserves information
+
+**Disadvantages**:
+- May violate statistical assumptions
+- Can dominate summary statistics (especially with small samples)
+- Requires careful interpretation
+
+**CQC example**: A small care home has one serious incident in a month, giving it the highest rate per bed-day. Keep this value and report "one small provider had a serious incident this period, inflating their rate." Don't exclude it—that would hide important information.
+
+### Transform to Reduce Influence
+
+**Principle**: Mathematical transformation reduces the influence of extreme values without removing them.
+
+**Common transformations**:
+- **Log transformation**: log(x). Reduces positive skew, brings extreme high values closer to the center.
+- **Square root**: √x. Milder than log, suitable for count data.
+- **Inverse**: 1/x. For rate data where small denominators create extreme values.
+- **Winsorizing**: Replace extreme values with less extreme ones (e.g., 95th percentile).
+
+**When to use**:
+- Data is heavily skewed
+- Transformation improves adherence to statistical assumptions (e.g., normality for t-tests)
+- You're modeling and transformation improves model fit
+- Transformation has substantive interpretation (e.g., log for multiplicative processes)
+
+**Advantages**:
+- Retains all data
+- Can improve statistical properties
+- Well-established in some contexts
+
+**Disadvantages**:
+- Changes interpretation (results are on transformed scale)
+- Not always intuitive to communicate
+- May not be appropriate for all data types
+
+**CQC example**: Infection rates per 100 bed-days are heavily right-skewed. Log-transforming rates before comparison makes the distribution more symmetric, reducing the influence of a few very high values. Report results as "geometric mean rate" or back-transform to original scale with caveats.
+
+### Use Robust Methods
+
+**Principle**: Choose statistical methods designed to resist the influence of unusual observations.
+
+**Robust alternatives**:
+- Use **median** instead of mean (@sec-describing-data)
+- Use **IQR** instead of standard deviation (@sec-variation-uncertainty)
+- Use **Spearman's correlation** instead of Pearson's (@sec-correlation)
+- Use **non-parametric tests** instead of t-tests when assumptions violated
+- Use **robust regression** methods (available via Guild consultation)
+
+**When to use**:
+- Unusual observations are genuine but distort conventional statistics
+- You want a measure of "typical" that isn't affected by extremes
+- Small sample with one or two unusual values
+
+**Advantages**:
+- Simple to apply
+- Well-established alternatives exist
+- Results less sensitive to outliers
+
+**Disadvantages**:
+- Less statistically efficient with clean data
+- May not answer the original question (median ≠ mean)
+- Some robust methods require specialist implementation
+
+**CQC example**: When comparing median waiting times across providers, one provider with very long waits doesn't distort the comparison as much as if you used mean waiting times. Median is robust to this outlier.
+
+### Remove (Last Resort)
+
+**Principle**: Exclude the observation from analysis. Only after investigation and documentation.
+
+**When justified**:
+- Value is a confirmed error that cannot be corrected
+- Value represents a fundamentally different population (e.g., mixing acute hospitals with hospices)
+- Method assumptions critically violated and transformation doesn't help
+- Including the value would produce misleading conclusions
+
+**When NOT justified**:
+- "It makes my results cleaner"
+- "It's more than 3 SD from the mean" (mechanical application of a rule)
+- "It doesn't fit my hypothesis"
+- "I don't know what else to do"
+
+**If you remove, you MUST**:
+- Document what you removed and why
+- Report sample size before and after exclusions
+- Conduct sensitivity analysis showing results with and without exclusion
+- Explain why exclusion is justified, not just that the value is extreme
+
+**Disadvantages**:
+- Introduces potential bias
+- Reduces sample size
+- May be difficult to defend
+- Can lead to "garden of forking paths" (trying different exclusions until results look good)
+
+**CQC example**: A provider's data is flagged as extreme. Investigation reveals this is a hospice mistakenly included in general hospital analysis. Removing this provider is justified because it's a different provider type, not because the value is unusual. Document: "One hospice was incorrectly included in hospital analysis and has been reclassified."
+
+### Sensitivity Analysis
+
+**Principle**: Test whether your conclusions change depending on how you handle unusual observations.
+
+**Approach**:
+- Analyze with all data included
+- Analyze with unusual observations excluded
+- Analyze with transformation
+- Analyze with robust methods
+- Compare results
+
+**When to use**:
+- High-stakes analysis where conclusions will be scrutinized
+- Borderline decisions (unclear whether to include or exclude)
+- Multiple unusual observations requiring different decisions
+- Building confidence in findings
+
+**Report**:
+- "Results were robust to outlier treatment: the same three providers were flagged regardless of whether we included extreme values."
+- "Results were sensitive to outlier treatment: Provider X was flagged only when we excluded one extreme observation. We retained all data and flagged Provider X with low confidence."
+
+**CQC example**: You're comparing provider incident rates. Two providers have very high rates. Analyze three ways: (1) all data, (2) excluding the two providers, (3) log-transforming rates. If the same ten providers are flagged in all three analyses, your results are robust. If the flagged list changes substantially, report both and explain the sensitivity.
+
+::: {.callout-note icon=false}
+## Rethinking: Why "Outlier Removal" Is Often Wrong
+
+Textbooks often present outlier detection as: (1) identify outliers, (2) remove them, (3) analyze the "clean" data. This is dangerous in regulatory contexts.
+
+**Why automatic removal is problematic**:
+
+1. **Outliers contain information**. A provider with extreme poor performance is exactly what regulation aims to identify. Removing it hides the problem.
+
+2. **Removal introduces bias**. If you systematically remove high or low values, your estimates of "typical" performance are no longer accurate. You're analyzing a subset, not the whole system.
+
+3. **Removal is subjective**. Where do you draw the line? 2 SD? 3 SD? IQR × 1.5? Different thresholds give different results. This is a "researcher degree of freedom" that can be exploited.
+
+4. **Removal destroys transparency**. Stakeholders ask "what about Provider X?" If you removed it, you have to explain why. "It was an outlier" isn't a satisfactory regulatory answer.
+
+5. **Extremes are often the most important cases**. In patient safety, the worst performers are exactly who we need to investigate. Statistical "cleanliness" is less important than regulatory purpose.
+
+**Better approach**: Keep unusual observations, investigate them, understand them, report them transparently. If a value fundamentally violates assumptions, use robust methods or transformation rather than removal.
+
+**When removal IS appropriate**: Confirmed errors, fundamentally different populations, cases where inclusion would be scientifically misleading (not just inconvenient). Always document and justify.
+
+**Key principle**: In academic research, outliers can distort estimation of population parameters. In regulation, outliers are often the point. Don't optimize for statistical elegance at the expense of regulatory purpose.
+:::
+
+::: {.callout-note icon=false}
+## Rethinking: Small Providers and the "Outlier" Trap
+
+Small providers (e.g., care homes with 20 beds vs 200 beds) are frequently flagged as statistical outliers. This doesn't mean they're performing poorly—it often reflects **low precision**, not poor quality.
+
+**Why small providers appear extreme**:
+
+- **Small denominators amplify rates**: One incident in a 20-bed home = 5% incident rate. One incident in a 200-bed home = 0.5% rate.
+- **High variability**: Small samples have wider confidence intervals. Values naturally more variable.
+- **Poisson variation**: Count data from small providers has inherently higher variance.
+
+**Example**: Two care homes, both have 1 incident this month:
+- Home A (20 beds): Rate = 1/20 = 5% 
+- Home B (200 beds): Rate = 1/200 = 0.5%
+
+Home A appears ten times worse, but both homes had the same number of incidents. The difference is denominator, not quality.
+
+**Regulatory implication**: 
+
+A small provider flagged as an outlier requires careful interpretation:
+
+- **If flagged**: Could be genuine problem OR natural variation from small sample. Investigate, but don't assume poor quality.
+- **If not flagged**: Low statistical power means you might miss real problems. Absence of statistical signal ≠ absence of issue.
+
+**Better approaches**:
+
+- **Funnel plots**: Show wider limits for small providers (@sec-z-scoring)
+- **Account for uncertainty**: Report confidence intervals, acknowledge lower precision
+- **Use absolute numbers**: "3 incidents" is clearer than "15% incident rate" for small providers
+- **Combine indicators**: Small providers unstable on individual metrics, but patterns across multiple indicators more informative
+
+**Key message**: Statistical outlier ≠ quality outlier. For small providers, apparent extremes often reflect sample size, not performance. Don't mistake precision for accuracy.
+:::
+
+::: {.callout-warning icon=false}
+## Overthinking: Winsorizing and Trimming
+
+Two alternative approaches to extreme values, less commonly used but worth knowing.
+
+**Trimming**: Remove a fixed percentage from each tail.
+- Example: Trim top and bottom 5%, analyze the middle 90%
+- Used in some athletic scoring (drop highest and lowest judge scores)
+- Reduces influence of extremes symmetrically
+- Problem: Arbitrary cutoff, loses information
+
+**Winsorizing**: Replace extreme values with less extreme ones.
+- Example: Replace values >95th percentile with the 95th percentile value
+- Example: Replace values <5th percentile with the 5th percentile value
+- Retains sample size while limiting influence
+- Problem: Creates artificial ceiling/floor, distorts distribution
+
+**When these might be appropriate**:
+
+- Exploratory analysis to see if results are driven by one or two extremes
+- Sensitivity analysis (compare trimmed vs full data)
+- Specific contexts where extreme measurement error suspected
+
+**When NOT appropriate**:
+
+- Regulatory analysis where extremes are the point
+- Final analysis (use for exploration only)
+- Without reporting what you did
+
+**CQC context**: Trimming and winsorizing are rarely appropriate for regulatory work because they systematically exclude or modify the very providers we might need to investigate. Use robust methods instead.
+
+If you're considering these approaches, consult the Guild—there's usually a better option.
+:::
+
+::: {.callout-warning icon=false}
+## Overthinking: Multivariate Outliers
+
+So far we've discussed **univariate outliers**: unusual on a single variable. But values can be unusual in combination.
+
+**Multivariate outliers**: Observations that are unusual in multi-dimensional space.
+
+**Example**: A care home has:
+- Staffing: 50th percentile (typical)
+- Incident rate: 60th percentile (slightly above average)
+- Satisfaction: 40th percentile (slightly below average)
+
+Individually, none of these is extreme. But *together*, low satisfaction with slightly high incidents AND typical staffing might be unusual—most homes with this staffing level and incident rate have higher satisfaction.
+
+**Detection methods**:
+- **Mahalanobis distance**: Measures distance from center of multivariate distribution
+- **Cook's distance**: Influence on regression model
+- **Leverage**: How unusual the combination of predictor values is
+
+**When this matters**:
+
+- Regression analysis (influential points can change model)
+- Cluster analysis (outliers distort groupings)
+- Fraud detection (unusual combinations of characteristics)
+- Casemix adjustment (providers with unusual characteristic combinations)
+
+**CQC relevance**: Limited. Most CQC analysis examines indicators one at a time or in simple relationships. Multivariate outlier detection requires more sophisticated modeling.
+
+**When to escalate**: If you're doing multivariate modeling (regression, clustering, PCA) and suspect influential observations, consult the Guild. Multivariate outlier diagnostics require specialist interpretation.
+
+For most CQC work, focus on univariate outliers and well-understood relationships.
+:::
+
+## Integration with Other Methods
+
+Unusual observations appear across all statistical methods. Here's how this chapter connects to methods chapters:
+
+**Z-scoring (@sec-z-scoring)**: Built around identifying providers with extreme z-scores (usually |z| > 2 or 3). This chapter provides the framework for interpreting and investigating those flagged providers.
+
+**SPC (@sec-spc-basics)**: Special cause signals are unusual observations in time. This chapter's principles apply: investigate, don't automatically react. Context matters.
+
+**t-tests (@sec-t-tests)**: Outliers can violate normality assumptions. This chapter guides investigation and choice of robust alternatives.
+
+**Correlation (@sec-correlation)**: Outliers heavily influence Pearson's r. This chapter explains when to use robust alternatives (Spearman) or investigate unusual points.
+
+**Outlier Methods (@sec-outlier-methods)**: The methods chapter provides computational details for detection. This chapter provides the conceptual foundation and decision framework.
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **No universal definition**: "Unusual" depends on your question, data, and context. Distance-based, position-based, model-based, and domain-based definitions all have uses.
+
+2. **Investigate first**: Never automatically remove unusual values. Always investigate: Is it an error? A genuine extreme? Explained by context? Unexplained but real?
+
+3. **Keep and document is the default**: Transparency trumps statistical convenience. Removing unusual observations introduces bias and reduces credibility.
+
+4. **Small providers ≠ poor quality**: Small denominators create high variability. Statistical outliers from small providers often reflect imprecision, not poor performance.
+
+5. **Multiple handling approaches**: Transform, use robust methods, analyze with/without, report sensitivity. Removal is a last resort.
+
+6. **Outliers are often the point**: In regulation, extreme values may be exactly what you're looking for. Don't optimize for statistical elegance at the expense of regulatory purpose.
+
+7. **Document everything**: Your investigation, your reasoning, your decisions. This documentation is essential for QA and defensibility.
+
+These principles underpin outlier detection methods (@sec-outlier-methods) and appear throughout all statistical methods chapters.
+:::

@@ -1,0 +1,105 @@
+# CQC Statistical Guidance Book – Core Rules
+
+Purpose: Minimal rules for Windsurf.  
+Detailed guidance lives in docs/project-docs:
+- IMPLEMENTATION_PLAN.md
+- CONTENT_DETAILS.md
+- PROJECT_RULES.md (if present)
+- QUARTO_CONFIG.md
+- QUICK_START.md
+- guidance.md
+
+---
+
+## 1. Content Philosophy
+
+- **Teach judgment, not rules**  
+  No mechanical thresholds (e.g. “if >10% missing…”). Show reasoning, options, and trade‑offs.
+- **Questions first, methods second**  
+  Structure sections around analyst questions, not theory.
+- **Respect complexity**  
+  Acknowledge uncertainty, assumptions, and regulatory trade‑offs.
+- **Multiple valid approaches**  
+  Present options with pros/cons; justify choices.
+- **Real CQC context**  
+  Use realistic CQC indicators and scenarios, not textbook datasets.
+
+---
+
+## 2. Structure Requirements
+
+- **Three-layer approach**  
+  Main text + “Rethinking” boxes + “Overthinking” boxes.
+- **Independent methods sections**  
+  Each methods section must be usable on its own.
+- **Building blocks only for foundations**  
+  Methods sections may reference Sections 1–4, not each other.
+- **Loose sequence**  
+  TOC shows a suggested order, but every section must work standalone.
+
+For full templates and examples, see CONTENT_DETAILS.md and IMPLEMENTATION_PLAN.md.
+
+---
+
+## 3. Writing Style
+
+- **Accessible, not patronising**  
+  Clear explanations; assume intelligence, not prior statistical training.
+- **Direct and practical**  
+  Use imperative, present tense: “Calculate…”, “Check…”.
+- **Honest about limitations**  
+  State assumptions and what the method does *not* solve.
+- **Second person, low textbook voice**  
+  Use “you”. Avoid “as shown in Section X…”, prefer “see Section X for…”.
+
+Detailed style rules and checklists: PROJECT_RULES.md and guidance.md (esp. quality criteria).
+
+---
+
+## 4. Code and Examples
+
+- Examples must be **complete and runnable** (in both R and Python code).
+- Use **CQC‑style data structures** and descriptive variable names.
+- Each major method needs at least one **worked example** with:
+  - Scenario
+  - Data structure
+  - Analysis steps with code
+  - Output
+  - Interpretation in regulatory context
+  - QA documentation example
+
+See CONTENT_DETAILS.md for required examples per section.
+
+---
+
+## 5. Scope for First Iteration
+
+First iteration includes only:
+
+- Foundations (Sections 1–4)
+- Core methods:
+  - Z‑scoring (Section 5 – highest priority)
+  - SPC basics (Section 6)
+  - t‑tests (Section 7)
+- Appendices: Glossary + References
+
+**Do NOT implement in iteration 1** (only reference if needed):
+- Advanced missing‑data methods
+- ANOVA, Chi‑squared, correlation tests
+- Rules‑based methods as a standalone section
+- Bayesian SPC and other advanced SPC topics (refer only in Overthinking)
+- Dedicated “small numbers” section (handle briefly in Overthinking boxes)
+
+Details and rationale: IMPLEMENTATION_PLAN.md and PLAN_SUMMARY.md.
+
+---
+
+## 6. Use of This Rules File
+
+- Treat this file as the **source of truth for constraints** Windsurf must obey.
+- For anything not specified here, consult:
+  - guidance.md for principles
+  - PROJECT_RULES.md for fuller standards
+  - CONTENT_DETAILS.md for section‑level specs
+  - QUARTO_CONFIG.md for technical config
+  - QUICK_START.md for setup and file structure

@@ -1,0 +1,261 @@
+---
+title: "Generate Example Data"
+format: html
+---
+
+```{r}
+# Generate synthetic data for all examples
+set.seed(42)
+
+# Create data directory if it doesn't exist
+if (!dir.exists("examples/data")) {
+  dir.create("examples/data", recursive = TRUE)
+}
+
+# Example 1: GP Access Analysis
+n_practices <- 6500
+
+gp_data_raw <- data.frame(
+  practice_code = paste0(sample(LETTERS, n_practices, replace = TRUE),
+                        sample(LETTERS, n_practices, replace = TRUE),
+                        sample(LETTERS, n_practices, replace = TRUE),
+                        sample(1:9, n_practices, replace = TRUE),
+                        sample(0:9, n_practices, replace = TRUE),
+                        sample(0:9, n_practices, replace = TRUE),
+                        sample(0:9, n_practices, replace = TRUE)),
+  practice_name = paste("Practice", 1:n_practices),
+  icb_code = sample(paste0("Q", sample(10:99, 20)), n_practices, replace = TRUE),
+  icb_name = sample(paste("NHS", c("Devon", "Cornwall", "Somerset", "Dorset"), "ICB"), 
+                   n_practices, replace = TRUE),
+  region = sample(c("South West", "South East", "London", "Midlands", "North East", 
+                   "North West", "East"), n_practices, replace = TRUE),
+  list_size = round(rnorm(n_practices, 8000, 4000)),
+  survey_responses = round(rnorm(n_practices, 200, 100)),
+  imd_quintile = sample(1:5, n_practices, replace = TRUE),
+  rural_urban = sample(c("Urban", "Rural"), n_practices, replace = TRUE, prob = c(0.7, 0.3))
+)
+
+gp_data_raw$list_size <- pmax(500, pmin(25000, gp_data_raw$list_size))
+gp_data_raw$survey_responses <- pmax(30, pmin(800, gp_data_raw$survey_responses))
+
+base_rate <- 0.35
+deprivation_effect <- (gp_data_raw$imd_quintile - 3) * -0.02
+gp_data_raw$phone_difficult_n <- rbinom(n_practices, 
+                                        gp_data_raw$survey_responses,
+                                        pmax(0.1, pmin(0.6, base_rate + deprivation_effect + rnorm(n_practices, 0, 0.08))))
+
+missing_idx <- sample(1:n_practices, round(n_practices * 0.05))
+gp_data_raw$phone_difficult_n[missing_idx] <- NA
+
+write.csv(gp_data_raw, "gp_access_data.csv", row.names = FALSE, na = "")
+cat("✓ Generated: gp_access_data.csv\n")
+
+# Example 2: Care Home Falls
+baseline_falls <- rpois(12, lambda = 17.5)
+baseline_falls[8] <- 26
+post_falls <- rpois(12, lambda = 13)
+
+falls_data <- data.frame(
+  month = 1:24,
+  date = seq(as.Date("2023-01-01"), by = "month", length.out = 24),
+  falls_count = c(baseline_falls, post_falls),
+  phase = c(rep("Baseline", 12), rep("Post-intervention", 12))
+)
+
+write.csv(falls_data, "falls_data.csv", row.names = FALSE)
+cat("✓ Generated: falls_data.csv\n")
+
+# Example 3: Mental Health Wait Times
+n_services <- 150
+log_mean <- log(75)
+log_sd <- 0.4
+
+mh_data <- data.frame(
+  service_code = sprintf("MHS%03d", 1:n_services),
+  service_name = paste("Mental Health Service", 1:n_services),
+  trust_name = sample(paste("NHS Trust", LETTERS[1:20]), n_services, replace = TRUE),
+  region = sample(c("South West", "South East", "London", "Midlands", 
+                   "North East", "North West", "East"), n_services, replace = TRUE),
+  survey_responses = round(rnorm(n_services, 150, 50)),
+  deprivation_score = runif(n_services, 10, 40)
+)
+
+mh_data$survey_responses <- pmax(50, pmin(300, mh_data$survey_responses))
+deprivation_effect <- (mh_data$deprivation_score - 25) * 0.01
+mh_data$wait_time_days <- round(rlnorm(n_services, 
+                                       meanlog = log_mean + deprivation_effect, 
+                                       sdlog = log_sd))
+mh_data$wait_time_days <- pmax(30, pmin(250, mh_data$wait_time_days))
+
+write.csv(mh_data, "mental_health_wait_times.csv", row.names = FALSE)
+cat("✓ Generated: mental_health_wait_times.csv\n")
+
+# Example 4: Medication Safety
+n_homes <- 15
+
+med_data <- data.frame(
+  home_id = sprintf("CH%02d", 1:n_homes),
+  home_name = paste("Care Home", LETTERS[1:n_homes]),
+  beds = round(runif(n_homes, 20, 80))
+)
+
+med_data$incidents_before <- round(med_data$beds * runif(n_homes, 0.08, 0.15), 1)
+reduction_pct <- runif(n_homes, 0.20, 0.35)
+reduction_pct[3] <- 0.65
+med_data$incidents_after <- round(med_data$incidents_before * (1 - reduction_pct), 1)
+med_data$difference <- med_data$incidents_after - med_data$incidents_before
+
+write.csv(med_data, "medication_safety_data.csv", row.names = FALSE)
+cat("✓ Generated: medication_safety_data.csv\n")
+
+# Example 5: Regional A&E Performance
+n_trusts_per_ics <- 100
+
+north_data <- data.frame(
+  trust_code = sprintf("RN%03d", 1:n_trusts_per_ics),
+  trust_name = paste("North Trust", 1:n_trusts_per_ics),
+  ics = "North",
+  monthly_attendances = round(rnorm(n_trusts_per_ics, 12000, 5000)),
+  deprivation_score = runif(n_trusts_per_ics, 15, 35),
+  beds = round(rnorm(n_trusts_per_ics, 500, 200))
+)
+
+south_data <- data.frame(
+  trust_code = sprintf("RS%03d", 1:n_trusts_per_ics),
+  trust_name = paste("South Trust", 1:n_trusts_per_ics),
+  ics = "South",
+  monthly_attendances = round(rnorm(n_trusts_per_ics, 12000, 5000)),
+  deprivation_score = runif(n_trusts_per_ics, 15, 35),
+  beds = round(rnorm(n_trusts_per_ics, 500, 200))
+)
+
+ae_data <- rbind(north_data, south_data)
+ae_data$monthly_attendances <- pmax(5000, pmin(25000, ae_data$monthly_attendances))
+ae_data$beds <- pmax(200, pmin(1000, ae_data$beds))
+
+base_performance <- ifelse(ae_data$ics == "North", 75, 72)
+deprivation_effect <- (ae_data$deprivation_score - 25) * -0.15
+ae_data$ae_performance <- base_performance + deprivation_effect + rnorm(nrow(ae_data), 0, 4)
+ae_data$ae_performance <- pmax(60, pmin(85, ae_data$ae_performance))
+
+write.csv(ae_data, "ae_performance_data.csv", row.names = FALSE)
+cat("✓ Generated: ae_performance_data.csv\n")
+
+# ==============================================================================
+# Example 6: Ambulance Handover Delays
+# ==============================================================================
+
+n_months <- 18
+
+# Generate monthly handover delays with increasing trend and winter peaks
+months <- 1:n_months
+dates <- seq(as.Date("2023-01-01"), by = "month", length.out = n_months)
+
+# Base level with increasing trend
+base_delays <- 150 + (months - 1) * 5  # Increasing by ~5 per month
+
+# Add winter peaks (Dec-Feb)
+month_of_year <- as.numeric(format(dates, "%m"))
+winter_effect <- ifelse(month_of_year %in% c(12, 1, 2), 40, 0)
+
+# Add random variation
+handover_data <- data.frame(
+  month = months,
+  date = dates,
+  delays_over_30min = round(base_delays + winter_effect + rnorm(n_months, 0, 15))
+)
+
+# Add special causes
+handover_data$delays_over_30min[8] <- 280  # August: IT system failure
+handover_data$delays_over_30min[15] <- 310  # December: flu outbreak
+
+# Ensure positive values
+handover_data$delays_over_30min <- pmax(100, handover_data$delays_over_30min)
+
+write.csv(handover_data, "ambulance_handovers.csv", row.names = FALSE)
+cat("✓ Generated: ambulance_handovers.csv\n")
+
+# ==============================================================================
+# Example 7: Infection Rates in Care Homes
+# ==============================================================================
+
+n_homes <- 80
+
+infection_data <- data.frame(
+  home_id = sprintf("CH%03d", 1:n_homes),
+  home_name = paste("Care Home", 1:n_homes),
+  residents = round(runif(n_homes, 20, 100)),
+  staff_ratio = runif(n_homes, 0.3, 0.7),
+  cqc_rating = sample(c("Outstanding", "Good", "Requires Improvement", "Inadequate"), 
+                     n_homes, replace = TRUE, prob = c(0.05, 0.70, 0.20, 0.05))
+)
+
+# Generate infection counts (Poisson-like, related to size and quality)
+base_rate <- 0.03  # Base infection rate per resident
+quality_effect <- ifelse(infection_data$cqc_rating == "Outstanding", -0.01,
+                  ifelse(infection_data$cqc_rating == "Good", 0,
+                  ifelse(infection_data$cqc_rating == "Requires Improvement", 0.01, 0.02)))
+
+infection_data$infections <- rpois(n_homes, 
+                                   infection_data$residents * (base_rate + quality_effect))
+
+# Calculate rate per 100 residents
+infection_data$infection_rate <- round(100 * infection_data$infections / infection_data$residents, 2)
+
+write.csv(infection_data, "infection_rates.csv", row.names = FALSE)
+cat("✓ Generated: infection_rates.csv\n")
+
+# ==============================================================================
+# Example 8: DoLS Application Trends
+# ==============================================================================
+
+n_las <- 150  # Local authorities
+n_quarters <- 12  # 3 years of quarterly data
+
+# Create panel data
+dols_data <- expand.grid(
+  la_code = sprintf("LA%03d", 1:n_las),
+  quarter = 1:n_quarters
+)
+
+# Add LA characteristics
+la_info <- data.frame(
+  la_code = sprintf("LA%03d", 1:n_las),
+  la_name = paste("Local Authority", 1:n_las),
+  population_65plus = round(runif(n_las, 20000, 150000)),
+  region = sample(c("North East", "North West", "Yorkshire", "East Midlands", 
+                   "West Midlands", "East", "London", "South East", "South West"), 
+                 n_las, replace = TRUE),
+  deprivation_score = runif(n_las, 10, 40)
+)
+
+dols_data <- merge(dols_data, la_info, by = "la_code")
+
+# Generate DoLS applications with trend and variation
+# Policy change at quarter 7 causes spike
+base_rate <- 50  # Applications per 10,000 population 65+
+trend <- (dols_data$quarter - 1) * 2  # Increasing trend
+policy_spike <- ifelse(dols_data$quarter >= 7, 30, 0)  # Policy change effect
+
+dols_data$applications <- round(
+  (dols_data$population_65plus / 10000) * 
+  (base_rate + trend + policy_spike + rnorm(nrow(dols_data), 0, 10))
+)
+
+# Ensure positive
+dols_data$applications <- pmax(10, dols_data$applications)
+
+# Calculate rate per 10,000 population 65+
+dols_data$rate_per_10k <- round(10000 * dols_data$applications / dols_data$population_65plus, 1)
+
+# Add date (add quarters manually)
+dols_data$date <- as.Date("2022-01-01") + (dols_data$quarter - 1) * 90  # Approximately 3 months
+
+# Sort
+dols_data <- dols_data[order(dols_data$la_code, dols_data$quarter), ]
+
+write.csv(dols_data, "dols_applications.csv", row.names = FALSE)
+cat("✓ Generated: dols_applications.csv\n")
+
+cat("\n✅ All example datasets generated successfully!\n")
+```

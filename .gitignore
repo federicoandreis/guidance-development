@@ -1,0 +1,35 @@
+# Documentation and development files
+docs/
+code/
+figures/
+
+# Quarto build outputs
+_book/
+_freeze/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# R and Python artifacts
+.Rhistory
+.RData
+.Ruserdata
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*

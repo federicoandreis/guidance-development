@@ -1,0 +1,218 @@
+---
+title: "Data Types & Implications"
+---
+
+## Why Data Type Matters {#sec-data-types}
+
+Before you can select an appropriate statistical method, you need to know what type of data you have. The same analytical question—"is this provider different from the national average?"—requires different methods depending on whether you're analysing waiting times (continuous), incident counts (discrete), or CQC ratings (ordinal).
+
+Data type determines:
+
+- Which statistical methods are valid
+- What distributions your data might follow
+- How to calculate summary statistics correctly
+- What visualisations are appropriate
+- How to interpret results
+
+Getting this wrong leads to invalid analysis. A method designed for quantitative data will give nonsensical results when applied to qualitative data, and vice versa.
+
+## The Two Main Categories
+
+All data falls into one of two broad categories:
+
+- **Quantitative (Numerical)**: Data representing quantities or amounts
+- **Qualitative (Categorical)**: Data representing qualities or categories
+
+Within each category, there are important subtypes that affect which statistical methods you can use.
+
+## Quantitative Data
+
+Quantitative data represents measurable quantities. You can perform arithmetic operations (add, subtract, calculate means) on quantitative data.
+
+### Continuous Data
+
+**Definition**: Quantitative data that can take any value within a range, including decimals.
+
+**Key characteristic**: You can always imagine a value between any two measurements. Between 1.5 and 1.6 metres, there's 1.55 metres. Between 1.55 and 1.56, there's 1.555 metres. And so on.
+
+**CQC examples**:
+
+- Waiting times (e.g., 2.5 hours, 3.75 hours)
+- Length of stay (e.g., 4.2 days, 7.8 days)
+- Percentages (e.g., 23.4% of patients seen within target)
+- Rates per 1,000 population (e.g., 15.7 incidents per 1,000 bed days)
+- Staff-to-patient ratios (e.g., 1.8 nurses per 10 beds)
+
+**Note on percentages**: Even though percentages are bounded (0-100%), they're continuous because infinite values are possible within that range. You can have 23.456% or 23.457%.
+
+### Discrete Data
+
+**Definition**: Quantitative data that can only take specific values, typically whole numbers (counts).
+
+**Key characteristic**: You cannot have values between the possible measurements. You can have 5 incidents or 6 incidents, but not 5.3 incidents.
+
+**CQC examples**:
+
+- Number of incidents (e.g., 0, 1, 2, 3 incidents)
+- Number of complaints (e.g., 12 complaints this month)
+- Number of staff (e.g., 47 registered nurses)
+- Number of beds (e.g., 120 beds)
+- Number of patients seen (e.g., 234 patients)
+- Days to assessment (when counted in whole days: 1 day, 2 days, not 1.5 days)
+
+**Common confusion**: "But we could measure time in fractions of a day!" Yes—and if you do, it becomes continuous. The distinction is about how you're measuring it, not what you're measuring.
+
+**Summary**: Both continuous and discrete data are quantitative—they represent amounts you can measure and calculate with. The difference is whether fractional values are possible.
+
+## Qualitative Data
+
+Qualitative data represents categories, groups, or qualities. You cannot perform meaningful arithmetic on qualitative data (averaging CQC ratings doesn't make sense).
+
+### Nominal Data
+
+**Definition**: Qualitative data with no natural order between categories.
+
+**Key characteristic**: Categories are different from each other, but there's no inherent ordering. "North East" isn't "more" or "less" than "South West".
+
+**CQC examples**:
+
+- Provider type (hospital, care home, GP practice)
+- Geographical region (North East, South West, London)
+- Service type (acute, community, mental health)
+- Incident category (medication error, fall, pressure ulcer)
+
+### Ordinal Data
+
+**Definition**: Qualitative data with a natural order between categories.
+
+**Key characteristic**: Categories have a meaningful order, but the distances between categories aren't necessarily equal.
+
+**CQC examples**:
+
+- CQC ratings (Inadequate < Requires Improvement < Good < Outstanding)
+- Severity levels (Low < Medium < High)
+- Agreement scales (Strongly Disagree < Disagree < Neutral < Agree < Strongly Agree)
+- Priority levels (Low < Medium < High < Urgent)
+
+**Critical point**: Even though ordinal data has an order, the gaps between categories aren't necessarily equal. The difference between "Inadequate" and "Requires Improvement" might not be the same as the difference between "Good" and "Outstanding". This affects which methods you can use—you can't treat ordinal data as quantitative.
+
+**Summary**: Both nominal and ordinal data are qualitative—they represent categories, not amounts. The difference is whether the categories have a natural order.
+
+## Quick Reference: The Classification Tree
+
+```
+Data
+├── Quantitative (Numerical)
+│   ├── Continuous (any value in range)
+│   │   └── Examples: waiting times, percentages, rates, ratios
+│   └── Discrete (whole numbers only)
+│       └── Examples: counts, incidents, number of staff
+└── Qualitative (Categorical)
+    ├── Nominal (no order)
+    │   └── Examples: provider type, region, incident category
+    └── Ordinal (ordered categories)
+        └── Examples: CQC ratings, severity levels, priority
+```
+
+## Common Confusions and Boundary Cases
+
+### "My data could be multiple types"
+
+This usually means you're conflating the raw data with derived measures:
+
+- **Raw data**: Number of incidents (quantitative, discrete)
+- **Derived measure**: Incident rate per 1,000 bed days (quantitative, continuous)
+
+The raw data type determines what you can do initially. Once you calculate a rate or percentage, you've created continuous quantitative data.
+
+### "What about percentages based on small counts?"
+
+If you have 3 successes out of 10 attempts (30%), the underlying data is discrete (counts), but the percentage is continuous. However, with very small denominators, treating it as continuous can be problematic—see @sec-z-scoring Overthinking boxes for when this matters.
+
+### "What about time periods?"
+
+Depends how you measure them:
+
+- Whole days (1, 2, 3 days) → Quantitative, discrete
+- Days with fractions (1.5, 2.3 days) → Quantitative, continuous
+- Time categories (0-7 days, 8-14 days, 15+ days) → Qualitative, ordinal
+
+### "What about Likert scales?"
+
+Technically qualitative, ordinal (1=Strongly Disagree through 5=Strongly Agree). However, when you have many responses, analysts sometimes treat the average as quantitative, continuous. This is controversial—see the Overthinking box below.
+
+## Mapping Data Types to Methods
+
+Different methods work for different data types. This table shows which methods in this guidance apply to which types:
+
+| Category | Type | Appropriate Methods | See Section |
+|----------|------|---------------------|-------------|
+| **Quantitative** | Continuous | Z-scoring, t-tests, SPC (I-charts, X̄-charts), Correlation | @sec-z-scoring, @sec-t-tests, @sec-spc-basics, @sec-correlation |
+| **Quantitative** | Discrete (counts) | Z-scoring (with caution), SPC (C-charts, U-charts) | @sec-z-scoring, @sec-spc-basics |
+| **Quantitative** | Discrete (proportions) | Z-scoring, SPC (P-charts) | @sec-z-scoring, @sec-spc-basics |
+| **Qualitative** | Nominal | Chi-squared tests (not in iteration 1) | Future section |
+| **Qualitative** | Ordinal | Specialized tests (not in iteration 1) | Future section |
+
+**Key principle**: When in doubt, consult the method section's "Before you start" checklist. Each method specifies what data types it handles.
+
+::: {.callout-note icon=false}
+## Rethinking: Data Type Choices in Regulation
+
+CQC sometimes has choices about how to measure things. Should we count days to assessment as discrete whole days or continuous time? Should we treat CQC ratings as ordinal categories or convert them to numeric scores?
+
+These aren't purely statistical decisions. They involve:
+
+- **Interpretability**: Stakeholders understand "3 days" better than "2.7 days"
+- **Fairness**: Whole days might be fairer if providers can't control exact timing
+- **Consistency**: Using the same measurement approach across indicators aids comparison
+- **Analytical power**: Continuous data generally provides more statistical power
+
+When you have a choice, document your reasoning. Explain why you measured it this way, what alternatives you considered, and what trade-offs you accepted. This is part of meeting the QA framework.
+
+The "right" data type is the one that best serves your analytical purpose while being defensible to stakeholders.
+:::
+
+::: {.callout-warning icon=false}
+## Overthinking: Boundary Cases and Controversies
+
+**Treating ordinal as quantitative**: Some analysts treat ordinal scales (like Likert scales) as quantitative, continuous when calculating means. The argument: with enough responses, the average of many ordinal values approximates a continuous measure. The counter-argument: this assumes equal spacing between categories, which is rarely true.
+
+**CQC context**: We generally avoid treating CQC ratings as quantitative (e.g., calculating a mean rating of 2.7). Ratings are qualitative, ordinal categories, and stakeholders don't interpret "average rating" meaningfully. However, for internal analysis, you might calculate the proportion in each category and analyse those proportions (which are quantitative, continuous).
+
+**Percentages from small denominators**: A percentage is mathematically quantitative, continuous, but when based on small counts, it behaves oddly. With 10 patients, you can only have 0%, 10%, 20%, etc.—effectively discrete. This matters for methods assuming continuous distributions. See @sec-z-scoring for how to handle this.
+
+**Rates vs counts**: Incident rates (per 1,000 bed days) are quantitative, continuous, but they're calculated from discrete counts. When counts are very small (e.g., 0-5 incidents), the rate might not behave like continuous data. Some methods handle this better than others.
+
+**When to escalate**: If your data doesn't clearly fit one type, or if you're unsure whether a boundary case matters for your chosen method, consult the Guild. These edge cases often require specialist judgment about which approximation is most defensible.
+:::
+
+## Checking Your Data Type
+
+Before starting analysis, verify your data type:
+
+1. **Look at actual values**: Can you have 2.5? If no, it's not continuous.
+
+2. **Check the measurement process**: How was it recorded? Whole numbers only, or decimals allowed?
+
+3. **Consider the analytical question**: Are you analysing the raw values, or a derived measure like a rate?
+
+4. **Review the method requirements**: Each method section specifies what data types it handles.
+
+If you're still unsure, @sec-qa-principles includes data type verification as part of the pre-analysis checklist.
+
+## Key Takeaways
+
+::: {.callout-important icon=false}
+## Essential Points
+
+1. **Two main categories**: Quantitative (numerical) data represents amounts; qualitative (categorical) data represents categories
+2. **Quantitative has two types**: Continuous (any value in range) and discrete (whole numbers only)
+3. **Qualitative has two types**: Nominal (no order) and ordinal (ordered categories)
+4. **Data type determines method choice**: Quantitative and qualitative data require fundamentally different statistical approaches
+5. **Most methods in this guidance work with quantitative data**: Z-scoring, t-tests, SPC, and correlation all require numerical measurements
+6. **Don't treat qualitative data as quantitative**: Averaging CQC ratings or calculating means of ordinal scales is generally inappropriate
+7. **Verify data type before analysis**: Check actual values, measurement process, and analytical question
+8. **Boundary cases need judgment**: Small counts, percentages from small denominators, and rates from discrete data require careful consideration
+
+Understanding your data type is the first step in choosing the right statistical method.
+:::

@@ -1,0 +1,221 @@
+{
+  "index.qmd": {
+    "index.html": "51ed30b8"
+  },
+  "quick-reference.qmd": {
+    "quick-reference.html": "642c0df5"
+  },
+  "chapters/01-getting-started.qmd": {
+    "01-getting-started.html": "ad0fccaa"
+  },
+  "chapters/02-data-types.qmd": {
+    "02-data-types.html": "92bfc404"
+  },
+  "chapters/03-uncertainty-variation.qmd": {
+    "03-uncertainty-variation.html": "582f21d2"
+  },
+  "chapters/04-qa-data-checks.qmd": {
+    "04-qa-data-checks.html": "54ed5c24"
+  },
+  "chapters/05-z-scoring.qmd": {
+    "05-z-scoring.html": "5742b505"
+  },
+  "chapters/06-spc-basics.qmd": {
+    "06-spc-basics.html": "a6f82970"
+  },
+  "chapters/07-t-tests.qmd": {
+    "07-t-tests.html": "e18c7cc5"
+  },
+  "appendices/glossary.qmd": {
+    "glossary.html": "0e51dfa8"
+  },
+  "appendices/references.qmd": {
+    "references.html": "b9254c01"
+  },
+  "chapters/00-figures.qmd": {
+    "00-figures.html": "5c92b505"
+  },
+  "examples/README.qmd": {
+    "README.html": "26a308fb"
+  },
+  "examples/01-gp-access-analysis/README.qmd": {
+    "README.html": "3f9d2cc0"
+  },
+  "examples/02-care-home-falls-spc/README.qmd": {
+    "README.html": "98e1e218"
+  },
+  "examples/01-gp-access-analysis/analysis/01-data-prep.qmd": {
+    "01-data-prep.html": "3ca2b1b0"
+  },
+  "examples/01-gp-access-analysis/analysis/02-exploration.qmd": {
+    "02-exploration.html": "455844ef"
+  },
+  "examples/01-gp-access-analysis/analysis/03-main-analysis.qmd": {
+    "03-main-analysis.html": "974402f5"
+  },
+  "examples/01-gp-access-analysis/analysis/04-stakeholder-report.qmd": {
+    "04-stakeholder-report.html": "1ffc8f0a"
+  },
+  "examples/02-care-home-falls-spc/analysis/01-data-prep.qmd": {
+    "01-data-prep.html": "2cc2f4cd"
+  },
+  "examples/02-care-home-falls-spc/analysis/02-baseline-spc.qmd": {
+    "02-baseline-spc.html": "5e7aa7a6"
+  },
+  "examples/02-care-home-falls-spc/analysis/03-intervention-analysis.qmd": {
+    "03-intervention-analysis.html": "e185f301"
+  },
+  "examples/02-care-home-falls-spc/analysis/04-recommendations.qmd": {
+    "04-recommendations.html": "001c3a06"
+  },
+  "examples/example-01-complete.qmd": {
+    "example-01-complete.html": "5be912a4"
+  },
+  "examples/example-02-complete.qmd": {
+    "example-02-complete.html": "8605b0c9"
+  },
+  "appendices/figures.qmd": {
+    "figures.html": "487a0c2b"
+  },
+  "examples/example-03-complete.qmd": {
+    "example-03-complete.html": "65f49b2a"
+  },
+  "examples/example-04-complete.qmd": {
+    "example-04-complete.html": "7684c2b1"
+  },
+  "examples/example-05-complete.qmd": {
+    "example-05-complete.html": "6d062c4c"
+  },
+  "examples/example-06-complete.qmd": {
+    "example-06-complete.html": "1ad84801"
+  },
+  "examples/example-07-complete.qmd": {
+    "example-07-complete.html": "3dd6bfae"
+  },
+  "examples/example-08-complete.qmd": {
+    "example-08-complete.html": "a790ffbe"
+  },
+  "chapters/08-missing-data-advanced.qmd": {
+    "08-missing-data-advanced.html": "dcf22545"
+  },
+  "chapters/04-statistical-inference.qmd": {
+    "04-statistical-inference.html": "b30a0b1e"
+  },
+  "chapters/05-qa-data-checks.qmd": {
+    "05-qa-data-checks.html": "dae9ae25"
+  },
+  "chapters/06-z-scoring.qmd": {
+    "06-z-scoring.html": "713c86c3"
+  },
+  "chapters/07-spc-basics.qmd": {
+    "07-spc-basics.html": "a74371dc"
+  },
+  "chapters/08-t-tests.qmd": {
+    "08-t-tests.html": "2810936a"
+  },
+  "chapters/09-missing-data-advanced.qmd": {
+    "09-missing-data-advanced.html": "bda8dc8a"
+  },
+  "docs/context/cqc-publications/annual_report_2023-24.md": {
+    "annual_report_2023-24.html": "d0ffa846"
+  },
+  "docs/context/cqc-publications/controlled_drugs_2024.md": {
+    "controlled_drugs_2024.html": "9137c88f"
+  },
+  "docs/context/cqc-publications/mental_health_report_2023-24.md": {
+    "mental_health_report_2023-24.html": "c39f70bb"
+  },
+  "docs/context/cqc-publications/state_of_care_2024-25.md": {
+    "state_of_care_2024-25.html": "ba0f496e"
+  },
+  "docs/context/qa-framework.md": {
+    "qa-framework.html": "2ddfeb5b"
+  },
+  "docs/project-docs/BOOK_STRUCTURE_REVIEW.md": {
+    "BOOK_STRUCTURE_REVIEW.html": "a007fd2a"
+  },
+  "docs/project-docs/CALLOUT_REVIEW.md": {
+    "CALLOUT_REVIEW.html": "9920dc7d"
+  },
+  "docs/project-docs/CLEANUP_SUMMARY.md": {
+    "CLEANUP_SUMMARY.html": "a36c8f82"
+  },
+  "docs/project-docs/COMPLETION_SUMMARY.md": {
+    "COMPLETION_SUMMARY.html": "03ff1e6e"
+  },
+  "docs/project-docs/CONTENT_DETAILS.md": {
+    "CONTENT_DETAILS.html": "876458fd"
+  },
+  "chapters/10-correlation.qmd": {
+    "10-correlation.html": "7cb22a4f"
+  },
+  "examples/example-09-complete.qmd": {
+    "example-09-complete.html": "b7828f8c"
+  },
+  "chapters/09-missing-data.qmd": {
+    "09-missing-data.html": "0d3de969"
+  },
+  "chapters/03-describing-data.qmd": {
+    "03-describing-data.html": "1d4be351"
+  },
+  "chapters/04-variation-uncertainty.qmd": {
+    "04-variation-uncertainty.html": "5248c912"
+  },
+  "chapters/05-statistical-inference.qmd": {
+    "05-statistical-inference.html": "6245c369"
+  },
+  "chapters/06-qa-data-checks.qmd": {
+    "06-qa-data-checks.html": "04c92a0d"
+  },
+  "chapters/09-correlation.qmd": {
+    "09-correlation.html": "afebde29"
+  },
+  "chapters/10-missing-data.qmd": {
+    "10-missing-data.html": "7e3dfbed"
+  },
+  "chapters/07-unusual-observations.qmd": {
+    "07-unusual-observations.html": "e1b4122f"
+  },
+  "chapters/08-missing-data-foundations.qmd": {
+    "08-missing-data-foundations.html": "654fd2e2"
+  },
+  "chapters/09-qa-principles.qmd": {
+    "09-qa-principles.html": "82421cd0"
+  },
+  "chapters/10-statistical-inference.qmd": {
+    "10-statistical-inference.html": "d568bb45"
+  },
+  "chapters/11-z-scoring.qmd": {
+    "11-z-scoring.html": "0efbdae5"
+  },
+  "chapters/12-spc-basics.qmd": {
+    "12-spc-basics.html": "667a999e"
+  },
+  "chapters/13-t-tests.qmd": {
+    "13-t-tests.html": "78c8775e"
+  },
+  "chapters/14-correlation.qmd": {
+    "14-correlation.html": "bc9ef1d6"
+  },
+  "chapters/15-outlier-methods.qmd": {
+    "15-outlier-methods.html": "658447e6"
+  },
+  "chapters/16-missing-data-methods.qmd": {
+    "16-missing-data-methods.html": "469caa8b"
+  },
+  "examples/example-10-outliers.qmd": {
+    "example-10-outliers.html": "e49ee43f"
+  },
+  "chapters/09-statistical-inference.qmd": {
+    "09-statistical-inference.html": "23d617db"
+  },
+  "chapters/10-qa-principles.qmd": {
+    "10-qa-principles.html": "d49be474"
+  },
+  "chapters/05-distribution-shape.qmd": {
+    "05-distribution-shape.html": "657b5b37"
+  },
+  "appendices/generate-figures.qmd": {
+    "generate-figures.html": "e307db05"
+  }
+}

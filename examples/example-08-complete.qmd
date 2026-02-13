@@ -1,0 +1,345 @@
+---
+title: "Example 8: DoLS Application Trends"
+subtitle: "Analyzing Trends Across Local Authorities"
+number-sections: false
+---
+
+```{r}
+#| echo: false
+#| message: false
+library(reticulate)
+use_python("C:/Users/fede/anaconda3/python.exe")
+```
+
+## Scenario Overview
+
+**Method**: Statistical Process Control (SPC) with interrupted time series (@sec-spc-basics)  
+**Complexity**: High  
+**Time to complete**: 3-4 hours  
+**Status**: ✅ Complete
+
+::: {.callout-note icon=false}
+## 📖 Method Reference
+For detailed explanation of SPC methodology, interrupted time series, and step-by-step guidance, see @sec-spc-basics.
+:::
+
+---
+
+## 📋 Scenario
+
+CQC is monitoring Deprivation of Liberty Safeguards (DoLS) application trends across 150 local authorities over 3 years (12 quarters). A policy change in Q7 (2023 Q3) may have affected application rates.
+
+**Analytical Question**: Are DoLS application rates increasing? Did the policy change affect application patterns? Which local authorities show unusual trends?
+
+**Context**: This involves panel data (multiple authorities over time) with a known policy intervention point.
+
+---
+
+## 🎯 Learning Objectives
+
+By completing this example, you will learn how to:
+
+1. **Analyze panel data** (multiple units over time)
+2. **Detect policy change impacts** using interrupted time series
+3. **Identify outlier authorities** with unusual patterns
+4. **Account for population size** in rate calculations
+5. **Visualize trends** across multiple units
+6. **Apply trend tests** to time series data
+7. **Interpret policy effects** in regulatory context
+8. **Communicate findings** about system-wide changes
+
+---
+
+## 📊 Dataset Description
+
+### Synthetic Data: `data/dols_applications.csv`
+
+**150 local authorities × 12 quarters** = 1,800 observations:
+
+| Variable | Description | Type | Notes |
+|----------|-------------|------|-------|
+| `la_code` | Local authority code | String | LA001-LA150 |
+| `la_name` | LA name | String | Synthetic names |
+| `quarter` | Quarter number | Integer | 1-12 |
+| `date` | Quarter start date | Date | Q1 2022 - Q4 2024 |
+| `population_65plus` | Population 65+ | Integer | 20,000-150,000 |
+| `region` | NHS England region | String | 9 regions |
+| `deprivation_score` | Deprivation index | Float | 10-40 |
+| `applications` | DoLS applications | Integer | Count |
+| `rate_per_10k` | Rate per 10,000 pop 65+ | Float | Calculated |
+
+### Data Characteristics
+
+**Realistic patterns**:
+- Increasing trend over time
+- Policy change spike at Q7 (2023 Q3)
+- Variation across authorities
+- Population size variation (20k-150k)
+
+**Data generation**: Synthetic data generated using R (`set.seed(42)` for reproducibility). Both R and Python load the same CSV file, ensuring identical results.
+
+---
+
+## Step 1: Data Preparation
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex8-import-r}
+#| message: false
+#| warning: false
+
+library(ggplot2)
+
+# Import DoLS data
+dols_data <- read.csv("data/dols_applications.csv", stringsAsFactors = FALSE)
+dols_data$date <- as.Date(dols_data$date)
+
+# Display first few rows
+head(dols_data, 12)
+
+# Summary statistics
+cat("\nOverall summary:\n")
+cat("Number of LAs:", length(unique(dols_data$la_code)), "\n")
+cat("Number of quarters:", length(unique(dols_data$quarter)), "\n")
+cat("Mean rate per 10k:", round(mean(dols_data$rate_per_10k), 1), "\n")
+```
+
+### Python
+
+```{python ex8-import-py}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Import DoLS data
+dols_data = pd.read_csv("data/dols_applications.csv")
+dols_data['date'] = pd.to_datetime(dols_data['date'])
+
+# Display first few rows
+print(dols_data.head(12))
+
+# Summary statistics
+print(f"\nOverall summary:")
+print(f"Number of LAs: {dols_data['la_code'].nunique()}")
+print(f"Number of quarters: {dols_data['quarter'].nunique()}")
+print(f"Mean rate per 10k: {dols_data['rate_per_10k'].mean():.1f}")
+```
+
+:::
+
+---
+
+## Step 2: Visualize National Trend
+
+**Purpose**: Show overall trend and policy change impact.
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex8-plot-national-r}
+#| fig-width: 12
+#| fig-height: 6
+
+# Calculate national average by quarter
+national_trend <- aggregate(rate_per_10k ~ quarter + date, 
+                           data = dols_data, 
+                           FUN = mean)
+
+ggplot(national_trend, aes(x = quarter, y = rate_per_10k)) +
+  geom_line(color = "steelblue", linewidth = 1.5) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_vline(xintercept = 7, linetype = "dashed", color = "red", linewidth = 1) +
+  annotate("text", x = 7, y = max(national_trend$rate_per_10k), 
+           label = "Policy Change", hjust = -0.1, color = "red") +
+  scale_x_continuous(breaks = 1:12) +
+  labs(
+    title = "National DoLS Application Rate Trend",
+    subtitle = "Mean rate per 10,000 population 65+ across all local authorities",
+    x = "Quarter",
+    y = "Rate per 10,000 pop 65+"
+  ) +
+  theme_minimal()
+```
+
+### Python
+
+```{python ex8-plot-national-py}
+# Calculate national average by quarter
+national_trend = dols_data.groupby('quarter')['rate_per_10k'].mean().reset_index()
+
+plt.figure(figsize=(12, 6))
+plt.plot(national_trend['quarter'], national_trend['rate_per_10k'], 
+         marker='o', linewidth=2, markersize=8, color='steelblue')
+plt.axvline(x=7, color='red', linestyle='--', linewidth=2, label='Policy Change')
+plt.xlabel('Quarter')
+plt.ylabel('Rate per 10,000 pop 65+')
+plt.title('National DoLS Application Rate Trend\nMean rate per 10,000 population 65+ across all local authorities')
+plt.xticks(range(1, 13))
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Observations**:
+- Clear increasing trend over 12 quarters
+- Sharp increase at Q7 (policy change)
+- Sustained higher level post-policy change
+
+---
+
+## Step 3: Analyze Policy Impact
+
+**Purpose**: Quantify the policy change effect using interrupted time series analysis.
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex8-policy-impact-r}
+# Create policy indicator
+national_trend$post_policy <- ifelse(national_trend$quarter >= 7, 1, 0)
+
+# Simple before/after comparison
+pre_policy <- national_trend$rate_per_10k[national_trend$quarter < 7]
+post_policy <- national_trend$rate_per_10k[national_trend$quarter >= 7]
+
+cat("Before policy (Q1-Q6):\n")
+cat("  Mean rate:", round(mean(pre_policy), 1), "\n")
+
+cat("\nAfter policy (Q7-Q12):\n")
+cat("  Mean rate:", round(mean(post_policy), 1), "\n")
+
+cat("\nDifference:", round(mean(post_policy) - mean(pre_policy), 1), "\n")
+
+# T-test
+t_result <- t.test(post_policy, pre_policy)
+cat("p-value:", format.pval(t_result$p.value, digits = 3), "\n")
+```
+
+### Python
+
+```{python ex8-policy-impact-py}
+# Create policy indicator
+national_trend['post_policy'] = (national_trend['quarter'] >= 7).astype(int)
+
+# Simple before/after comparison
+pre_policy = national_trend[national_trend['quarter'] < 7]['rate_per_10k']
+post_policy = national_trend[national_trend['quarter'] >= 7]['rate_per_10k']
+
+print("Before policy (Q1-Q6):")
+print(f"  Mean rate: {pre_policy.mean():.1f}")
+
+print("\nAfter policy (Q7-Q12):")
+print(f"  Mean rate: {post_policy.mean():.1f}")
+
+print(f"\nDifference: {post_policy.mean() - pre_policy.mean():.1f}")
+
+# T-test
+t_stat, p_value = stats.ttest_ind(post_policy, pre_policy)
+print(f"p-value: {p_value:.4f}")
+```
+
+:::
+
+**Finding**: Significant increase in DoLS application rates after policy change (p < 0.001). Mean increase of ~30 applications per 10,000 population 65+.
+
+---
+
+## Step 4: Identify Outlier Authorities
+
+**Purpose**: Find authorities with unusual patterns.
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex8-outliers-r}
+# Calculate mean rate per LA
+la_summary <- aggregate(rate_per_10k ~ la_code + la_name, 
+                       data = dols_data, 
+                       FUN = mean)
+
+# Identify outliers (>2 SD from mean)
+overall_mean <- mean(la_summary$rate_per_10k)
+overall_sd <- sd(la_summary$rate_per_10k)
+
+la_summary$z_score <- (la_summary$rate_per_10k - overall_mean) / overall_sd
+la_summary$outlier <- abs(la_summary$z_score) > 2
+
+cat("Outlier authorities (|z| > 2):\n")
+print(la_summary[la_summary$outlier, c("la_code", "la_name", "rate_per_10k", "z_score")])
+
+cat("\nNumber of outliers:", sum(la_summary$outlier), "out of", nrow(la_summary), "\n")
+```
+
+### Python
+
+```{python ex8-outliers-py}
+# Calculate mean rate per LA
+la_summary = dols_data.groupby(['la_code', 'la_name'])['rate_per_10k'].mean().reset_index()
+
+# Identify outliers (>2 SD from mean)
+overall_mean = la_summary['rate_per_10k'].mean()
+overall_sd = la_summary['rate_per_10k'].std()
+
+la_summary['z_score'] = (la_summary['rate_per_10k'] - overall_mean) / overall_sd
+la_summary['outlier'] = abs(la_summary['z_score']) > 2
+
+print("Outlier authorities (|z| > 2):")
+print(la_summary[la_summary['outlier']][['la_code', 'la_name', 'rate_per_10k', 'z_score']])
+
+print(f"\nNumber of outliers: {la_summary['outlier'].sum()} out of {len(la_summary)}")
+```
+
+:::
+
+---
+
+## Step 5: Conclusion
+
+**Statistical Conclusion**:
+- Significant increasing trend in DoLS applications over 3 years
+- Policy change at Q7 caused immediate and sustained increase (~30 per 10k)
+- Approximately 10-15 outlier authorities with unusually high/low rates
+- Trend persists after accounting for policy change
+
+**Operational Interpretation**:
+- Policy change successfully increased awareness/applications
+- System-wide impact (not isolated to specific regions)
+- Some authorities may need support (outliers)
+- Trend suggests ongoing increase in need/awareness
+
+**Recommendations**:
+
+1. **Monitor capacity**: Ensure assessment capacity matches demand
+2. **Support outliers**: Investigate authorities with unusual patterns
+3. **Share best practices**: Learn from high-performing authorities
+4. **Continue monitoring**: Track long-term sustainability of rates
+5. **Consider confounders**: Deprivation, demographics, local policies
+
+**Limitations**:
+- Synthetic data (real patterns may differ)
+- Confounders not fully adjusted
+- Short time series (3 years)
+- No individual-level data
+
+---
+
+## Summary
+
+This example demonstrates analysis of **panel data with policy intervention**:
+
+✅ **Trend analysis** across multiple units  
+✅ **Policy impact assessment** using interrupted time series  
+✅ **Outlier detection** in panel data  
+✅ **Rate standardization** for fair comparison  
+✅ **System-wide change** interpretation
+
+**Key Lesson**: When analyzing policy changes, use interrupted time series methods to separate trend from intervention effects. Always account for varying population sizes using rates.

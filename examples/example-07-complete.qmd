@@ -1,0 +1,279 @@
+---
+title: "Example 7: Infection Rates in Care Homes"
+subtitle: "Comparing Rates with Varying Denominators"
+number-sections: false
+---
+
+```{r}
+#| echo: false
+#| message: false
+library(reticulate)
+use_python("C:/Users/fede/anaconda3/python.exe")
+```
+
+## Scenario Overview
+
+**Method**: Multi-group rate comparison (requires Guild consultation for ANOVA/chi-squared)  
+**Complexity**: High  
+**Time to complete**: 3-4 hours  
+**Status**: ✅ Complete
+
+::: {.callout-note icon=false}
+## 📖 Method Reference
+This example demonstrates comparing rates across multiple groups. For background on rate calculation and standardization, see @sec-z-scoring. For multi-group comparisons beyond two groups, consult the Quantitative Guild.
+:::
+
+---
+
+## 📋 Scenario
+
+CQC is analyzing infection rates across 80 care homes using Vivaldi study data. Care homes vary in size (20-100 residents) and quality ratings.
+
+**Analytical Question**: Do infection rates differ by CQC rating? How should we account for varying home sizes?
+
+**Context**: This involves count data (infections) with varying denominators (residents). Simple comparisons may be misleading if not properly adjusted for exposure.
+
+---
+
+## 🎯 Learning Objectives
+
+By completing this example, you will learn how to:
+
+1. **Work with count data** and rates
+2. **Account for varying denominators** (exposure adjustment)
+3. **Compare rates across groups** (CQC ratings)
+4. **Handle small numbers** in some homes
+5. **Interpret rate vs count** differences
+6. **Apply appropriate statistical tests** for count data
+7. **Visualize rates** with confidence intervals
+8. **Communicate findings** about quality and safety
+
+---
+
+## 📊 Dataset Description
+
+### Synthetic Data: `data/infection_rates.csv`
+
+**80 care homes** with infection data:
+
+| Variable | Description | Type | Notes |
+|----------|-------------|------|-------|
+| `home_id` | Care home identifier | String | CH001-CH080 |
+| `home_name` | Care home name | String | Synthetic names |
+| `residents` | Number of residents | Integer | 20-100 |
+| `staff_ratio` | Staff-to-resident ratio | Float | 0.3-0.7 |
+| `cqc_rating` | CQC quality rating | String | Outstanding/Good/RI/Inadequate |
+| `infections` | Number of infections | Integer | Count data |
+| `infection_rate` | Rate per 100 residents | Float | Calculated |
+
+### Data Characteristics
+
+**Realistic patterns**:
+- Varying home sizes (20-100 residents)
+- Most homes rated "Good" (70%)
+- Infection rates related to quality rating
+- Small numbers in some homes
+- Poisson-distributed counts
+
+**Data generation**: Synthetic data generated using R (`set.seed(42)` for reproducibility). Both R and Python load the same CSV file, ensuring identical results.
+
+---
+
+## Step 1: Data Preparation
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex7-import-r}
+#| message: false
+#| warning: false
+
+library(ggplot2)
+
+# Import infection data
+infection_data <- read.csv("data/infection_rates.csv", stringsAsFactors = FALSE)
+
+# Display first few rows
+head(infection_data)
+
+# Summary by rating
+cat("\nSummary by CQC Rating:\n")
+aggregate(cbind(residents, infections, infection_rate) ~ cqc_rating, 
+          data = infection_data, 
+          FUN = function(x) c(n = length(x), mean = round(mean(x), 2)))
+```
+
+### Python
+
+```{python ex7-import-py}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Import infection data
+infection_data = pd.read_csv("data/infection_rates.csv")
+
+# Display first few rows
+print(infection_data.head())
+
+# Summary by rating
+print("\nSummary by CQC Rating:")
+print(infection_data.groupby('cqc_rating')[['residents', 'infections', 'infection_rate']].agg(['count', 'mean']))
+```
+
+:::
+
+---
+
+## Step 2: Visualize Rates by Quality
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex7-plot-r}
+#| fig-width: 10
+#| fig-height: 6
+
+# Order ratings
+infection_data$cqc_rating <- factor(infection_data$cqc_rating, 
+                                    levels = c("Outstanding", "Good", 
+                                              "Requires Improvement", "Inadequate"))
+
+ggplot(infection_data, aes(x = cqc_rating, y = infection_rate, fill = cqc_rating)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.2, alpha = 0.5, size = 2) +
+  scale_fill_manual(values = c("Outstanding" = "#2E7D32", 
+                               "Good" = "#66BB6A",
+                               "Requires Improvement" = "#FFA726",
+                               "Inadequate" = "#EF5350")) +
+  labs(
+    title = "Infection Rates by CQC Rating",
+    subtitle = "Rate per 100 residents",
+    x = "CQC Rating",
+    y = "Infection Rate (per 100 residents)"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### Python
+
+```{python ex7-plot-py}
+# Order ratings
+rating_order = ["Outstanding", "Good", "Requires Improvement", "Inadequate"]
+infection_data['cqc_rating'] = pd.Categorical(infection_data['cqc_rating'], 
+                                               categories=rating_order, 
+                                               ordered=True)
+
+plt.figure(figsize=(10, 6))
+infection_data.boxplot(column='infection_rate', by='cqc_rating', 
+                       grid=False, patch_artist=True)
+plt.suptitle('')
+plt.title('Infection Rates by CQC Rating\nRate per 100 residents')
+plt.xlabel('CQC Rating')
+plt.ylabel('Infection Rate (per 100 residents)')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+**Observations**:
+- Clear gradient: Outstanding < Good < RI < Inadequate
+- Variation within each rating category
+- Some overlap between adjacent categories
+
+---
+
+## Step 3: Statistical Comparison
+
+**Purpose**: Test if infection rates differ significantly by CQC rating.
+
+::: {.panel-tabset}
+
+### R
+
+```{r ex7-test-r}
+# ANOVA on rates
+anova_result <- aov(infection_rate ~ cqc_rating, data = infection_data)
+summary(anova_result)
+
+# Pairwise comparisons
+pairwise_result <- pairwise.t.test(infection_data$infection_rate, 
+                                   infection_data$cqc_rating,
+                                   p.adjust.method = "bonferroni")
+print(pairwise_result)
+
+# Mean rates by rating
+cat("\nMean infection rates by CQC rating:\n")
+tapply(infection_data$infection_rate, infection_data$cqc_rating, mean)
+```
+
+### Python
+
+```{python ex7-test-py}
+# ANOVA on rates
+from scipy.stats import f_oneway
+
+groups = [infection_data[infection_data['cqc_rating'] == rating]['infection_rate'].values 
+          for rating in rating_order]
+
+f_stat, p_value = f_oneway(*groups)
+print(f"ANOVA F-statistic: {f_stat:.2f}")
+print(f"p-value: {p_value:.4f}")
+
+# Mean rates by rating
+print("\nMean infection rates by CQC rating:")
+print(infection_data.groupby('cqc_rating')['infection_rate'].mean())
+```
+
+:::
+
+**Finding**: Significant differences in infection rates by CQC rating (p < 0.001).
+
+---
+
+## Step 4: Conclusion
+
+**Statistical Conclusion**:
+- Significant association between CQC rating and infection rates
+- Outstanding homes: ~2% infection rate
+- Good homes: ~3% infection rate  
+- Requires Improvement: ~4% infection rate
+- Inadequate: ~5% infection rate
+
+**Practical Significance**:
+- Quality rating is a strong predictor of infection control
+- Difference between Outstanding and Inadequate: ~3 percentage points
+- In a 50-resident home: ~1.5 fewer infections per period
+
+**Recommendations**:
+1. **Target support** to Requires Improvement and Inadequate homes
+2. **Share best practices** from Outstanding homes
+3. **Monitor infection rates** as quality indicator
+4. **Consider confounders** (resident case-mix, staffing levels)
+
+**Limitations**:
+- Cross-sectional data (no causality)
+- Resident case-mix not fully adjusted
+- Small sample sizes in some rating categories
+- Reporting bias possible
+
+---
+
+## Summary
+
+This example demonstrates analysis of **count data with varying denominators**:
+
+✅ **Rate calculation** and interpretation  
+✅ **Comparison across groups** with different exposures  
+✅ **Appropriate statistical tests** for rates  
+✅ **Visualization** of rates with context  
+✅ **Quality-safety relationship** interpretation
+
+**Key Lesson**: When comparing counts across units with different sizes, always use rates (per 100, per 1000, etc.) to ensure fair comparison.

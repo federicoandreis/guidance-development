@@ -1,0 +1,293 @@
+---
+title: "References & Resources"
+number-sections: false
+---
+
+# References and Resources {#sec-references}
+
+This appendix provides internal CQC resources, external guidance, and recommended reading for deeper learning. Resources are organized by topic and level.
+
+---
+
+## CQC Internal Resources
+
+### Quality Assurance
+
+**Quantitative Analytics and Statistics Quality Assurance Framework** (2025)  
+Internal framework for ensuring analytical quality. Aligns with the AQuA Book. Defines roles, responsibilities, and quality standards for quantitative work.  
+*Contact*: Practice Leads or federico.andreis@cqc.org.uk
+
+**Data and Insight Quantitative Guild Terms of Reference** (2025)  
+Defines the Guild's role in providing specialist statistical support, maintaining standards, and building analytical capability.  
+*Access*: Internal CQC document
+
+**Data and Insight Competency Framework** (2025)  
+Outlines analytical competencies across career levels. Maps skills to training needs.  
+*Access*: Internal CQC document
+
+### Method-Specific Guidance
+
+**Methodology for constructing z-scores** (CQC Data Science and Statistics Team, 2020)  
+Comprehensive internal guidance on standard and working z-scores. Covers data types, minimum requirements, formulas, and trouble-shooting.  
+*Access*: Internal CQC document  
+*Note*: This book provides a more accessible introduction; consult the full guidance for implementation details.
+
+**SPC Implementation Guidance** (if available)  
+Internal guidance on applying SPC methods at CQC.  
+*Contact*: Guild for current resources
+
+---
+
+## Government and Regulatory Standards
+
+### Analysis Quality
+
+**The Aqua Book: Guidance on producing quality analysis for government** (HM Treasury, 2015)  
+Government standard for analytical quality. Covers the analytical cycle, QA processes, and communication.  
+*Link*: [https://www.gov.uk/government/publications/the-aqua-book-guidance-on-producing-quality-analysis-for-government](https://www.gov.uk/government/publications/the-aqua-book-guidance-on-producing-quality-analysis-for-government)
+
+**Code of Practice for Statistics** (UK Statistics Authority, latest edition)  
+Standards for producing official statistics. Principles of trustworthiness, quality, and value apply to CQC's analytical work.  
+*Link*: [https://code.statisticsauthority.gov.uk/](https://code.statisticsauthority.gov.uk/)
+
+### Statistical Methods
+
+**Government Statistical Service (GSS) Guidance**  
+Range of guidance on statistical methods, quality assurance, and communication.  
+*Link*: [https://gss.civilservice.gov.uk/guidance/](https://gss.civilservice.gov.uk/guidance/)
+
+---
+
+## Academic and Professional Literature
+
+### Z-scoring and Provider Comparison
+
+**Spiegelhalter, D. J. (2005)**. Funnel plots for comparing institutional performance. *Statistics in Medicine*, 24(8), 1185-1202.  
+Seminal paper on funnel plots for provider comparison. Explains relationship to z-scoring and overdispersion adjustment.
+
+**Spiegelhalter, D., et al. (2012)**. Statistical methods for healthcare regulation: rating, screening and surveillance. *Journal of the Royal Statistical Society: Series A*, 175(1), 1-47.  
+Comprehensive review of statistical methods for healthcare regulation, including z-scoring, funnel plots, and risk adjustment.
+
+### Statistical Process Control
+
+**Thor, J., et al. (2007)**. Application of statistical process control in healthcare improvement: systematic review. *Quality and Safety in Health Care*, 16(5), 387-399.  
+Systematic review of SPC in healthcare. Documents benefits, limitations, barriers, and facilitating factors.
+
+**Mohammed, M. A., Worthington, P., & Woodall, W. H. (2008)**. Plotting basic control charts: tutorial notes for healthcare practitioners. *Quality and Safety in Health Care*, 17(2), 137-145.  
+Practical tutorial on creating and interpreting control charts in healthcare.
+
+**Benneyan, J. C., Lloyd, R. C., & Plsek, P. E. (2003)**. Statistical quality control methods in infection control and hospital epidemiology, Part I: Introduction and basic theory. *Infection Control & Hospital Epidemiology*, 24(1), 7-16.  
+Introduction to SPC methods for healthcare applications, with focus on infection control.
+
+### Missing Data
+
+**Little, R. J. A., & Rubin, D. B. (2019)**. *Statistical Analysis with Missing Data* (3rd ed.). John Wiley & Sons.  
+Authoritative textbook on missing data theory and methods. Covers MCAR/MAR/MNAR framework and advanced techniques.
+
+**van Buuren, S. (2018)**. *Flexible Imputation of Missing Data* (2nd ed.). CRC Press.  
+Practical guide to multiple imputation with R examples. Accessible introduction to modern missing data methods.
+
+**Laaksonen, S. (2018)**. *Survey Methodology and Missing Data: Tools and Techniques for Practitioners*. Springer.  
+Applied perspective on missing data in surveys and administrative data.
+
+---
+
+## Recommended Textbooks
+
+### Introductory Statistics
+
+**Kirkwood, B. R., & Sterne, J. A. C. (2003)**. *Essential Medical Statistics* (2nd ed.). Blackwell.  
+Clear introduction to statistics for healthcare applications. Covers core methods with medical examples.
+
+**Altman, D. G. (1991)**. *Practical Statistics for Medical Research*. Chapman & Hall.  
+Classic text on statistical methods in medical research. Emphasizes practical application and interpretation.
+
+### Statistical Process Control
+
+**Wheeler, D. J., & Chambers, D. S. (1992)**. *Understanding Statistical Process Control* (2nd ed.). SPC Press.  
+Comprehensive introduction to SPC philosophy and methods. Industry standard reference.
+
+**Provost, L. P., & Murray, S. K. (2011)**. *The Health Care Data Guide: Learning from Data for Improvement*. Jossey-Bass.  
+SPC methods specifically for healthcare quality improvement. Practical examples and case studies.
+
+### Advanced Methods
+
+**Gelman, A., & Hill, J. (2006)**. *Data Analysis Using Regression and Multilevel/Hierarchical Models*. Cambridge University Press.  
+Advanced regression methods including hierarchical models relevant to provider comparison.
+
+**Harrell, F. E. (2015)**. *Regression Modeling Strategies* (2nd ed.). Springer.  
+Advanced regression methods with emphasis on model validation and avoiding common pitfalls.
+
+---
+
+## Online Resources and Training
+
+### R Programming
+
+**R for Data Science** by Hadley Wickham & Garrett Grolemund  
+Free online book covering data manipulation, visualization, and analysis in R.  
+*Link*: [https://r4ds.had.co.nz/](https://r4ds.had.co.nz/)
+
+**RStudio Education**  
+Tutorials, cheatsheets, and learning resources for R and RStudio.  
+*Link*: [https://education.rstudio.com/](https://education.rstudio.com/)
+
+### Python Programming
+
+**Python for Data Analysis** by Wes McKinney  
+Guide to data analysis with pandas, NumPy, and matplotlib.
+
+**Real Python**  
+Tutorials and courses on Python for data analysis.  
+*Link*: [https://realpython.com/](https://realpython.com/)
+
+### Statistical Methods
+
+**NHS-R Community**  
+Community of R users in healthcare. Resources, webinars, and support.  
+*Link*: [https://nhsrcommunity.com/](https://nhsrcommunity.com/)
+
+**Cross Validated (Stack Exchange)**  
+Q&A site for statistics. Search before asking; most questions already answered.  
+*Link*: [https://stats.stackexchange.com/](https://stats.stackexchange.com/)
+
+---
+
+## Training Courses
+
+### Internal CQC Training
+
+Contact the Guild or Learning & Development team for:
+- Introduction to statistics for analysts
+- R programming for data analysis
+- Advanced statistical methods
+- QA and peer review skills
+
+### External Training
+
+**Royal Statistical Society (RSS)**  
+Professional development courses on statistical methods.  
+*Link*: [https://rss.org.uk/training-events/](https://rss.org.uk/training-events/)
+
+**Government Statistical Service (GSS) Learning**  
+Training for government analysts, including statistics and R programming.  
+*Access*: Via GSS membership
+
+---
+
+## Software and Tools
+
+### Statistical Software
+
+**R and RStudio**  
+Free, open-source software for statistical analysis. CQC's primary analytical tool.  
+*Download*: [https://posit.co/download/rstudio-desktop/](https://posit.co/download/rstudio-desktop/)
+
+**Python (Anaconda Distribution)**  
+Python with data science packages pre-installed.  
+*Download*: [https://www.anaconda.com/download](https://www.anaconda.com/download)
+
+### R Packages Used in This Guidance
+
+**Data manipulation**:
+- `dplyr`: Data manipulation
+- `tidyr`: Data reshaping
+- `readr`: Reading data files
+
+**Visualization**:
+- `ggplot2`: Creating plots
+- `naniar`: Visualizing missing data
+
+**Statistical methods**:
+- `qcc`: Quality control charts (SPC)
+- Base R stats functions for t-tests and z-scores
+
+**Missing data**:
+- `mice`: Multiple imputation
+- `naniar`: Missing data visualization
+
+### Python Packages
+
+**Data manipulation**:
+- `pandas`: Data manipulation and analysis
+- `numpy`: Numerical computing
+
+**Visualization**:
+- `matplotlib`: Basic plotting
+- `seaborn`: Statistical visualization
+- `missingno`: Missing data visualization
+
+**Statistical methods**:
+- `scipy.stats`: Statistical tests
+- `statsmodels`: Statistical models
+
+---
+
+## Getting Help
+
+### Within CQC
+
+1. **Guild consultation**: For specialist statistical advice, method selection, or complex analyses
+2. **Peer review**: Use the QA Framework for structured feedback
+3. **Practice Leads**: For guidance on standards and processes
+
+### External Support
+
+1. **GSS Methodology Advisory Service**: For government analysts
+2. **RSS Statistical Advice Service**: Professional statistical advice
+3. **Cross Validated**: Online Q&A for specific technical questions
+
+---
+
+## Keeping Up to Date
+
+### Journals and Publications
+
+**Significance Magazine** (RSS)  
+Accessible articles on statistics in practice.  
+*Link*: [https://www.significancemagazine.com/](https://www.significancemagazine.com/)
+
+**Journal of the Royal Statistical Society, Series A**  
+Applied statistics research, including healthcare applications.
+
+**Quality and Safety in Health Care** (BMJ)  
+Healthcare quality improvement research, including SPC applications.
+
+### Newsletters and Blogs
+
+**NHS-R Community Blog**  
+R applications in healthcare.
+
+**Simply Statistics**  
+Blog on statistics and data science.  
+*Link*: [https://simplystatistics.org/](https://simplystatistics.org/)
+
+---
+
+## Citation Information
+
+To cite this guidance:
+
+> CQC Data and Insight (2025). *CQC Statistical Guidance: A Practical Guide for Analysts*. Care Quality Commission.
+
+For specific sections, include the section title and URL when published.
+
+---
+
+## Document History
+
+**Version 1.0** (December 2025): Initial release covering:
+- **Part I: Foundations** (9 sections): Getting Started, Data Types, Describing Data, Variation & Uncertainty, Distribution Shape, Unusual Observations, Missing Data Foundations, Statistical Inference, QA Principles
+- **Part II: Core Methods** (6 sections): Z-scoring, SPC Basics, t-tests, Correlation, Outlier Methods, Missing Data Methods
+- **Part III: Worked Examples** (10 complete examples with R and Python code)
+- **Appendices**: Glossary, References
+
+**Planned for Version 2.0**: ANOVA, Chi-squared tests, advanced SPC methods (Bayesian, CUSUM, EWMA), case studies, interactive components.
+
+**Feedback**: Contact the Guild or Practice Leads with suggestions for improvements or additional resources.
+
+---
+
+## Bibliography
+
+See `references.bib` for full bibliographic details of cited works.
