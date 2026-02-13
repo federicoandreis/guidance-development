@@ -32,8 +32,71 @@ body.quarto-light-mode #quarto-content main:first-child {
 }
 
 /* Make "How to Use This Book" section more prominent */
-#how-to-use-this-book {
+#how-to-use-this-book,
+#how-to-use-this-guidance {
   margin-top: 3em;
   border-top: 2px solid #e2e8f0;
   padding-top: 2em;
+}
+
+/* ── Navigation cards on index page ── */
+.nav-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2em;
+  margin: 1.5em 0;
+}
+
+.nav-card {
+  padding: 1.2em;
+  background-color: #f7fafc;
+  border-left: 4px solid #cbd5e0;
+  border-radius: 0 4px 4px 0;
+  transition: box-shadow 0.15s ease;
+}
+
+.nav-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.nav-card-foundations { border-left-color: #3182ce; }
+.nav-card-methods    { border-left-color: #38a169; }
+.nav-card-examples   { border-left-color: #e53e3e; }
+
+@media (max-width: 768px) {
+  .nav-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Quick Reference workflow cards ── */
+.workflow-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2em;
+  margin: 1.5em 0;
+}
+
+.workflow-card {
+  padding: 1.2em;
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.workflow-card h4 {
+  margin-top: 0;
+  color: #2c5282;
+}
+
+.workflow-card.nav-card-foundations { border-left: 4px solid #3182ce; }
+.workflow-card.nav-card-methods    { border-left: 4px solid #38a169; }
+.workflow-card.nav-card-examples   { border-left: 4px solid #e53e3e; }
+
+/* ── Decision tree on Quick Reference ── */
+.decision-tree {
+  background-color: #edf2f7;
+  padding: 1.5em;
+  border-radius: 5px;
+  margin: 1em 0;
 }

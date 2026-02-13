@@ -8,37 +8,43 @@ number-sections: false
 
 ## Overview
 
-Practical statistical guidance for CQC analysts. Methods, worked examples, and decision criteria with complete R and Python code.
+Practical statistical guidance for CQC analysts. Methods, worked examples, and decision criteria — with complete R and Python code throughout.
+
+This book teaches **judgment, not rules**: every section explains the reasoning behind analytical choices so you can adapt to your specific context.
 
 ---
 
-**Start Here**:
-- [QA Principles](chapters/10-qa-principles.qmd): Quality framework for all analysis
-- [Quick Reference](quick-reference.qmd): Find the right method for your question
+::: {.callout-tip icon=false}
+## Start Here
+
+- **Know your question?** → [Quick Reference](quick-reference.qmd) maps analytical problems directly to methods
+- **New to statistical analysis?** → [Getting Started](chapters/01-getting-started.qmd) for orientation and reading strategies
+- **Need QA guidance?** → [QA Principles](chapters/09-qa-principles.qmd) for the quality framework underpinning all analysis
+:::
 
 ---
 
-::: {style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2em; margin: 1.5em 0;"}
-::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #3182ce;"}
+::: {.nav-cards}
+::: {.nav-card .nav-card-foundations}
 **Part I: Foundations**
 
-Statistical concepts for regulatory analysis.
+Data types, descriptive statistics, variation, distributions, unusual observations, missing data concepts, statistical inference, and QA principles.
 
 [Getting Started →](chapters/01-getting-started.qmd)
 :::
 
-::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #38a169;"}
+::: {.nav-card .nav-card-methods}
 **Part II: Core Methods**
 
-Z-scoring, SPC, t-tests, correlation, outlier detection, missing data.
+Z-scoring, SPC, t-tests, correlation, outlier detection, and missing data handling — each with step-by-step guides and dual R/Python code.
 
-[View Methods →](chapters/11-z-scoring.qmd)
+[View Methods →](chapters/10-z-scoring.qmd)
 :::
 
-::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #e53e3e;"}
+::: {.nav-card .nav-card-examples}
 **Part III: Worked Examples**
 
-10 complete analytical workflows with realistic data.
+10 complete analytical workflows using realistic CQC data, from data preparation through to stakeholder reporting.
 
 [View Examples →](examples/README.qmd)
 :::
@@ -46,6 +52,19 @@ Z-scoring, SPC, t-tests, correlation, outlier detection, missing data.
 
 ---
 
-**Using this guidance**: Check QA principles → Select method based on your question → Follow worked example → Execute with provided code → Document decisions → Escalate complex cases to the Guild.
+## How to Use This Guidance
 
+1. **Check QA principles** → Understand what documentation and quality standards apply
+2. **Select your method** → Use the [Quick Reference](quick-reference.qmd) to match your question to a method
+3. **Follow the method chapter** → Step-by-step guide with assumptions, pitfalls, and interpretation
+4. **Work through an example** → Complete workflows with realistic data and code
+5. **Document your decisions** → QA templates in each methods chapter
+6. **Escalate when needed** → Each chapter explains when to consult the [Quantitative Guild](mailto:federico.andreis@cqc.org.uk)
 
+---
+
+::: {.callout-note icon=false}
+## About This Version
+
+**Version 1.0** (2025) covers 9 foundation chapters, 6 core methods, and 10 worked examples with dual R/Python code. For feedback or suggestions, contact the [Quantitative Guild](mailto:federico.andreis@cqc.org.uk).
+:::

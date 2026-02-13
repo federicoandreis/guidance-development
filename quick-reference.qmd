@@ -33,12 +33,12 @@ This page provides the fastest route to the right method for experienced analyst
 
 | Your Question | Method | When to Use | Chapter |
 |---------------|--------|-------------|---------|
-| Compare many providers to benchmark | **Z-scoring** | 10+ providers vs national average | 11 [@sec-z-scoring] |
-| Monitor performance over time | **SPC charts** | Detect changes in time series | 12 [@sec-spc-basics] |
-| Compare two groups | **t-tests** | Pilot vs control, before vs after | 13 [@sec-t-tests] |
-| Explore relationships | **Correlation** | Association between variables | 14 [@sec-correlation] |
-| Investigate unusual values | **Outlier methods** | Extreme observations requiring investigation | 15 [@sec-outlier-methods] |
-| Handle missing data | **Missing data methods** | Substantial missingness | 16 [@sec-missing-data-handling] |
+| Compare many providers to benchmark | **Z-scoring** | 10+ providers vs national average | 10 [@sec-z-scoring] |
+| Monitor performance over time | **SPC charts** | Detect changes in time series | 11 [@sec-spc-basics] |
+| Compare two groups | **t-tests** | Pilot vs control, before vs after | 12 [@sec-t-tests] |
+| Explore relationships | **Correlation** | Association between variables | 13 [@sec-correlation] |
+| Investigate unusual values | **Outlier methods** | Extreme observations requiring investigation | 14 [@sec-outlier-methods] |
+| Handle missing data | **Missing data methods** | Substantial missingness | 15 [@sec-missing-data-handling] |
 
 ## By Data Type and Sample Size
 
@@ -69,8 +69,8 @@ This page provides the fastest route to the right method for experienced analyst
 
 ## Common Workflows
 
-::: {style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin: 1.5em 0;"}
-::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #e53e3e;"}
+::: {.workflow-cards}
+::: {.workflow-card .nav-card-examples}
 **Profile Provider Performance**
 
 1. Check data quality and data type ([@sec-data-types])
@@ -80,7 +80,7 @@ This page provides the fastest route to the right method for experienced analyst
 5. Document methods, assumptions, and limitations
 :::
 
-::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #3182ce;"}
+::: {.workflow-card .nav-card-foundations}
 **Evaluate Intervention or Policy Change**
 
 1. Check data quality, data type, and baseline comparability ([@sec-data-types])
@@ -92,7 +92,7 @@ This page provides the fastest route to the right method for experienced analyst
 7. Document for QA review
 :::
 
-::: {style="padding: 1em; background-color: #f7fafc; border-left: 3px solid #38a169;"}
+::: {.workflow-card .nav-card-methods}
 **Monitor Trends and Detect Changes**
 
 1. Check data quality, data type, and temporal completeness ([@sec-data-types])
@@ -107,7 +107,7 @@ This page provides the fastest route to the right method for experienced analyst
 
 ## Quick Decision Tree
 
-::: {style="background-color: #edf2f7; padding: 1.5em; border-radius: 5px; margin: 1em 0;"}
+::: {.decision-tree}
 **Step 1: What are you comparing?**
 
 - **Single value vs benchmark** → Z-scoring [@sec-z-scoring]

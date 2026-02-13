@@ -6,7 +6,6 @@ title: "Monitoring Trends Over Time: SPC Basics"
 #| include: false
 # Setup Python environment
 library(reticulate)
-use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
 ```
 
 ::: {.callout-tip icon=false}
@@ -717,7 +716,7 @@ SPC is essential for monitoring change over time. Master the basics before consi
 - **Mohammed MA, Worthington P, Woodall WH** (2008). "Plotting basic control charts: tutorial notes for healthcare practitioners." *Quality and Safety in Health Care*, 17(2), 137-145. (Excellent practical introduction)
 - **Provost LP, Murray SK** (2011). *The Health Care Data Guide: Learning from Data for Improvement*. Jossey-Bass. (Comprehensive textbook)
 - **NHS Improvement SPC guidance**: https://www.england.nhs.uk/statistical-process-control-tool/
-- **AQuA Book** (Chapter on Time Series): Analyzing data over time
+- **AQuA Book** (Chapter on Time Series): Analysing data over time
 
 **Online Resources**:
 

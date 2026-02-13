@@ -23,19 +23,19 @@ book:
         - chapters/03-describing-data.qmd
         - chapters/04-variation-uncertainty.qmd
         - chapters/05-distribution-shape.qmd
-        - chapters/07-unusual-observations.qmd
-        - chapters/08-missing-data-foundations.qmd
-        - chapters/09-statistical-inference.qmd
-        - chapters/10-qa-principles.qmd
+        - chapters/06-unusual-observations.qmd
+        - chapters/07-missing-data-foundations.qmd
+        - chapters/08-statistical-inference.qmd
+        - chapters/09-qa-principles.qmd
 
     - part: "Part II: Core Methods"
       chapters:
-        - chapters/11-z-scoring.qmd
-        - chapters/12-spc-basics.qmd
-        - chapters/13-t-tests.qmd
-        - chapters/14-correlation.qmd
-        - chapters/15-outlier-methods.qmd
-        - chapters/16-missing-data-methods.qmd
+        - chapters/10-z-scoring.qmd
+        - chapters/11-spc-basics.qmd
+        - chapters/12-t-tests.qmd
+        - chapters/13-correlation.qmd
+        - chapters/14-outlier-methods.qmd
+        - chapters/15-missing-data-methods.qmd
 
     - part: "Part III: Worked Examples"
       chapters:

@@ -17,7 +17,7 @@ Quality assurance isn't bureaucracy. It's how we ensure our analysis is defensib
 
 **What good QA achieves**:
 - Catches errors early, before they affect decisions
-- Builds confidence in analysis across the organization
+- Builds confidence in analysis across the organisation
 - Enables effective review by colleagues and stakeholders
 - Creates organizational learning from what works and what doesn't
 - Supports transparent, defensible regulatory action
@@ -425,7 +425,7 @@ Before applying any statistical method, verify these fundamentals. This is not b
 - [ ] **Completeness checked**: Do you have all expected records?
 - [ ] **Duplicates identified**: Are duplicates legitimate?
 
-**Why it matters**: Analyzing the wrong unit or including duplicates gives nonsensical results.
+**Why it matters**: Analysing the wrong unit or including duplicates gives nonsensical results.
 
 ### 3. Variable Definitions
 

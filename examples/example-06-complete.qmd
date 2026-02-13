@@ -8,7 +8,6 @@ number-sections: false
 #| echo: false
 #| message: false
 library(reticulate)
-use_python("C:/Users/fede/anaconda3/python.exe")
 ```
 
 ## Scenario Overview

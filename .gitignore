@@ -15,6 +15,7 @@ Thumbs.db
 *~
 
 # R and Python artifacts
+.Renviron
 .Rhistory
 .RData
 .Ruserdata
@@ -33,3 +34,4 @@ __pycache__/
 .vscode/
 .idea/
 *.sublime-*
+/.quarto/

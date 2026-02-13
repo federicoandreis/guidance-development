@@ -6,8 +6,6 @@ title: "Exploring Relationships: Correlation & Association"
 #| include: false
 # Setup Python environment
 library(reticulate)
-# Use system Python (where pandas is installed)
-use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
 ```
 
 ::: {.callout-tip icon=false}
@@ -29,7 +27,7 @@ Correlation quantifies the relationship between two variables using a single num
 
 **Key advantages**:
 
-- Quantifies relationship strength on a standardized scale (-1 to +1)
+- Quantifies relationship strength on a standardised scale (-1 to +1)
 - Identifies direction (positive or negative association)
 - Flags potential areas for further investigation
 - Helps understand contextual factors affecting outcomes
@@ -228,7 +226,7 @@ Create a scatter plot with:
 - **Curved pattern**: Points follow a curve → Use Spearman, or escalate for non-linear methods
 - **No pattern**: Random scatter → Correlation likely near zero
 - **Outliers**: Extreme points far from the main cluster → Use Spearman or investigate outliers
-- **Clusters**: Distinct groups → May need to analyze separately
+- **Clusters**: Distinct groups → May need to analyse separately
 
 ### 2. Check Data Quality
 
@@ -628,15 +626,15 @@ A correlation can **reverse direction** when you separate data into subgroups.
 
 This happens when the subgroups have very different baseline rates and different proportions in each deprivation category.
 
-:**Implication**: Always consider whether your data should be analyzed in subgroups (by region, provider type, etc.) rather than pooled.
+:**Implication**: Always consider whether your data should be analysed in subgroups (by region, provider type, etc.) rather than pooled.
 
 ### Range Restriction
 
 Correlations can be **artificially weakened** when you restrict the range of one or both variables.
 
-:**Example**: If you only analyze practices in the most deprived areas (IMD deciles 1-3), you might find no correlation with access, not because there isn't one, but because you've removed most of the variation in deprivation.
+:**Example**: If you only analyse practices in the most deprived areas (IMD deciles 1-3), you might find no correlation with access, not because there isn't one, but because you've removed most of the variation in deprivation.
 
-:**Implication**: Be cautious about excluding data or analyzing only subsets. Report the range of values analyzed.
+:**Implication**: Be cautious about excluding data or analysing only subsets. Report the range of values analysed.
 
 ### Outliers Can Distort Correlations
 

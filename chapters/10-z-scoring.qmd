@@ -6,8 +6,6 @@ title: "Comparing Provider Performance: Z-scoring"
 #| include: false
 # Setup Python environment
 library(reticulate)
-# Use system Python (where pandas is installed)
-use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
 ```
 
 ::: {.callout-tip icon=false}
@@ -94,7 +92,7 @@ Check these requirements before applying z-scoring:
 
 ### Step 1: Calculate the Indicator Value
 
-For each provider, calculate the indicator you're analyzing.
+For each provider, calculate the indicator you're analysing.
 
 **For proportions** (e.g., percentage of patients seen within target):
 $$\text{Proportion} = \frac{\text{Number meeting target}}{\text{Total number}}$$
@@ -155,7 +153,7 @@ A histogram of z-scores with reference lines at ±1, ±2, and ±3 standard devia
 
 ## Worked Example: GP Cancer Referral Rates
 
-**Scenario**: You're analyzing 2-week-wait cancer referral rates across 150 GP practices. You want to identify practices with unusually high or low referral rates.
+**Scenario**: You're analysing 2-week-wait cancer referral rates across 150 GP practices. You want to identify practices with unusually high or low referral rates.
 
 **Data structure**:
 

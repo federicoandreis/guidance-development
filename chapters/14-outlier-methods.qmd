@@ -5,7 +5,6 @@ title: "Outlier Detection and Treatment"
 ```{r}
 #| include: false
 library(reticulate)
-use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
 ```
 
 ::: {.callout-tip icon=false}
@@ -165,7 +164,7 @@ Document all decisions in a decision log for QA purposes.
 
 ### Scenario
 
-You're analyzing staffing ratios (qualified staff per 10 residents) across 80 care homes. You need to identify extreme values that warrant investigation before conducting your main analysis.
+You're analysing staffing ratios (qualified staff per 10 residents) across 80 care homes. You need to identify extreme values that warrant investigation before conducting your main analysis.
 
 **Data**: Simulated staffing ratios (most homes 2.5-4.5 staff per 10 residents, with some genuine extremes and data errors)
 

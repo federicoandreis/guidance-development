@@ -6,8 +6,6 @@ title: "Comparing Two Groups: t-tests"
 #| include: false
 # Setup Python environment
 library(reticulate)
-# Use system Python (where pandas is installed)
-use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
 ```
 
 ::: {.callout-tip icon=false}

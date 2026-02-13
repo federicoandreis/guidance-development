@@ -38,7 +38,7 @@ Not all missingness is equal. The reason data is missing determines whether it c
 **Impact on analysis**:
 - **No bias**: Complete cases are a random subset, so estimates are unbiased
 - **Loss of precision**: Smaller sample = wider confidence intervals = less statistical power
-- **Easy to handle**: Analyzing complete cases only is valid
+- **Easy to handle**: Analysing complete cases only is valid
 
 **Why it's rare in practice**: True randomness is uncommon. Usually missingness relates to something, even if subtly.
 
@@ -108,7 +108,7 @@ Missing data affects analysis in two ways. Understanding the difference is cruci
 
 **Caused by**: All types of missingness (MCAR, MAR, MNAR)
 
-**Example**: You plan to compare 100 providers, but 20 have missing data. Analyzing 80 providers instead of 100 means less precise estimates—wider confidence intervals, lower statistical power.
+**Example**: You plan to compare 100 providers, but 20 have missing data. Analysing 80 providers instead of 100 means less precise estimates—wider confidence intervals, lower statistical power.
 
 **Consequence**: You might miss real differences (false negatives), not because of bias but because you lack precision.
 

@@ -7,7 +7,6 @@ number-sections: false
 ```{r}
 #| include: false
 library(reticulate)
-use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
 ```
 
 ## Scenario Overview

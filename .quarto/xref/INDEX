@@ -217,5 +217,32 @@
   },
   "appendices/generate-figures.qmd": {
     "generate-figures.html": "e307db05"
+  },
+  "chapters/06-unusual-observations.qmd": {
+    "06-unusual-observations.html": "cc99996a"
+  },
+  "chapters/07-missing-data-foundations.qmd": {
+    "07-missing-data-foundations.html": "2093d480"
+  },
+  "chapters/08-statistical-inference.qmd": {
+    "08-statistical-inference.html": "52f62199"
+  },
+  "chapters/10-z-scoring.qmd": {
+    "10-z-scoring.html": "c1cc1c6c"
+  },
+  "chapters/11-spc-basics.qmd": {
+    "11-spc-basics.html": "4ed39aaf"
+  },
+  "chapters/12-t-tests.qmd": {
+    "12-t-tests.html": "10171a45"
+  },
+  "chapters/13-correlation.qmd": {
+    "13-correlation.html": "789a9c31"
+  },
+  "chapters/14-outlier-methods.qmd": {
+    "14-outlier-methods.html": "b70a59b0"
+  },
+  "chapters/15-missing-data-methods.qmd": {
+    "15-missing-data-methods.html": "7a5e79e2"
   }
 }

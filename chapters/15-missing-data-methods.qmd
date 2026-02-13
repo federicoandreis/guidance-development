@@ -6,8 +6,6 @@ title: "Handling Missing Data"
 #| include: false
 # Setup Python environment
 library(reticulate)
-# Use system Python (where pandas is installed)
-use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
 ```
 
 ::: {.callout-tip icon=false}
@@ -26,7 +24,7 @@ You have missing data in your analysis and need to decide how to handle it. Miss
 
 ## What Missing Data Handling Does {#sec-missing-data-handling}
 
-Handling missing data means making informed decisions about how to proceed with analysis when you don't have complete information. The goal is to minimize bias and properly represent uncertainty.
+Handling missing data means making informed decisions about how to proceed with analysis when you don't have complete information. The goal is to minimise bias and properly represent uncertainty.
 
 **What good missing data handling does**:
 - **Investigates** why data is missing (the most critical step)
@@ -48,7 +46,7 @@ Handling missing data means making informed decisions about how to proceed with 
 ::: {.callout-note icon=false}
 ## 📖 Complete Worked Example
 
-**Note**: A dedicated worked example for missing data handling is planned for future development. For now, refer to the in-chapter worked example below which demonstrates investigating missingness patterns and choosing appropriate approaches.
+The in-chapter worked example below demonstrates investigating missingness patterns and choosing appropriate approaches using realistic CQC data. Several Part III examples also encounter missing data as part of their workflows — see Example 1 (GP Access) and Example 10 (Care Home Staffing) for practical handling in context.
 
 **Topics covered in the in-chapter example**:
 - Visualizing missingness with upset plots
@@ -160,7 +158,7 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 **Practical approaches for most CQC work**:
 
 **Complete case analysis** (most common):
-- Analyze only cases with complete data
+- Analyse only cases with complete data
 - Simple, transparent, defensible
 - Document how many cases excluded and why
 - Check if excluded cases differ systematically
@@ -213,7 +211,7 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 
 ## Worked Example: Care Home Quality Ratings with Missing Data
 
-**Scenario**: You're analyzing care home quality ratings across 450 care homes. Three key variables have missing data:
+**Scenario**: You're analysing care home quality ratings across 450 care homes. Three key variables have missing data:
 - Staffing levels: 12% missing
 - Resident satisfaction: 18% missing  
 - Inspection score: 8% missing

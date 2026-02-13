@@ -8,7 +8,6 @@ number-sections: false
 #| include: false
 # Setup Python environment
 library(reticulate)
-use_python("C:/Users/fede/anaconda3/python.exe", required = TRUE)
 ```
 
 ## Scenario Overview

@@ -108,7 +108,7 @@ Examples: This care home's true rate = national average; the intervention made n
 
 | Context | Recommended Threshold | Rationale |
 |---------|----------------------|-----------|
-| **High-stakes decisions** (enforcement) | 0.01 or 0.001 | Minimize false positives, higher evidence bar |
+| **High-stakes decisions** (enforcement) | 0.01 or 0.001 | Minimise false positives, higher evidence bar |
 | **Screening for inspection** (initial flagging) | 0.10 or 0.20 | Catch more potential issues, investigation will confirm |
 | **Exploratory analysis** (patterns) | No fixed threshold | Look at effect sizes and CIs, not just p-values |
 
@@ -259,6 +259,17 @@ Every statistical result should report:
 
 **When to escalate**: If designing a new indicator and unsure about power calculations, consult the Quantitative Guild.
 :::
+
+## Applying These Concepts
+
+The inference principles in this chapter underpin every methods chapter in Part II:
+
+- **Z-scoring** (@sec-z-scoring): Uses z-scores (standard deviations from the mean) and p-values to flag providers. The interpretation of "statistically significant" depends on everything in this chapter.
+- **SPC** (@sec-spc-basics): Control limits are derived from variation estimates. Special cause signals are essentially hypothesis tests applied to time series.
+- **t-tests** (@sec-t-tests): Directly apply hypothesis testing, p-values, confidence intervals, and effect sizes to compare groups.
+- **Correlation** (@sec-correlation): Significance tests for correlation coefficients use the same p-value logic. Sample size determines precision.
+- **Outlier methods** (@sec-outlier-methods): Statistical criteria for "unusual" depend on distributional assumptions and the false positive/negative trade-off.
+- **Missing data** (@sec-missing-data-handling): Inference is only valid if missingness doesn't introduce bias. Understanding estimation helps you assess the impact of missing data.
 
 ## Key Takeaways
 
