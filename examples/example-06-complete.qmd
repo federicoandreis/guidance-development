@@ -12,10 +12,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Statistical Process Control (SPC) (@sec-spc-basics)  
-**Complexity**: Medium-High  
-**Time to complete**: 2-3 hours  
+**Method**: Statistical Process Control (SPC) (@sec-spc-basics)
+**Complexity**: Medium-High
+**Time to complete**: 2-3 hours
 **Status**: ✅ Complete
+**QASQA questions**: Q3 (Analysis); Q4 (Delivery & Communication)
+**Competencies demonstrated**: A (Statistical analysis and methods); B (Analytical judgment); D (Communication of findings)
 
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
@@ -451,3 +453,20 @@ This example demonstrates SPC application to **trending data**, showing:
 ✅ **Alternative monitoring approaches** for trending data
 
 **Key Lesson**: When processes show sustained trends, standard SPC control limits become less meaningful. Focus on trend analysis and investigate root causes of deterioration.
+
+---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | SPC I-chart with trend analysis; linear regression for trend quantification |
+| **QASQA question** | Q3: Analysis — is the SPC method appropriate for trending data?; Q4: Delivery & Communication — does the chart make the deterioration visible to stakeholders? |
+| **Competencies** | A: Statistical analysis and methods; B: Analytical judgment; D: Communication of findings |
+| **Data source** | Monthly ambulance handover delay rates (synthetic illustrative data) |
+| **Key decisions** | I-chart chosen (single rate per month); standard limits calculated from baseline despite trend — limitations noted; trend analysis added as supplementary to standard SPC |
+| **Assumptions** | Monthly data points independent; measurement definition consistent throughout; no structural change in data collection |
+| **Limitations** | Standard SPC control limits less meaningful when process shows sustained trend; trend may not be linear long-term; single trust — cannot generalise |
+| **Sensitivity** | Consistent with visual inspection; trend magnitude stable across different baseline period definitions |
+| **Next steps** | Investigate operational root causes (winter pressures, capacity); consider detrended control chart or CUSUM for ongoing monitoring |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

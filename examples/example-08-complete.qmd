@@ -12,10 +12,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Statistical Process Control (SPC) with interrupted time series (@sec-spc-basics)  
-**Complexity**: High  
-**Time to complete**: 3-4 hours  
+**Method**: Statistical Process Control (SPC) with interrupted time series (@sec-spc-basics)
+**Complexity**: High
+**Time to complete**: 3-4 hours
 **Status**: ✅ Complete
+**QASQA questions**: Q3 (Analysis); Q4 (Delivery & Communication)
+**Competencies demonstrated**: A (Statistical analysis and methods); B (Analytical judgment); D (Communication of findings)
 
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
@@ -354,3 +356,20 @@ This example demonstrates analysis of **panel data with policy intervention**:
 ✅ **System-wide change** interpretation
 
 **Key Lesson**: When analyzing policy changes, use interrupted time series methods to separate trend from intervention effects. Always account for varying population sizes using rates.
+
+---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | SPC with interrupted time series; DoLS application rates per 1,000 eligible population |
+| **QASQA question** | Q3: Analysis — does the ITS method appropriately isolate the policy effect from pre-existing trend?; Q4: Delivery & Communication — are the trend and intervention effect communicated clearly? |
+| **Competencies** | A: Statistical analysis and methods; B: Analytical judgment; D: Communication of findings |
+| **Data source** | DoLS applications by local authority, quarterly (synthetic illustrative data) |
+| **Key decisions** | Rates per 1,000 eligible population used (not raw counts); interrupted time series structure (pre/post Cheshire West ruling); outlier LAs investigated separately |
+| **Assumptions** | Policy change date is correctly identified; population estimates are accurate; no concurrent confounding policy changes |
+| **Limitations** | No individual-level data; ecological analysis only; local authority capacity and definitions may vary; 2014 Cheshire West ruling creates structural break |
+| **Sensitivity** | Pre-trend and post-intervention slope estimates stable across model specification variants |
+| **Next steps** | Validate outlier LAs with operational knowledge; consider multilevel model with Guild support; monitor for regression to mean in initially high LAs |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

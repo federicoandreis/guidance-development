@@ -8,6 +8,8 @@ title: "Comparing Provider Performance: Z-scoring"
 library(reticulate)
 ```
 
+After reading this chapter, you will know how to apply z-scoring to compare provider performance against a national benchmark, understand when standard z-scoring is appropriate and when Working z-scores are needed, interpret z-score bands in a regulatory context, and communicate results through both numerical outputs and funnel plot visualisations.
+
 ::: {.callout-tip icon=false}
 ## Problem This Method Solves
 
@@ -36,6 +38,8 @@ Z-scoring measures how many standard deviations a provider's observed value is f
 - Replace professional judgment about whether to investigate
 
 ## Before You Start
+
+**QA Framework alignment**: Z-scoring most directly supports QA question 3 (Analysis — is the method appropriate and correctly applied?) and question 5 (Fitness for Purpose — does the indicator measure what the regulatory question requires?). Document your choice of standard versus Working z-scores, banding thresholds, and exclusion criteria as part of the question 3 record.
 
 ::: {.callout-note icon=false}
 ## Note on Code Examples
@@ -420,6 +424,21 @@ plt.show()
 
 **Critical point**: Statistical significance ≠ clinical significance. A z-score of 2.5 might be statistically unusual but clinically unimportant if the absolute difference is tiny. Always consider both.
 
+::: {.callout-note icon=false}
+## 🤔 Rethinking: Regression to the Mean
+
+When a care home is flagged as significantly above average this year, expect it to look better next year — even without any change in quality. This is regression to the mean, and it is a statistical certainty, not a mystery.
+
+**Why it happens**: A z-score reflects both true underlying performance and random variation. A provider in the flagged zone has likely experienced both worse-than-average true performance *and* unlucky random variation. In the next period, the random component averages out, pulling the z-score back towards zero.
+
+**CQC implications**:
+- Do not interpret a flagged provider "recovering" into the expected band as proof that an intervention worked — it may be regression to the mean
+- Do not dismiss concerns about a flagged provider on the grounds that they might simply regress — the underlying true performance still warrants investigation
+- Repeated flagging over multiple periods is a stronger signal than a single-period flag, because the random component averages out over time
+
+**Practical test**: If you have multiple years of data, plot each provider's z-score over time. Genuine persistent problems produce consistently high z-scores; random extremes regress towards zero.
+:::
+
 ## Common Pitfalls
 
 ### Pitfall 1: Ignoring direction
@@ -442,6 +461,23 @@ plt.show()
 ### Pitfall 5: Assuming causation
 - Z-scoring identifies difference, not cause
 - Investigation determines whether it's a quality issue, case-mix, data error, or chance
+
+::: {.callout-note icon=false}
+## 🤔 Rethinking: Multiple Testing — When Chance Looks Like a Signal
+
+CQC routinely runs z-scoring across dozens or hundreds of indicators simultaneously. This creates a multiple testing problem: the more tests you run, the more providers you will flag by chance alone — even if nothing is actually wrong.
+
+**The maths**: At p < 0.05, expect approximately 1 false positive for every 20 tests. Run z-scoring on 100 indicators and expect roughly 5 borderline flags that are pure chance.
+
+**What this means in practice**:
+- A provider flagged on a single indicator out of many may not need investigation — especially if the flag is borderline (z ≈ 2.0) and unsupported by other evidence
+- A provider flagged on three or more indicators simultaneously is a much stronger signal — the probability of coincidence is much lower
+- Inspection decisions should weight evidence from *multiple* sources, not single-indicator flags
+
+**Formal corrections** (Bonferroni, Benjamini–Hochberg) exist but are rarely applied in CQC profiling, where the goal is screening rather than confirmatory inference. Instead, raise the threshold for action: require flagging on multiple indicators, or require z > 3 rather than z > 2 before escalating a single-indicator concern.
+
+For guidance on multiple testing corrections in formal evaluations, raise this with the Guild before analysis begins.
+:::
 
 ## Documenting Your Analysis
 
@@ -469,7 +505,7 @@ For QA purposes, record:
 - What follow-up actions you recommend
 
 ::: {.callout-note icon=false}
-## Rethinking: Why Z-scoring Succeeded at CQC
+## 🤔 Rethinking: Why Z-scoring Succeeded at CQC
 
 CQC has used z-scoring extensively for provider comparison since the early 2010s. Why has it become a core method?
 
@@ -490,30 +526,152 @@ CQC has used z-scoring extensively for provider comparison since the early 2010s
 The key lesson: A good-enough method that's consistently applied and well-understood often beats a perfect method that's complex and inconsistently used.
 :::
 
+## Funnel Plots: Visualising Provider Variation {#sec-funnel-plots}
+
+Funnel plots are the natural visual companion to z-scoring. Where z-scores give you a number for automated flagging, funnel plots give you a picture — showing every provider's performance against statistically derived control limits that widen for smaller providers to reflect their greater uncertainty.
+
+### How Funnel Plots Work
+
+A funnel plot places each provider as a point on a scatter plot with:
+
+- **x-axis**: Denominator size (e.g., practice list size, number of bed-days)
+- **y-axis**: Performance indicator (e.g., referral rate per 1,000)
+
+Control limits drawn on the plot represent the expected range of variation for a provider of that denominator size. Small providers have wide limits (less data = more uncertainty); large providers have narrow limits. This creates the characteristic funnel shape.
+
+**Two sets of limits** are typically drawn:
+
+| Limit | Multiplier | Equivalent z-score | Interpretation |
+|-------|------------|-------------------|----------------|
+| Inner (dashed blue) | ±1.96 SE | \|z\| > 1.96 | 95% — screening threshold |
+| Outer (dashed red) | ±3.09 SE | \|z\| > 3.09 | 99.8% — strong signal threshold |
+
+A provider whose point falls outside the outer limits is equivalent to one with \|z\| > 3.09 — the funnel plot makes this visually obvious and also shows immediately *why* small providers are harder to flag: their limits extend further.
+
+### Code Example
+
+:::: {.panel-tabset group="language"}
+## R
+```{r}
+#| label: funnel-plot-r
+#| fig-width: 9
+#| fig-height: 6
+
+# Funnel plot for GP cancer referral rates
+theta <- national_mean   # national mean referral rate per 1,000
+n_seq <- seq(500, max(gp_data$list_size) * 1.05, length.out = 300)
+
+# Control limits: SE(rate) = sqrt(theta * 1000 / n) under Poisson approximation
+se_seq   <- sqrt(theta * 1000 / n_seq)
+ul_95    <- theta + 1.96 * se_seq
+ll_95    <- theta - 1.96 * se_seq
+ul_998   <- theta + 3.09 * se_seq
+ll_998   <- theta - 3.09 * se_seq
+
+# Classify each provider relative to their own limits
+se_prov     <- sqrt(theta * 1000 / gp_data$list_size)
+outside_998 <- abs(gp_data$referral_rate - theta) > 3.09 * se_prov
+outside_95  <- abs(gp_data$referral_rate - theta) > 1.96 * se_prov & !outside_998
+point_col   <- ifelse(outside_998, "red", ifelse(outside_95, "orange", "grey60"))
+
+plot(gp_data$list_size, gp_data$referral_rate,
+     xlab = "Practice Size (List Size)",
+     ylab = "Referral Rate per 1,000 Patients",
+     main = "Funnel Plot: GP Cancer Referral Rates",
+     col = point_col, pch = 19, cex = 0.8,
+     ylim = range(c(gp_data$referral_rate, ll_998, ul_998)))
+lines(n_seq, ul_95,  col = "steelblue", lty = 2, lwd = 1.5)
+lines(n_seq, ll_95,  col = "steelblue", lty = 2, lwd = 1.5)
+lines(n_seq, ul_998, col = "red",       lty = 2, lwd = 1.5)
+lines(n_seq, ll_998, col = "red",       lty = 2, lwd = 1.5)
+abline(h = theta, col = "black", lwd = 1.5)
+
+legend("topright", bty = "n",
+       legend = c(
+         paste0("Within limits (n=", sum(!outside_95 & !outside_998), ")"),
+         paste0("Outside 95% (n=", sum(outside_95), ")"),
+         paste0("Outside 99.8% (n=", sum(outside_998), ")"),
+         "95% control limits", "99.8% control limits", "National mean"),
+       col    = c("grey60", "orange", "red", "steelblue", "red", "black"),
+       pch    = c(19, 19, 19, NA, NA, NA),
+       lty    = c(NA, NA, NA, 2, 2, 1),
+       pt.cex = 0.9)
+```
+
+## Python
+```{python}
+#| label: funnel-plot-py
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import matplotlib.lines as mlines
+
+theta = national_mean
+n_seq = np.linspace(500, gp_data['list_size'].max() * 1.05, 300)
+
+# Control limits
+se_seq = np.sqrt(theta * 1000 / n_seq)
+ul_95  = theta + 1.96 * se_seq
+ll_95  = theta - 1.96 * se_seq
+ul_998 = theta + 3.09 * se_seq
+ll_998 = theta - 3.09 * se_seq
+
+# Classify providers
+se_prov     = np.sqrt(theta * 1000 / gp_data['list_size'])
+outside_998 = np.abs(gp_data['referral_rate'] - theta) > 3.09 * se_prov
+outside_95  = (np.abs(gp_data['referral_rate'] - theta) > 1.96 * se_prov) & ~outside_998
+colors      = np.where(outside_998, 'red', np.where(outside_95, 'orange', 'grey'))
+
+fig, ax = plt.subplots(figsize=(9, 6))
+ax.scatter(gp_data['list_size'], gp_data['referral_rate'], c=colors, alpha=0.7, s=30)
+ax.plot(n_seq, ul_95,  color='steelblue', linestyle='--', linewidth=1.5)
+ax.plot(n_seq, ll_95,  color='steelblue', linestyle='--', linewidth=1.5)
+ax.plot(n_seq, ul_998, color='red',       linestyle='--', linewidth=1.5)
+ax.plot(n_seq, ll_998, color='red',       linestyle='--', linewidth=1.5)
+ax.axhline(theta, color='black', linewidth=1.5)
+
+within_p = mpatches.Patch(color='grey',   label=f"Within limits (n={sum(~outside_95 & ~outside_998)})")
+out95_p  = mpatches.Patch(color='orange', label=f"Outside 95% (n={sum(outside_95)})")
+out998_p = mpatches.Patch(color='red',    label=f"Outside 99.8% (n={sum(outside_998)})")
+lim95_l  = mlines.Line2D([], [], color='steelblue', linestyle='--', label='95% control limits')
+lim998_l = mlines.Line2D([], [], color='red',       linestyle='--', label='99.8% control limits')
+mean_l   = mlines.Line2D([], [], color='black',     linestyle='-',  label='National mean')
+ax.legend(handles=[within_p, out95_p, out998_p, lim95_l, lim998_l, mean_l],
+          loc='upper right', fontsize=8)
+
+ax.set_xlabel('Practice Size (List Size)')
+ax.set_ylabel('Referral Rate per 1,000 Patients')
+ax.set_title('Funnel Plot: GP Cancer Referral Rates')
+plt.tight_layout()
+plt.show()
+```
+::::
+
+### Reading and Communicating Funnel Plots
+
+**For analysis**: A provider above the outer (99.8%) limit warrants investigation. A provider above the inner (95%) limit is a candidate for monitoring. The funnel shape immediately conveys that small providers require much more evidence to be flagged — this is not special treatment, it is statistical fairness.
+
+**For presentations**: Funnel plots communicate uncertainty in a way that tables of z-scores cannot. When a small provider is not flagged despite a high rate, the funnel plot makes the reason intuitive: their wide limits mean the evidence is not yet strong enough.
+
+**CQC practice**: Use z-scores for internal analysis and automated flagging. Use funnel plots when presenting results to stakeholders, boards, or in publications. They are complementary tools.
+
 ::: {.callout-note icon=false}
-## Rethinking: Z-scores vs Funnel Plots
+## 🤔 Rethinking: Z-scores vs Funnel Plots
 
-Funnel plots and z-scores are closely related: both identify providers outside expected variation. So when should you use each?
+Funnel plots and z-scores produce the same analytical decision — both flag providers outside expected variation. The choice is about communication, not analysis.
 
-**Z-scores**:
-- Numerical output: easy to sort, filter, automate
-- Clear banding for decision-making
-- Works well in tables and databases
-- Less visual, more analytical
+| | Z-scores | Funnel plots |
+|---|---|---|
+| **Output** | Numerical — easy to sort, filter, automate | Visual — immediate pattern recognition |
+| **Best for** | Internal analysis, dashboards, databases | Reports, presentations, publications |
+| **Shows uncertainty** | Indirectly (via CI width) | Directly (funnel width) |
+| **Multiple indicators** | Easy to compare across indicators | One indicator at a time |
 
-**Funnel plots**:
-- Visual output: great for presentations and reports
-- Shows relationship between sample size and uncertainty
-- Makes small-denominator issues obvious
-- Less useful for automated flagging
-
-**CQC practice**: Use z-scores for analysis and provider flagging. Use funnel plots for communicating results to stakeholders. They're complementary, not competing.
-
-**Technical note**: Funnel plots typically show 95% and 99.8% confidence limits, which correspond roughly to z-scores of ±2 and ±3. A provider outside the funnel is a provider with |z| > 2 or 3.
+**Technical note**: The inner funnel limit (95%) corresponds to \|z\| > 1.96; the outer (99.8%) to \|z\| > 3.09. A provider outside the funnel has a flagged z-score — they are equivalent, presented differently.
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: When Standard Z-scoring Fails
+## ⚙️ Overthinking: When Standard Z-scoring Fails
 
 Standard z-scoring assumes your data is approximately normally distributed with constant variance. When these assumptions fail, results can be misleading.
 
@@ -550,11 +708,11 @@ If your indicator is heavily skewed (e.g., length of stay with long right tail),
 2. Use Working z-scores with appropriate distribution
 3. Use median-based methods instead
 
-**When to escalate**: If you're unsure whether your data meets assumptions, or if you need Working z-scores, seek specialist support. Working z-scores require model-based approaches (Beta distribution for proportions, Poisson/Negative Binomial for counts) that need specialist implementation.
+**When to escalate**: If you're unsure whether your data meets assumptions, or if you need Working z-scores, raise it with the Quantitative Analytics and Statistics Guild (the Guild) at a Quant Clinic session. Working z-scores require model-based approaches (Beta distribution for proportions, Poisson/Negative Binomial for counts) that need specialist implementation.
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Working Z-scores Technical Details
+## ⚙️ Overthinking: Working Z-scores Technical Details
 
 **Working z-scores** extend standard z-scoring to non-normal data by using the exact distribution of the indicator.
 
@@ -597,7 +755,7 @@ $$Z_i = \frac{Y_i - T}{s_i}$$
 - Estimating parameters (Beta shape parameters, Poisson/NB dispersion)
 - Calculating z-scores from model-based expectations
 
-**CQC practice**: Validated R scripts exist for Working z-scores. Don't implement from scratch — use established code. Contact the Practice Lead if you need access.
+**CQC practice**: Validated R scripts exist for Working z-scores. Don't implement from scratch — use established code. Contact the Practice Lead or raise it with the Guild if you need access or guidance on implementation.
 
 **When to use**:
 - Denominators <30 or expected events <10
@@ -631,17 +789,17 @@ $$Z_i = \frac{Y_i - T}{s_i}$$
 - **GP Access Analysis** → Example 1 (worked example with z-scoring)
 - **Mental Health Wait Times** → Example 3 (z-scoring with skewed data)
 
-## When to Seek Specialist Support
+## When to Seek Support from the Guild
 
-Seek specialist support when:
+Raise your analysis with the Quantitative Analytics and Statistics Guild (the Guild) at a Quant Clinic session when:
 
 - **Distribution extremely skewed** despite transformations or log-scaling
 - **Negative variance estimates** appear in your calculations
 - **Systematic patterns in residuals** after z-scoring (suggests model misspecification)
-- **Multiple testing** across many indicators simultaneously (need correction)
+- **Multiple testing** across many indicators simultaneously (need correction strategy)
 - **Working z-scores needed** but unsure of implementation or interpretation
-- **Small numbers** combined with high stakes decisions
-- **Stakeholder challenge** to methodology requiring specialist defense
+- **Small numbers** combined with high-stakes decisions
+- **Stakeholder challenge** to methodology requiring specialist defence
 - **New indicator development** where z-scoring appropriateness is unclear
 
 ## Key Takeaways

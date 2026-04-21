@@ -7,6 +7,8 @@ title: "Outlier Detection and Treatment"
 library(reticulate)
 ```
 
+After reading this chapter, you will know how to apply three complementary outlier detection methods (Z-score, Modified Z-score, and IQR), combine their results to prioritise investigation, interpret flagged values in context, and document your decisions in a way that is defensible for QA.
+
 ::: {.callout-tip icon=false}
 ## Problem This Method Solves
 
@@ -37,6 +39,8 @@ Outlier detection methods apply statistical rules to identify observations that 
 - Automatically fix data problems (treatment requires judgment)
 
 ## Before You Start
+
+**QA Framework alignment**: Outlier detection most directly supports QA question 3 (Analysis — has the data been appropriately checked before main analysis?) and question 5 (Fitness for Purpose — are the results defensible given the data quality?). Document which detection methods were applied, what investigation was conducted for each flagged observation, and how treatment decisions were made as part of the question 3 record.
 
 ::: {.callout-note icon=false}
 ## Note on Code Examples
@@ -424,6 +428,38 @@ Small providers naturally show higher variation. An extreme value from a 15-bed 
 
 Using only one detection method misses the bigger picture. Apply 2-3 methods and look for consensus. Agreement across methods strengthens the case for investigation.
 
+::: {.callout-note icon=false}
+## 🤔 Rethinking: Outliers Are Data, Not Problems
+
+The instinct when encountering an outlier is to remove it — to "clean" the data. Resist this. Outliers are often the most important observations in a regulatory dataset.
+
+**Outliers can be**:
+- **Data errors**: Wrong units, transcription mistakes, impossible values — these should be corrected or removed with a documented rationale
+- **Genuine extremes**: A care home that is genuinely understaffed, or a practice with an exceptionally high referral rate — these are exactly what CQC needs to investigate
+- **Contextual differences**: A specialist unit serving a different population — these require separate analysis or adjustment, not removal
+
+**The regulatory risk of over-removing**: If you remove outliers to produce a "cleaner" distribution, you may be removing the very providers that need regulatory attention. A bias towards false negatives (missing problems) is more serious in a regulatory context than a bias towards false positives (over-investigating).
+
+**The right approach**: Flag, investigate, document. Keep outliers unless you can demonstrate they are errors. Report sensitivity analyses showing whether your conclusions change with or without them.
+:::
+
+::: {.callout-warning icon=false}
+## ⚙️ Overthinking: Beyond Univariate Detection
+
+The methods in this chapter detect outliers on a single variable at a time. But a provider can be unusual in a way that only becomes apparent when you look at multiple variables together.
+
+**Example**: A care home with a staffing ratio of 3.1 (within normal range), an incident rate of 2.8 per resident (within normal range), and a complaint rate of 0.15 per resident (within normal range) — but the combination of all three moderately elevated indicators might signal systematic risk that no single indicator detects.
+
+**Multivariate outlier methods**:
+- **Mahalanobis distance**: Measures how far a point is from the multivariate centre, accounting for correlations between variables. A point can be unusual in multivariate space while normal on each individual dimension.
+- **Isolation Forest**: Machine learning approach that detects outliers by how quickly they are "isolated" in random splits. Works well with many variables.
+- **Local Outlier Factor (LOF)**: Identifies points that are locally unusual relative to their neighbours, rather than globally unusual relative to all data.
+
+**When to use**: When you have 3+ indicators and suspect that unusual combinations matter, not just single extreme values. These methods are computationally straightforward but require care in interpretation.
+
+For multivariate outlier analysis in a regulatory context, raise this with the Quantitative Analytics and Statistics Guild (the Guild) before proceeding — the choice of method and threshold requires specialist judgment.
+:::
+
 ## Documenting Your Analysis
 
 For QA purposes, record:
@@ -457,9 +493,9 @@ See @sec-qa-principles for full QA documentation requirements and templates.
 ## Related Approaches
 
 ### For different data characteristics
-- **Multivariate outliers** → Mahalanobis distance (seek specialist support)
+- **Multivariate outliers** → See Overthinking box above; raise with the Guild for implementation
 - **Time-series outliers** → SPC methods (@sec-spc-basics)
-- **Clustering-based detection** → DBSCAN, Isolation Forest (seek specialist support)
+- **Clustering-based detection** → DBSCAN, Isolation Forest — raise with the Guild
 
 ### For foundational understanding
 - **Conceptual framework** → @sec-unusual-observations (read first!)
@@ -470,14 +506,14 @@ See @sec-qa-principles for full QA documentation requirements and templates.
 - **Provider comparison** → Z-scoring (@sec-z-scoring) handles expected variation
 - **Missing data** → @sec-missing-data-foundations (outliers vs missing different issues)
 
-## When to Seek Specialist Support
+## When to Seek Support from the Guild
 
-Seek specialist support when:
+Raise your analysis with the Quantitative Analytics and Statistics Guild (the Guild) at a Quant Clinic session when:
 
-- **Multivariate outliers needed**: Outliers across multiple variables simultaneously
+- **Multivariate outliers needed**: Outliers across multiple variables simultaneously (see Overthinking box)
 - **Advanced methods required**: Isolation Forest, Local Outlier Factor, or other machine learning approaches
 - **High-stakes decisions**: Outlier treatment could materially affect regulatory action
-- **Methodological challenge**: Stakeholder questions your outlier treatment approach
+- **Methodological challenge**: A stakeholder questions your outlier treatment approach
 - **Unusual data structure**: Hierarchical data, spatial data, or other complex structures
 - **Systematic patterns**: Many outliers suggesting data quality or population issues
 - **Resource constraints**: Too many outliers to investigate manually

@@ -8,6 +8,8 @@ title: "Monitoring Trends Over Time: SPC Basics"
 library(reticulate)
 ```
 
+After reading this chapter, you will understand how Statistical Process Control distinguishes genuine changes from random variation, know how to construct and interpret an I-chart for continuous data, apply the most important detection rules, choose between the main chart types (I, P, C, U), and connect SPC signals to regulatory action.
+
 ::: {.callout-tip icon=false}
 ## Problem This Method Solves
 
@@ -56,6 +58,8 @@ SPC monitors processes over time to distinguish **common cause variation** (norm
 **SPC's value**: It quantifies "expected range" so you know when variation is unusual enough to investigate.
 
 ## Before You Start
+
+**QA Framework alignment**: SPC most directly supports QA question 3 (Analysis — is the method appropriate and correctly applied?) and question 4 (Delivery & Communication — does the chart communicate the finding clearly to decision-makers?). Document chart type selection, the period used to establish baseline limits, and any recalculations as part of the question 3 record.
 
 ::: {.callout-note icon=false}
 ## Note on Code Examples
@@ -408,7 +412,7 @@ Use this decision tree:
 
 → **Continuous data** (waiting times, length of stay, scores)
   - One measurement per period? → **I-Chart**
-  - Multiple measurements per period? → **X̄-chart** (beyond this guide, seek specialist support)
+  - Multiple measurements per period? → **X̄-chart** (beyond this guide — raise with the Guild)
 
 → **Proportions/Percentages** (% meeting target, % with complications)
   - → **P-Chart**
@@ -470,7 +474,7 @@ For QA purposes, record:
 - Any process changes implemented
 
 ::: {.callout-note icon=false}
-## Rethinking: CQC's SPC Journey
+## 🤔 Rethinking: CQC's SPC Journey
 
 SPC has been used in healthcare for decades, but CQC's adoption has been gradual. Why?
 
@@ -504,7 +508,7 @@ The key: SPC isn't replacing other methods, it's adding time-series capability t
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Detection Rules and Sensitivity
+## ⚙️ Overthinking: Detection Rules and Sensitivity
 
 The basic rule (points outside 3-sigma limits) is conservative: it minimizes false alarms but may miss gradual changes. Additional **Western Electric rules** increase sensitivity:
 
@@ -573,7 +577,7 @@ if check_rule4(data['value'], centre_line):
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Advanced SPC Methods
+## ⚙️ Overthinking: Advanced SPC Methods
 
 **CUSUM (Cumulative Sum) charts**: Plot cumulative deviations from target. More sensitive to small persistent shifts than Shewhart charts.
 
@@ -617,13 +621,13 @@ if check_rule4(data['value'], centre_line):
 
 **When to use**: Research context or when you have strong prior information.
 
-**CQC practice**: Stick with simple Shewhart-type charts (I, P, C, U) for most applications. Seek specialist support for CUSUM, EWMA, or Bayesian methods. These advanced methods are referenced in the literature but rarely needed for routine monitoring.
+**CQC practice**: Stick with simple Shewhart-type charts (I, P, C, U) for most applications. Raise questions about CUSUM, EWMA, or Bayesian methods with the Quantitative Analytics and Statistics Guild (the Guild) — these are referenced in the literature but rarely needed for routine monitoring.
 
 **Key principle**: Simple methods consistently applied beat complex methods inconsistently used.
 :::
 
 ::: {.callout-note icon=false}
-## Rethinking: Evidence for SPC in Healthcare
+## 🤔 Rethinking: Evidence for SPC in Healthcare
 
 A systematic review of SPC in healthcare (Thor et al., 2007) found substantial evidence of benefits:
 
@@ -664,9 +668,9 @@ A systematic review of SPC in healthcare (Thor et al., 2007) found substantial e
 - **Policy intervention impact** → See Example 8 (DoLS Trends) for interrupted time series
 
 ### For advanced SPC methods
-- **CUSUM charts** → See Overthinking box above, or seek specialist support
-- **EWMA charts** → Seek specialist support for implementation
-- **Bayesian SPC** → Specialist methods, seek specialist support
+- **CUSUM charts** → See Overthinking box above; raise with the Guild for implementation
+- **EWMA charts** → Raise with the Guild before implementing
+- **Bayesian SPC** → Specialist methods — discuss with the Guild
 
 ### For foundational concepts
 - **Understanding variation** → @sec-variation-uncertainty (common vs special cause)
@@ -676,11 +680,11 @@ A systematic review of SPC in healthcare (Thor et al., 2007) found substantial e
 - **Care Home Falls** → Example 2 (SPC with intervention)
 - **Ambulance Handovers** → Example 6 (SPC with trend analysis)
 
-## When to Seek Specialist Support
+## When to Seek Support from the Guild
 
-Seek specialist support when:
+Raise your analysis with the Quantitative Analytics and Statistics Guild (the Guild) at a Quant Clinic session when:
 
-- **Complex chart types needed**: G-charts, T-charts, or other specialized charts beyond basics
+- **Complex chart types needed**: G-charts, T-charts, or other specialised charts beyond basics
 - **Autocorrelation suspected**: Data points are not independent (common in daily/weekly data)
 - **Multiple concurrent changes**: Several interventions or changes happening simultaneously
 - **Unusual patterns**: Chart shows patterns not covered by basic detection rules

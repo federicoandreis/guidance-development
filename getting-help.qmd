@@ -1,0 +1,79 @@
+---
+title: "Getting Help: The Quantitative Analytics and Statistics Guild"
+---
+
+The Quantitative Analytics and Statistics Guild (the Guild) provides specialist statistical and analytical support across CQC. This page tells you how to access that support.
+
+## What the Guild Does
+
+The Guild supports analysts working on statistical and quantitative questions in CQC's regulatory and improvement work. It is the professional home for statistical expertise within the organisation and offers:
+
+- Peer review and sense-checking of analytical approaches
+- Specialist advice on methods beyond routine profiling (multiple imputation, multilevel models, causal inference, etc.)
+- Guidance on new indicator development and fitness-for-purpose assessments
+- Support for QA decisions where statistical judgment is required
+- A space to raise emerging issues and share learning across teams
+
+The Guild does not make operational decisions — that remains with the commissioning team. It provides analytical advice to inform those decisions.
+
+## When to Come to the Guild
+
+Come to the Guild when you encounter any of the following:
+
+| Situation | Guild route |
+|-----------|------------|
+| Assumption violations you're unsure how to handle | Quant Clinic drop-in |
+| Method selection beyond routine profiling (regression, multilevel, imputation) | Quant Clinic or direct contact |
+| New indicator development requiring statistical sign-off | Direct contact with Practice Lead |
+| Stakeholder challenge to methodology | Quant Clinic or escalation |
+| Working z-scores, funnel plots, advanced SPC | Quant Clinic drop-in |
+| Multiple testing corrections for high-stakes analysis | Quant Clinic drop-in |
+| MNAR or substantial missing data (>20%) | Quant Clinic or escalation |
+
+Every methods chapter in Part II includes a "When to Seek Support from the Guild" section with specific triggers for that method.
+
+## Meeting Cadence
+
+::: {.callout-note icon=false}
+## Note for Document Reviewers
+
+The dates and links in this section should be verified against current Guild scheduling before publication. Contact the Practice Lead to confirm the current cadence and any Teams channel details.
+:::
+
+### Quant Clinic — Drop-in Sessions
+
+**Format**: Open drop-in — no agenda, no booking required. Bring your question.
+
+**Frequency**: Fortnightly (every two weeks)
+
+**Duration**: 1 hour
+
+**Who attends**: Any analyst with a statistical or methodological question. Guild members rotate as hosts.
+
+**What to bring**: A brief description of your question, the data you're working with, and what you've tried so far. You don't need slides.
+
+### Monthly Guild Meeting
+
+**Format**: Structured agenda — updates, knowledge-sharing, emerging issues
+
+**Frequency**: Monthly
+
+**Duration**: 1 hour
+
+**Who attends**: Guild members and invited guests. Open to observers — contact the Practice Lead if you'd like to attend a session.
+
+**Agenda items typically include**: Method spotlight, peer review of a live analysis, updates from external bodies (GSS, ONS, AQuA), emerging issues from operational teams.
+
+## How to Contact the Guild
+
+**Teams channel**: The Guild has a dedicated Microsoft Teams channel for asynchronous questions. Post your question there and a Guild member will respond, typically within two working days.
+
+**Practice Lead**: For questions requiring direct escalation, methodological sign-off, or access to validated code (e.g., Working z-score scripts), contact the Practice Lead directly.
+
+**Peer review requests**: If your analysis will inform a high-stakes decision (enforcement, public reporting), consider requesting a formal peer review. Contact the Practice Lead to arrange this.
+
+## Related Resources
+
+- **How to Use This Guidance** → @sec-getting-started for an overview of the guidance structure and how the Guild fits in
+- **Competency Framework Alignment** → @sec-competency-alignment for how Guild support maps to professional development
+- **QA Framework** → @sec-qa-principles for the five questions that structure analytical quality assurance

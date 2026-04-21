@@ -12,10 +12,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Z-scoring with transformation (@sec-z-scoring)  
-**Complexity**: Medium-High  
-**Time to complete**: 2-3 hours  
+**Method**: Z-scoring with transformation (@sec-z-scoring)
+**Complexity**: Medium-High
+**Time to complete**: 2-3 hours
 **Status**: ✅ Complete
+**QASQA questions**: Q3 (Analysis); Q5 (Fitness for Purpose)
+**Competencies demonstrated**: A (Statistical analysis and methods); B (Analytical judgment); E (Quality assurance and reproducibility)
 
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
@@ -560,3 +562,18 @@ print(flagged_final.head(10))
 5. Report results in interpretable units
 
 ---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | Z-scoring with log transformation |
+| **QASQA question** | Q3: Analysis — was the method appropriate and correctly applied?; Q5: Fitness for Purpose — does the method handle the skewed distribution appropriately? |
+| **Competencies** | A: Statistical analysis and methods; B: Analytical judgment; E: Quality assurance and reproducibility |
+| **Data source** | Mental health wait times by provider (synthetic illustrative data) |
+| **Key decisions** | Log transformation applied after confirming positive skew (histogram + Shapiro-Wilk); Working z-scores considered and noted as alternative; results back-transformed for reporting |
+| **Assumptions** | Log transformation adequately normalises the distribution; providers are comparable (same pathway definition) |
+| **Limitations** | Transformation changes scale — absolute differences harder to interpret; providers with zero waits excluded from log transformation (would require +0.5 adjustment or alternative) |
+| **Sensitivity** | Results compared between untransformed and log-transformed z-scores; top-flagged providers stable across both |
+| **Next steps** | Validate transformation choice with Guild if used for formal profiling; consider Working z-scores for high-stakes decisions |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

@@ -12,10 +12,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Z-scoring (@sec-z-scoring)  
-**Complexity**: Medium  
-**Time to complete**: 2-3 hours  
+**Method**: Z-scoring (@sec-z-scoring)
+**Complexity**: Medium
+**Time to complete**: 2-3 hours
 **Status**: ✅ Complete
+**QASQA questions**: Q3 (Analysis); Q5 (Fitness for Purpose)
+**Competencies demonstrated**: A (Statistical analysis and methods); C (Data quality and governance); E (Quality assurance and reproducibility)
 
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
@@ -747,3 +749,20 @@ This example demonstrates a complete z-scoring workflow for CQC regulatory analy
 ✅ Stakeholder-ready visualizations and reporting  
 
 **For full QA documentation, see**: `docs/qa-checklist.md`, `docs/decisions-log.md`, `docs/assumptions.md`
+
+---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | Z-scoring (standard) |
+| **QASQA question** | Q3: Analysis — was the method appropriate and correctly applied?; Q5: Fitness for Purpose — does the indicator measure what the regulatory question requires? |
+| **Competencies** | A: Statistical analysis and methods; C: Data quality and governance; E: Quality assurance and reproducibility |
+| **Data source** | GP Patient Survey 2025 (synthetic illustrative data — seed 42 for reproducibility) |
+| **Key decisions** | Complete case analysis for missing data (5% excluded, documented); z ≥ 2 threshold for flagging; national mean and SD calculated from all providers with complete data |
+| **Assumptions** | Data approximately normally distributed; providers are comparable (same indicator definition); survey non-response is not systematically related to phone access quality |
+| **Limitations** | Ecological analysis — practice-level rates, not individual patient experiences; no risk adjustment for deprivation or rurality; survey non-response may introduce bias |
+| **Sensitivity** | Results checked at z ≥ 1.5 and z ≥ 2.5 thresholds — flagged set changes but top-flagged practices are stable |
+| **Next steps** | Cross-check flagged practices against inspection history and other indicators; confirm data quality for extreme outliers before regulatory action |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

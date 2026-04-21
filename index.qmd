@@ -52,6 +52,45 @@ Complete analytical workflows using realistic CQC data, from data preparation th
 
 ---
 
+## What's in This Guidance
+
+This guidance covers statistical methods for CQC regulatory and improvement analysis. It is organised in three parts and built around a common three-layer structure: main text for essentials, Rethinking boxes (🤔) for context and judgment, and Overthinking boxes (⚙️) for edge cases and advanced detail.
+
+| Chapter | Title | What it covers |
+|---------|-------|----------------|
+| 1 | How to Use This Book | Orientation, reading paths, governance alignment |
+| — | [Quick Reference](quick-reference.qmd) | Method selection flowchart and scenario table |
+| — | [Getting Help](getting-help.qmd) | Guild meeting cadence, Quant Clinic, contact details |
+| **Part I: Foundations** | | |
+| 2 | Data Types | Continuous, counts, proportions, categorical — when each applies |
+| 3 | Describing Data | Summary statistics, distribution shape, centre and spread |
+| 4 | Measuring Variation and Uncertainty | Standard deviation, confidence intervals, uncertainty communication |
+| 5 | Distribution Shape | Normality, skewness, transformations |
+| 6 | Unusual Observations | What makes something unusual; conceptual framework before methods |
+| 7 | Missing Data Foundations | MCAR, MAR, MNAR — understanding why data is missing |
+| 8 | Statistical Inference | p-values, confidence intervals, effect sizes, practical significance |
+| 9 | QA Principles | The five QASQA questions; documentation standards |
+| **Part II: Core Methods** | | |
+| 10 | Z-scoring | Provider comparison against national benchmark; funnel plots |
+| 11 | SPC Basics | Monitoring trends over time; I, P, C, U charts; detection rules |
+| 12 | t-tests | Comparing two groups or before/after a pilot |
+| 13 | Correlation | Exploring relationships between indicators |
+| 14 | Outlier Detection | Systematic flagging using Z-score, Modified Z-score, and IQR methods |
+| 15 | Handling Missing Data | Complete case analysis, imputation, sensitivity analysis |
+| **Part III: Worked Examples** | | |
+| Ex 1 | GP Access Analysis | Z-scoring with data quality challenges |
+| Ex 2 | Care Home Falls Monitoring | SPC with intervention effect |
+| Ex 3 | Mental Health Wait Times | Z-scoring with skewed data and transformation |
+| Ex 4 | Medication Safety Pilot | Paired t-test with small sample |
+| Ex 5 | Regional A&E Performance | Two-sample t-test |
+| Ex 6 | Ambulance Handover Delays | SPC with trend analysis |
+| Ex 7 | Infection Rates in Care Homes | Rate comparison with varying denominators |
+| Ex 8 | DoLS Application Trends | SPC with interrupted time series |
+| Ex 9 | Staffing and Quality Outcomes | Correlation with confounding |
+| Ex 10 | Care Home Staffing Investigation | Outlier detection and treatment |
+
+---
+
 ## How to Use This Guidance
 
 There is no single right way to read this book. How you use it depends on what you need right now:

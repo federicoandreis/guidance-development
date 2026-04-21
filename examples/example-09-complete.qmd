@@ -12,10 +12,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Correlation Analysis (@sec-correlation)  
-**Complexity**: Medium-High  
-**Time to complete**: 3-4 hours  
+**Method**: Correlation Analysis (@sec-correlation)
+**Complexity**: Medium-High
+**Time to complete**: 3-4 hours
 **Status**: ✅ Complete
+**QASQA questions**: Q2 (Design); Q3 (Analysis)
+**Competencies demonstrated**: A (Statistical analysis and methods); B (Analytical judgment); D (Communication of findings)
 
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
@@ -388,3 +390,20 @@ print(results_df.to_string(index=False))
 7. **Know when to escalate**: Multivariate analysis needed for full picture
 
 This example demonstrates a complete correlation analysis workflow suitable for CQC thematic work, with appropriate attention to confounding, outliers, and limitations.
+
+---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | Spearman's rank correlation (robust to outliers and non-normal distribution of pressure ulcer rates) |
+| **QASQA question** | Q2: Design — is correlation appropriate for this thematic research question?; Q3: Analysis — were method choice and outlier handling documented? |
+| **Competencies** | A: Statistical analysis and methods; B: Analytical judgment; D: Communication of findings |
+| **Data source** | Nursing staff ratio and pressure ulcer rate per 1,000 resident-days (synthetic illustrative data, n=200 care homes) |
+| **Key decisions** | Spearman chosen over Pearson (outlier present: CH600; pressure ulcer rates right-skewed); Pearson reported for comparison; CH600 investigated and retained (confirmed genuine outlier) |
+| **Assumptions** | Each care home is an independent observation; nurse ratio is measured consistently across homes; pressure ulcer rates are reliably reported |
+| **Limitations** | Cross-sectional — cannot establish causation or direction; resident complexity confounds the relationship; no adjustment for care home size, case-mix, or regional factors |
+| **Sensitivity** | Excluding CH600 weakens but does not reverse the relationship (ρ = -0.38 vs -0.45); Pearson and Spearman give consistent direction |
+| **Next steps** | Multivariate analysis with Guild support to control for resident complexity; triangulate with inspection narratives; consider longitudinal design |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

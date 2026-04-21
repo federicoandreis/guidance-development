@@ -8,6 +8,8 @@ title: "Comparing Two Groups: t-tests"
 library(reticulate)
 ```
 
+After reading this chapter, you will know when to apply a t-test versus z-scoring or SPC, how to carry out one-sample, two-sample, and paired t-tests step by step, interpret results in terms of both statistical and practical significance, and understand when assumption violations require an alternative approach.
+
 ::: {.callout-tip icon=false}
 ## Problem This Method Solves
 
@@ -75,6 +77,8 @@ t-tests compare means (averages) and determine whether observed differences are 
 
 ## Before You Start
 
+**QA Framework alignment**: t-tests most directly support QA question 3 (Analysis — is the method appropriate and correctly applied?). When used for pilot evaluations, they also support question 5 (Fitness for Purpose — does the comparison answer the right question?). Document assumption checks, effect size calculations, and the choice between one-sample, two-sample, or paired test as part of the question 3 record.
+
 Check these requirements before applying t-tests:
 
 ### Data Requirements
@@ -85,7 +89,7 @@ Check these requirements before applying t-tests:
 - [ ] **Quality checks**: Completed pre-analysis QA (see @sec-qa-principles)
 
 ### When t-tests May Not Be Appropriate
-- **Comparing >2 groups**: Use ANOVA (beyond this guide, seek specialist support)
+- **Comparing >2 groups**: Use ANOVA (beyond this guide — raise with the Guild)
 - **Many providers**: Use z-scoring instead
 - **Highly skewed data**: Consider transformation or non-parametric tests
 - **Very small samples** (<5 per group): Results unreliable
@@ -690,7 +694,7 @@ For QA purposes, record:
 - What the results do and don't tell you
 
 ::: {.callout-note icon=false}
-## Rethinking: t-tests in Regulatory Context
+## 🤔 Rethinking: t-tests in Regulatory Context
 
 t-tests are common in research but less common in CQC's routine provider comparison. Why?
 
@@ -721,7 +725,7 @@ t-tests are common in research but less common in CQC's routine provider compari
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Assumption Violations and Alternatives
+## ⚙️ Overthinking: Assumption Violations and Alternatives
 
 **Normality assumption**:
 
@@ -735,7 +739,7 @@ t-tests are common in research but less common in CQC's routine provider compari
 - Transform data (log, square root) if skewed
 - Use non-parametric alternative (Mann-Whitney U for two-sample, Wilcoxon signed-rank for paired)
 - Increase sample size if possible
-- Seek specialist support
+- Raise with the Guild if unsure which alternative applies
 
 **Equal variance assumption** (two-sample t-test):
 
@@ -759,7 +763,7 @@ t-tests are common in research but less common in CQC's routine provider compari
 - Clustered data (patients within providers, use multilevel models)
 - Time series data (use SPC methods instead)
 
-**If violated**: Don't use standard t-test. Seek specialist support for appropriate method.
+**If violated**: Don't use standard t-test. Raise with the Guild for guidance on multilevel models or repeated-measures methods.
 
 **Small sample sizes**:
 
@@ -783,7 +787,7 @@ t-tests are common in research but less common in CQC's routine provider compari
 - Focus on pre-specified primary outcome
 - Report all tests performed, not just significant ones
 
-**When to escalate**: If you're unsure whether assumptions are met, or how to handle violations, seek specialist support. Getting this wrong invalidates your results.
+**When to escalate**: If you're unsure whether assumptions are met, or how to handle violations, raise this at a Guild Quant Clinic session before proceeding. Getting this wrong invalidates your results.
 :::
 
 ## Related Approaches
@@ -795,9 +799,9 @@ t-tests are common in research but less common in CQC's routine provider compari
 - **Non-normal data** → See Overthinking box above for alternatives
 
 ### For advanced comparisons
-- **More than two groups** → ANOVA (future section, or seek specialist support)
-- **Confounding variables** → ANCOVA or regression (seek specialist support)
-- **Repeated measures** → Mixed models (seek specialist support)
+- **More than two groups** → ANOVA (beyond this guide — raise with the Guild)
+- **Confounding variables** → ANCOVA or regression (raise with the Guild)
+- **Repeated measures** → Mixed models (raise with the Guild)
 
 ### For foundational concepts
 - **Understanding variation** → @sec-variation-uncertainty
@@ -808,17 +812,17 @@ t-tests are common in research but less common in CQC's routine provider compari
 - **Medication Safety Pilot** → Example 4 (paired t-test)
 - **Regional A&E Performance** → Example 5 (two-sample t-test)
 
-## When to Seek Specialist Support
+## When to Seek Support from the Guild
 
-Seek specialist support when:
+Raise your analysis with the Quantitative Analytics and Statistics Guild (the Guild) at a Quant Clinic session when:
 
 - **Assumption violations**: Data is severely non-normal or variances very unequal, and you're unsure about alternatives
 - **Multiple groups**: Need to compare more than two groups (requires ANOVA, not t-tests)
-- **Repeated measures**: Same providers measured multiple times (requires paired or repeated measures methods)
+- **Repeated measures**: Same providers measured multiple times (requires paired or repeated-measures methods)
 - **Unequal sample sizes with unequal variances**: Welch's t-test may be needed but you're unsure
-- **Complex study designs**: Crossover designs, cluster randomization, or other specialized designs
+- **Complex study designs**: Crossover designs, cluster randomisation, or other specialised designs
 - **Non-parametric alternatives**: Data doesn't meet assumptions and you need Mann-Whitney or Wilcoxon tests
-- **Power calculations**: Need to determine required sample size before conducting study
+- **Power calculations**: Need to determine required sample size before conducting a study
 - **Equivalence testing**: Want to show groups are similar (not just fail to show difference)
 
 ## Key Takeaways
@@ -832,7 +836,7 @@ Seek specialist support when:
 4. **p-values aren't everything**: Report effect sizes and confidence intervals
 5. **For CQC provider comparison, usually use z-scoring instead**: t-tests are for specific two-group comparisons
 6. **Statistical significance ≠ practical significance**: Always consider context
-7. **When in doubt, seek specialist support**: Especially for assumption violations or complex designs
+7. **When in doubt, raise with the Guild**: Especially for assumption violations or complex designs
 
 t-tests are useful for specific two-group comparisons but are not CQC's primary provider comparison method. Understand when they're appropriate and when z-scoring or SPC is better suited to your question.
 :::

@@ -12,10 +12,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Statistical Process Control (SPC) (@sec-spc-basics)  
-**Complexity**: Medium  
-**Time to complete**: 2-3 hours  
+**Method**: Statistical Process Control (SPC) (@sec-spc-basics)
+**Complexity**: Medium
+**Time to complete**: 2-3 hours
 **Status**: ✅ Complete
+**QASQA questions**: Q3 (Analysis); Q4 (Delivery & Communication)
+**Competencies demonstrated**: A (Statistical analysis and methods); B (Analytical judgment); D (Communication of findings)
 
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
@@ -687,3 +689,20 @@ This example demonstrates a complete SPC workflow for intervention evaluation, i
 ✅ Stakeholder-ready reporting and recommendations  
 
 **For full QA documentation, see**: `docs/qa-checklist.md`, `docs/decisions-log.md`
+
+---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | Statistical Process Control — I-chart |
+| **QASQA question** | Q3: Analysis — was the method appropriate and correctly applied?; Q4: Delivery & Communication — does the chart communicate the finding clearly? |
+| **Competencies** | A: Statistical analysis and methods; B: Analytical judgment; D: Communication of findings |
+| **Data source** | Monthly falls counts (synthetic illustrative data — seed 42) |
+| **Key decisions** | Baseline period months 1–12 used for control limits; month 7 (flu outbreak) excluded from limit calculation; I-chart chosen (one count per period) |
+| **Assumptions** | Process stable in baseline period; flu outbreak is a known special cause unrelated to underlying care quality; post-intervention period is independent |
+| **Limitations** | Single care home — cannot generalise; short post-intervention period (12 months) limits sustainability assessment; regression to the mean possible |
+| **Sensitivity** | Results consistent with Rule 1 only and with Rules 1+4 applied |
+| **Next steps** | Continue monitoring for at least 12 more months to confirm sustainability; triangulate with inspection findings and resident outcomes |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

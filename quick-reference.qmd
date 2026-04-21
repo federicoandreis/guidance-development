@@ -13,6 +13,51 @@ This page provides the fastest route to the right method for experienced analyst
 Not sure which method applies, or hitting an edge case? The **Quantitative Analytics and Statistics Guild** is your first port of call — Teams channels, monthly meetings, and Quant Clinic drop-in sessions. See [When to Seek Specialist Support](#when-to-seek-specialist-support) below, or go to @sec-getting-started for fuller guidance.
 :::
 
+## Method Selection Flowchart
+
+Use this flowchart to find the right method for your question. Start at the top.
+
+```{mermaid}
+flowchart TD
+    A([What is your analytical question?]) --> B{Comparing providers\nor groups?}
+    A --> C{Monitoring over time?}
+    A --> D{Exploring a relationship?}
+    A --> E{Data quality or\nexploration?}
+
+    B --> B1{How many providers?}
+    B1 -->|Many vs national benchmark| B2[Z-scoring\n@sec-z-scoring]
+    B1 -->|Exactly two groups| B3{Paired or independent?}
+    B3 -->|Paired — same units\nbefore and after| B4[Paired t-test\n@sec-t-tests]
+    B3 -->|Independent — different units| B5[Two-sample t-test\n@sec-t-tests]
+
+    C --> C1{What type of data?}
+    C1 -->|Continuous — one\nvalue per period| C2[I-chart SPC\n@sec-spc-basics]
+    C1 -->|Proportion per period| C3[P-chart SPC\n@sec-spc-basics]
+    C1 -->|Count with\nconstant denominator| C4[C-chart SPC\n@sec-spc-basics]
+    C1 -->|Rate with\nvarying denominator| C5[U-chart SPC\n@sec-spc-basics]
+
+    D --> D1[Correlation analysis\n@sec-correlation]
+
+    E --> E2{What is the problem?}
+    E2 -->|Extreme values to flag| E3[Outlier detection\n@sec-outlier-methods]
+    E2 -->|Missing values| E4[Missing data methods\n@sec-missing-data-handling]
+    E2 -->|Understand data structure| E5[Data types\n@sec-data-types]
+    E2 -->|Describe distributions| E6[Describing data\n@sec-describing-data]
+
+    style B2 fill:#d4edda,stroke:#28a745
+    style B4 fill:#d4edda,stroke:#28a745
+    style B5 fill:#d4edda,stroke:#28a745
+    style C2 fill:#cce5ff,stroke:#004085
+    style C3 fill:#cce5ff,stroke:#004085
+    style C4 fill:#cce5ff,stroke:#004085
+    style C5 fill:#cce5ff,stroke:#004085
+    style D1 fill:#fff3cd,stroke:#856404
+    style E3 fill:#f8d7da,stroke:#721c24
+    style E4 fill:#f8d7da,stroke:#721c24
+    style E5 fill:#e2e3e5,stroke:#383d41
+    style E6 fill:#e2e3e5,stroke:#383d41
+```
+
 ## Common Analyst Scenarios
 
 **Jump directly to the section you need:**
@@ -63,8 +108,8 @@ Not sure which method applies, or hitting an edge case? The **Quantitative Analy
 | **Proportions** | ≥100 total | vs benchmark | Z-scoring | [@sec-z-scoring] |
 | **Proportions** | Time series | Trend detection | SPC (P-chart) | [@sec-spc-basics] |
 | **Binary** | ≥100 total | Two groups | t-test on proportions | [@sec-t-tests] |
-| **Ordinal** | Any | Any | Seek specialist support (specialized methods) | - |
-| **Nominal** | Any | Group comparisons | Seek specialist support (Chi-squared, etc.) | - |
+| **Ordinal** | Any | Any | Raise with the Guild (specialised methods) | - |
+| **Nominal** | Any | Group comparisons | Raise with the Guild (Chi-squared, etc.) | - |
 
 **Notes: Sample sizes are guidelines, not rigid thresholds. See individual method chapters for detailed requirements.**
 
@@ -126,8 +171,14 @@ Know your data type ([@sec-data-types]), check for quality issues ([@sec-qa-prin
 
 **3. Run, interpret, document** — follow the method chapter step-by-step, check assumptions, interpret results in context, and record your methods, assumptions, limitations, and interpretation for QA ([@sec-qa-principles]).
 
-## When to Seek Specialist Support
+## When to Seek Support from the Guild
 
-- Designing new indicators | Complex missing data | Methodology challenged | Method unclear | Need specialist support
+Raise questions at the Quant Clinic or on the Guild Teams channel when:
 
-Raise questions through the **Guild community** (Teams channels, drop-in sessions) or consult your function's technical expert. For complex or high-stakes cases, escalate to the **[Practice Lead for Quantitative Analytics and Statistics](mailto:federico.andreis@cqc.org.uk)**.
+- Designing new indicators or assessing fitness for purpose
+- Complex missing data (>20% or MNAR suspected)
+- Methodology challenged by providers or stakeholders
+- Method unclear — the flowchart above doesn't give a clear answer
+- Advanced methods needed: multilevel models, multiple imputation, causal inference, CUSUM/EWMA SPC
+
+See [Getting Help: The Guild](getting-help.qmd) for Quant Clinic dates and contact details. For complex or high-stakes cases, escalate to the **[Practice Lead for Quantitative Analytics and Statistics](mailto:federico.andreis@cqc.org.uk)**.

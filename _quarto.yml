@@ -16,6 +16,7 @@ book:
     - index.qmd
     - chapters/01-getting-started.qmd
     - quick-reference.qmd
+    - getting-help.qmd
 
     - part: "Part I: Foundations"
       chapters:

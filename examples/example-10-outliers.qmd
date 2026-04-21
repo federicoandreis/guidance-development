@@ -11,10 +11,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Outlier Detection and Treatment (@sec-outlier-methods)  
-**Complexity**: Medium  
-**Time to complete**: 2-3 hours  
+**Method**: Outlier Detection and Treatment (@sec-outlier-methods)
+**Complexity**: Medium
+**Time to complete**: 2-3 hours
 **Status**: ✅ Complete
+**QASQA questions**: Q3 (Analysis); Q5 (Fitness for Purpose)
+**Competencies demonstrated**: B (Analytical judgment); C (Data quality and governance); E (Quality assurance and reproducibility)
 
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
@@ -462,3 +464,20 @@ Complete investigation log created including:
 - **Chapter 15**: Outlier Detection and Treatment (@sec-outlier-methods)
 - **Chapter 7**: Unusual Observations (conceptual foundations) (@sec-unusual-observations)
 - **Chapter 10**: QA Principles (@sec-qa-principles)
+
+---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | Three-method outlier detection: Z-score (\|z\| > 2.5), Modified Z-score (\|z\| > 3.5), IQR (k = 1.5) |
+| **QASQA question** | Q3: Analysis — were multiple methods applied and decisions documented?; Q5: Fitness for Purpose — are flagged providers genuinely unusual or data quality issues? |
+| **Competencies** | B: Analytical judgment; C: Data quality and governance; E: Quality assurance and reproducibility |
+| **Data source** | Staffing ratios (qualified staff per 10 residents) for 80 care homes (synthetic illustrative data) |
+| **Key decisions** | Three methods applied; homes flagged by 2+ methods treated as high priority; each flagged home investigated (data error, genuine extreme, or contextual); decision log maintained |
+| **Assumptions** | Staffing ratio is reported consistently; a ratio below 1.0 or above 7.0 warrants investigation regardless of statistical flagging |
+| **Limitations** | Univariate detection only — multivariate combinations not assessed; small provider variation not adjusted for; data errors can only be resolved by data provider contact |
+| **Sensitivity** | Core conclusions stable with IQR threshold k = 1.0 and k = 2.0 |
+| **Next steps** | Data errors: contact providers for verification; genuine extremes: flag for inspection targeting; contextual outliers: document rationale and note in reporting |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

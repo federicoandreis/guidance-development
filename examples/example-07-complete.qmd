@@ -12,10 +12,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Multi-group rate comparison (requires specialist support for ANOVA/chi-squared)  
-**Complexity**: High  
-**Time to complete**: 3-4 hours  
+**Method**: Multi-group rate comparison (requires specialist support for ANOVA/chi-squared)
+**Complexity**: High
+**Time to complete**: 3-4 hours
 **Status**: ✅ Complete
+**QASQA questions**: Q2 (Design); Q3 (Analysis)
+**Competencies demonstrated**: A (Statistical analysis and methods); B (Analytical judgment); C (Data quality and governance)
 
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
@@ -288,3 +290,20 @@ This example demonstrates analysis of **count data with varying denominators**:
 ✅ **Quality-safety relationship** interpretation
 
 **Key Lesson**: When comparing counts across units with different sizes, always use rates (per 100, per 1000, etc.) to ensure fair comparison.
+
+---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | Rate calculation and multi-group rate comparison; Kruskal-Wallis test for non-normal rates |
+| **QASQA question** | Q2: Design — is rate-based comparison appropriate given varying denominators?; Q3: Analysis — were count data assumptions handled correctly? |
+| **Competencies** | A: Statistical analysis and methods; B: Analytical judgment; C: Data quality and governance |
+| **Data source** | Infection counts and resident-days by care home, grouped by size/type (synthetic illustrative data) |
+| **Key decisions** | Rates per 1,000 resident-days used (not raw counts) to account for varying denominator; Kruskal-Wallis applied due to non-normal rate distribution; post-hoc pairwise comparisons documented |
+| **Assumptions** | Resident-days is the appropriate denominator; infection definition consistent across care homes; groups are meaningfully comparable |
+| **Limitations** | No risk adjustment for resident complexity or case-mix; reporting bias possible (better homes may report more); cross-sectional design |
+| **Sensitivity** | Consistent conclusions using Poisson regression approach (specialist validation required) |
+| **Next steps** | Validate rate differences with inspection narrative data; consider risk-adjusted analysis with Guild support |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

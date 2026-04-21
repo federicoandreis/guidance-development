@@ -12,10 +12,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Paired t-test (@sec-t-tests)  
-**Complexity**: Medium  
-**Time to complete**: 2-3 hours  
-**Status**: Complete
+**Method**: Paired t-test (@sec-t-tests)
+**Complexity**: Medium
+**Time to complete**: 2-3 hours
+**Status**: ✅ Complete
+**QASQA questions**: Q2 (Design); Q3 (Analysis)
+**Competencies demonstrated**: A (Statistical analysis and methods); B (Analytical judgment); E (Quality assurance and reproducibility)
 
 ::: {.callout-note icon=false}
 ## Method Reference
@@ -537,3 +539,18 @@ print(f"Without outlier: p = {p_value_no:.4f} | d = {cohens_d_no:.2f}")
 **Analysis Complete** ✅
 
 ---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | Paired t-test (before/after within same care homes) |
+| **QASQA question** | Q2: Design — is the paired design appropriate for this evaluation?; Q3: Analysis — were assumptions checked and correctly handled? |
+| **Competencies** | A: Statistical analysis and methods; B: Analytical judgment; E: Quality assurance and reproducibility |
+| **Data source** | Medication error rates for 10 pilot care homes, 6 months before/after (synthetic illustrative data) |
+| **Key decisions** | Paired test (same homes measured twice — preserves within-home correlation); Shapiro-Wilk on differences (not raw values) confirmed normality |
+| **Assumptions** | Same homes measured at both time points; no major confounding changes (staffing, case-mix) during the 6-month period; differences approximately normally distributed |
+| **Limitations** | No control group — cannot rule out temporal trends (regression to mean, seasonal effects); small sample (n=10) limits generalisability; 6-month follow-up may not capture sustainability |
+| **Sensitivity** | Wilcoxon signed-rank gives consistent result (non-parametric check) |
+| **Next steps** | Wider rollout with control group design; investigate CH03 outlier; plan 12-month follow-up evaluation |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

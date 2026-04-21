@@ -12,10 +12,12 @@ library(reticulate)
 
 ## Scenario Overview
 
-**Method**: Two-sample (independent) t-test (@sec-t-tests)  
-**Complexity**: Medium  
-**Time to complete**: 2-3 hours  
+**Method**: Two-sample (independent) t-test (@sec-t-tests)
+**Complexity**: Medium
+**Time to complete**: 2-3 hours
 **Status**: ✅ Complete
+**QASQA questions**: Q2 (Design); Q3 (Analysis)
+**Competencies demonstrated**: A (Statistical analysis and methods); B (Analytical judgment); D (Communication of findings)
 
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
@@ -548,3 +550,18 @@ plt.show()
 **Analysis Complete** ✅
 
 ---
+
+## QA Documentation Record
+
+| Item | Detail |
+|------|--------|
+| **Method** | Two-sample independent t-test (Welch's variant — unequal variances not assumed) |
+| **QASQA question** | Q2: Design — is the two-group comparison appropriate for this question?; Q3: Analysis — were assumptions checked and correctly handled? |
+| **Competencies** | A: Statistical analysis and methods; B: Analytical judgment; D: Communication of findings |
+| **Data source** | A&E 4-hour performance by trust, North and South regions (synthetic illustrative data) |
+| **Key decisions** | Welch's t-test used (Levene's test confirmed unequal variances); Cohen's d reported alongside p-value; both statistical and practical significance interpreted |
+| **Assumptions** | Trusts within each region are independent; A&E performance is approximately normally distributed within regions |
+| **Limitations** | Ecological comparison — between-region averages mask within-region variation; no adjustment for trust-level confounders (size, case-mix, urban/rural); cross-sectional snapshot |
+| **Sensitivity** | Mann-Whitney U (non-parametric) gives consistent directional result |
+| **Next steps** | Investigate within-South variation; consider multilevel model accounting for trust-level factors; monitor trends over time using SPC |
+| **Sign-off** | \_\_\_\_\_\_\_\_ (Analyst) \_\_\_\_\_\_\_\_ (Peer reviewer) \_\_\_\_\_\_\_\_ (Date) |

@@ -8,6 +8,8 @@ title: "Handling Missing Data"
 library(reticulate)
 ```
 
+After reading this chapter, you will be able to quantify and visualise missing data patterns, determine the likely missingness mechanism (MCAR, MAR, or MNAR), choose between complete case analysis, sensitivity analysis, and imputation, and document your approach in a way that is transparent and defensible.
+
 ::: {.callout-tip icon=false}
 ## Problem This Method Solves
 
@@ -43,6 +45,8 @@ Handling missing data means making informed decisions about how to proceed with 
 
 ## Before You Start
 
+**QA Framework alignment**: Missing data handling most directly supports QA question 1 (Engagement & Scoping — is the data fit for the analytical purpose?) and question 3 (Analysis — are the analytical decisions appropriate given the missingness pattern?). Document the missingness investigation, mechanism assumption, approach chosen, and sensitivity analysis as part of the question 3 record.
+
 ::: {.callout-note icon=false}
 ## 📖 Complete Worked Example
 
@@ -76,11 +80,11 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 - You need to decide how to proceed with analysis
 - You want to understand the impact of missingness on your conclusions
 
-**When to escalate immediately**:
+**When to escalate immediately**: Raise with the Quantitative Analytics and Statistics Guild (the Guild) before proceeding if:
 - >30-40% of data missing across multiple key variables
 - Strong suspicion that poor performers systematically don't report (MNAR)
 - High-stakes decision requiring sophisticated imputation methods
-- Regulatory challenge expected and you need defensible approach
+- Regulatory challenge expected and you need a defensible approach
 
 **Key principle**: Start simple. Most CQC analyses can use complete case analysis with clear documentation of limitations. Only use complex methods when necessary.
 :::
@@ -152,8 +156,7 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 → Consider seeking specialist support for multiple imputation
 
 **If missingness is >40% or MNAR suspected**:
-→ **Seek specialist support immediately**
-→ May not be possible to proceed without strong assumptions
+→ **Raise with the Guild immediately** — may not be possible to proceed without strong assumptions
 
 #### Practical approaches for most CQC work
 
@@ -437,7 +440,7 @@ print("Difference:", f"{abs(model_complete.coef_[0] - model_imputed.coef_[0]):.3
 **Key lesson**: Investigation showed why data was missing (small homes), which informed our approach and limitations statement.
 
 ::: {.callout-note icon=false}
-## Rethinking: CQC's Experience with Missing Data
+## 🤔 Rethinking: CQC's Experience with Missing Data
 
 CQC's experience with missing data varies by data source:
 
@@ -460,7 +463,7 @@ Don't use advanced methods just because they exist. Transparency and defensibili
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Multiple Imputation Technical Details
+## ⚙️ Overthinking: Multiple Imputation Technical Details
 
 **Rubin's Rules for pooling**:
 
@@ -506,7 +509,7 @@ Rule of thumb: M ≥ percentage of cases with missing data
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: When MAR Assumption Fails (MNAR)
+## ⚙️ Overthinking: When MAR Assumption Fails (MNAR)
 
 If missingness is related to the unobserved values (MNAR), standard methods produce biased results. Options:
 
@@ -542,18 +545,18 @@ If missingness is related to the unobserved values (MNAR), standard methods prod
 ### For different analytical contexts
 - **Small amounts of missingness** (<5%) → Complete case analysis usually fine
 - **Moderate missingness** (5-20%) → Complete case + sensitivity analysis
-- **Substantial missingness** (>20%) → Seek specialist support before proceeding
-- **MNAR suspected** → Escalate immediately, may not be solvable
+- **Substantial missingness** (>20%) → Raise with the Guild before proceeding
+- **MNAR suspected** → Raise with the Guild immediately — may not be solvable
 
 ### For advanced methods (when simple approaches insufficient)
-- **Multiple Imputation** → See Overthinking box, or seek specialist support
-- **Maximum Likelihood** → Seek specialist support for implementation
-- **Inverse Probability Weighting** → Seek specialist support for specialized cases
+- **Multiple Imputation** → See Overthinking box above; raise with the Guild for implementation
+- **Maximum Likelihood** → Raise with the Guild for implementation
+- **Inverse Probability Weighting** → Raise with the Guild for specialised cases
 
 ### For related data issues
 - **Outliers and extreme values** → @sec-unusual-observations
-- **Measurement error** → Seek specialist support
-- **Data linkage problems** → Seek specialist support
+- **Measurement error** → Raise with the Guild
+- **Data linkage problems** → Raise with the Guild
 
 ## Documenting Your Analysis
 
@@ -618,9 +621,9 @@ Always check if your conclusions change under different assumptions. If results 
 
 Missing data handling must be transparent. Document: how much is missing, why you think it's missing, what you did about it, and what limitations remain. Stakeholders will ask, be ready.
 
-## When to Seek Specialist Support
+## When to Seek Support from the Guild
 
-Seek specialist support when:
+Raise your analysis with the Quantitative Analytics and Statistics Guild (the Guild) at a Quant Clinic session when:
 
 - **Substantial missing data**: >20% missing and analysis is high-stakes
 - **MNAR suspected**: Missingness likely related to unobserved values
@@ -645,7 +648,7 @@ Seek specialist support when:
 7. **Be honest about MNAR**: if poor performers don't report, no statistical method fixes this
 8. **Prevention beats cure**: better data collection is the real solution
 
-Missing data handling is about managing uncertainty transparently, not eliminating it. When in doubt, seek specialist support.
+Missing data handling is about managing uncertainty transparently, not eliminating it. When in doubt, raise the analysis with the Guild before proceeding.
 :::
 
 ## Further Reading
