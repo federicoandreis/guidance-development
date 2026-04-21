@@ -18,6 +18,8 @@ Thumbs.db
 *.swp
 *.swo
 *~
+.windsurfrules
+.Rprofile
 
 # R and Python artifacts
 .Renviron

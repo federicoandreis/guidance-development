@@ -2,6 +2,8 @@
 title: "Handling Missing Data: Foundations"
 ---
 
+After reading this chapter, you will understand the three missing data mechanisms (MCAR, MAR, MNAR), know how to investigate which applies to your dataset, and be able to decide when simple complete case analysis is appropriate and when the pattern of missingness is itself the most important finding.
+
 ## When Data Isn't There {#sec-missing-data-foundations}
 
 Missing data is inevitable in regulatory analytics. Providers don't submit data, surveys have non-response, systems fail to record values, staff forget to document. The question isn't "do I have missing data?" but "**does it matter for my analysis?**"
@@ -248,7 +250,7 @@ Based on investigation, decide how to proceed.
 
 #### Action
 - Choose approach based on complexity and stakes
-- For high-stakes analysis, seek specialist support for imputation methods
+- For high-stakes analysis, consult the Quantitative Analytics and Statistics Guild (the Guild) on imputation methods
 - For routine analysis, sensitivity analysis often sufficient
 
 #### Document
@@ -401,7 +403,7 @@ For QA purposes (@sec-qa-principles), always document:
 > "Provider satisfaction data was missing for 18% of providers (n=45). Investigation showed smaller providers (<50 beds) were more likely to have missing data (30% missing) than larger providers (8% missing), suggesting MAR. We conducted stratified analysis for small and large providers separately to avoid bias from differential missingness. Results should be interpreted cautiously for small providers given reduced sample size (n=105 small providers with complete data from 150 total)."
 
 ::: {.callout-note icon=false}
-## Rethinking: Missing Data as a Signal, Not Just a Problem
+## 🤔 Rethinking: Missing Data as a Signal, Not Just a Problem
 
 In regulatory contexts, missing data often *is* the finding, not just an obstacle to analysis.
 
@@ -428,7 +430,7 @@ In regulatory contexts, missing data often *is* the finding, not just an obstacl
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: The MAR Assumption Is Often Unverifiable
+## ⚙️ Overthinking: The MAR Assumption Is Often Unverifiable
 
 **Fundamental problem**: You can't definitively prove data is MAR vs MNAR, because the distinction depends on the unobserved values.
 
@@ -453,6 +455,16 @@ In regulatory contexts, missing data often *is* the finding, not just an obstacl
 4. **Acknowledge limits**: Even sophisticated imputation can't overcome MNAR without strong assumptions.
 
 **CQC practice**: Most regulatory analysis should assume data is NOT MAR unless you have good evidence otherwise. Non-reporting often correlates with poor performance (MNAR). Document this assumption and its implications for interpretation.
+:::
+
+::: {.callout-note icon=false}
+## Related Approaches
+
+- For computational implementation (multiple imputation, sensitivity analysis, R and Python code) → @sec-missing-data-handling
+- For understanding how missingness affects statistical inference and uncertainty → @sec-statistical-inference
+- For data quality checks before analysis → @sec-qa-principles
+- For handling unusual values that may indicate data errors → @sec-unusual-observations
+- For small denominator problems that can look like missingness → @sec-z-scoring (Overthinking boxes)
 :::
 
 ## Looking Ahead: Methods Chapter

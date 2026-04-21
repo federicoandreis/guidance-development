@@ -2,6 +2,8 @@
 title: "Central Tendency and Position"
 ---
 
+After reading this chapter, you will understand the main measures of central tendency — arithmetic, geometric, harmonic, and weighted means; percentiles and quantiles; and mode — know when to use each, and be able to select the right measure for different data types and communication contexts.
+
 ## Where Is the Middle? {#sec-describing-data}
 
 Before comparing providers or detecting outliers, you need to describe where your data sits. Is the typical waiting time 2 hours or 20 hours? Is the average incident rate 5 per month or 50? These questions about location, central tendency, and typical values are fundamental to regulatory analysis.
@@ -66,7 +68,7 @@ Any mean can be **weighted** to give different observations different importance
 **Which is right?** Both are valid—they answer different questions. Choose based on your regulatory purpose.
 
 ::: {.callout-note icon=false}
-## Rethinking: Why Different Means Matter for Regulation
+## 🤔 Rethinking: Why Different Means Matter for Regulation
 
 In academic statistics, the arithmetic mean dominates because of its mathematical properties (unbiased estimator, efficient, etc.). But regulatory analysis often involves rates, ratios, and aggregations across providers of different sizes.
 
@@ -82,7 +84,7 @@ When in doubt, calculate multiple measures and understand why they differ. If th
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: The Generalized Mean Formula
+## ⚙️ Overthinking: The Generalized Mean Formula
 
 All these means are special cases of the **generalized mean** (also called power mean), defined by:
 
@@ -106,11 +108,11 @@ Different values of *p* give different means:
 - Multiplicative data → geometric (*p* → 0)
 - Rates with varying denominators → harmonic (*p* = -1)
 
-**When to escalate**: If you're considering a generalized mean with *p* ≠ {-1, 0, 1, 2}, seek specialist support. These are rarely needed and require careful justification.
+**When to escalate**: If you're considering a generalized mean with *p* ≠ {-1, 0, 1, 2}, raise it with the Quantitative Analytics and Statistics Guild (the Guild). These are rarely needed and require careful justification.
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Weighted Generalized Means
+## ⚙️ Overthinking: Weighted Generalized Means
 
 The generalized mean formula can be extended to include weights:
 
@@ -134,7 +136,7 @@ This unifies both dimensions:
 - Provider-centered (*w* = 1) vs patient-centered (*w* = size) perspectives
 - Additive (*p* = 1) vs multiplicative (*p* → 0) vs rate-based (*p* = -1) data structures
 
-**When to escalate**: If you need weighted geometric or weighted harmonic means, seek specialist support. These are valid but require careful implementation and justification.
+**When to escalate**: If you need weighted geometric or weighted harmonic means, raise it with the Guild. These are valid but require careful implementation and justification.
 :::
 
 ## Class 2: Quantiles {#sec-quantiles}
@@ -254,7 +256,7 @@ The **mode** is the value that appears most frequently.
 **Summary**: Mode answers "what's most common?" Use it for categorical data or when frequency matters more than average value.
 
 ::: {.callout-warning icon=false}
-## Overthinking: Trimmed and Winsorized Means
+## ⚙️ Overthinking: Trimmed and Winsorized Means
 
 Two specialized approaches for handling outliers without discarding them:
 
@@ -272,11 +274,11 @@ Two specialized approaches for handling outliers without discarding them:
 
 **When to consider**: If you have confirmed outliers (data errors, unusual circumstances) but don't want to delete them entirely. However, for most CQC analyses, it's clearer to calculate the standard mean and median, report both, and explain why they differ.
 
-**When to escalate**: If you're considering trimming or winsorization for a high-stakes analysis (e.g., provider ratings, funding allocation), seek specialist support. These methods require careful justification.
+**When to escalate**: If you're considering trimming or winsorization for a high-stakes analysis (e.g., provider ratings, funding allocation), raise it with the Guild. These methods require careful justification.
 :::
 
 ::: {.callout-note icon=false}
-## Rethinking: Percentiles Aren't Percentages
+## 🤔 Rethinking: Percentiles Aren't Percentages
 
 A common confusion: "This provider is at the 90th percentile" doesn't mean "90% of their patients experience this outcome." It means "This provider ranks higher than 90% of other providers."
 
@@ -323,7 +325,15 @@ No single measure is always best. Choose based on your analytical question:
 
 This chapter covers where data sits (location, position, central tendency). But location alone is incomplete. Two providers might both have a mean incident rate of 10 per month, but one is consistently 9-11 per month (stable) while the other swings from 0-20 per month (variable).
 
-**Next step**: @sec-variation-uncertainty covers measuring spread, understanding variation, and quantifying uncertainty. Together, location and spread give you a complete picture of provider performance.
+::: {.callout-note icon=false}
+## Related Approaches
+
+- To measure how spread out your data is (the essential complement to location) → @sec-variation-uncertainty
+- To understand distribution shape (skewness, heavy tails) before choosing between mean and median → @sec-distribution-shape
+- To classify your data before choosing a location measure → @sec-data-types
+- To use location measures as input for statistical testing → @sec-statistical-inference
+- For statistical flagging of providers using means and SDs → @sec-z-scoring
+:::
 
 ## Key Takeaways
 

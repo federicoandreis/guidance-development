@@ -2,6 +2,8 @@
 title: "Data Types & Implications"
 ---
 
+After reading this chapter, you will be able to classify any CQC data as continuous, discrete, nominal, or ordinal; understand which statistical methods apply to each type; and recognise common boundary cases that require careful judgment before analysis begins.
+
 ## Why Data Type Matters {#sec-data-types}
 
 Before you can select an appropriate statistical method, you need to know what type of data you have. The same analytical question—"is this provider different from the national average?"—requires different methods depending on whether you're analysing waiting times (continuous), incident counts (discrete), or CQC ratings (ordinal).
@@ -156,7 +158,7 @@ Different methods work for different data types. This table shows which methods 
 **Key principle**: When in doubt, consult the method section's "Before you start" checklist. Each method specifies what data types it handles.
 
 ::: {.callout-note icon=false}
-## Rethinking: Data Type Choices in Regulation
+## 🤔 Rethinking: Data Type Choices in Regulation
 
 CQC sometimes has choices about how to measure things. Should we count days to assessment as discrete whole days or continuous time? Should we treat CQC ratings as ordinal categories or convert them to numeric scores?
 
@@ -173,7 +175,7 @@ The "right" data type is the one that best serves your analytical purpose while 
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Boundary Cases and Controversies
+## ⚙️ Overthinking: Boundary Cases and Controversies
 
 **Treating ordinal as quantitative**: Some analysts treat ordinal scales (like Likert scales) as quantitative, continuous when calculating means. The argument: with enough responses, the average of many ordinal values approximates a continuous measure. The counter-argument: this assumes equal spacing between categories, which is rarely true.
 
@@ -183,7 +185,7 @@ The "right" data type is the one that best serves your analytical purpose while 
 
 **Rates vs counts**: Incident rates (per 1,000 bed days) are quantitative, continuous, but they're calculated from discrete counts. When counts are very small (e.g., 0-5 incidents), the rate might not behave like continuous data. Some methods handle this better than others.
 
-**When to escalate**: If your data doesn't clearly fit one type, or if you're unsure whether a boundary case matters for your chosen method, seek specialist support. These edge cases often require specialist judgment about which approximation is most defensible.
+**When to escalate**: If your data doesn't clearly fit one type, or if you're unsure whether a boundary case matters for your chosen method, raise it at the Quantitative Analytics and Statistics Guild (the Guild) Quant Clinic or contact the Practice Lead. These edge cases often require specialist judgment about which approximation is most defensible.
 :::
 
 ## Checking Your Data Type
@@ -199,6 +201,16 @@ Before starting analysis, verify your data type:
 4. **Review the method requirements**: Each method section specifies what data types it handles.
 
 If you're still unsure, @sec-qa-principles includes data type verification as part of the pre-analysis checklist.
+
+::: {.callout-note icon=false}
+## Related Approaches
+
+- To describe where your data sits (central tendency) → @sec-describing-data
+- To measure how spread out it is → @sec-variation-uncertainty
+- To understand its shape (skewness, heavy tails) → @sec-distribution-shape
+- To check data quality before analysis → @sec-qa-principles
+- For method-specific data requirements → see each method chapter's "Before you start" checklist
+:::
 
 ## Key Takeaways
 

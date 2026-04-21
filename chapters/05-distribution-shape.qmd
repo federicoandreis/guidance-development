@@ -2,6 +2,8 @@
 title: "Distribution Shape"
 ---
 
+After reading this chapter, you will understand how skewness and kurtosis affect method selection, know how to detect departures from symmetry using both visual inspection and formal measures, and be able to choose appropriate responses when your data violates the normality assumptions that underpin common statistical methods.
+
 ## Beyond Location and Spread {#sec-distribution-shape}
 
 Chapters 3 and 4 covered location (where the centre is) and spread (how variable the data is). But two distributions with the same mean and SD can look very different.
@@ -94,7 +96,7 @@ This chapter covers **shape** (symmetry and tail behaviour).
 - Document the skewness and interpret results accordingly
 - Use methods that accommodate skewness (e.g., working z-scores, @sec-z-scoring)
 
-**When to escalate**: If you're unsure whether skewness is severe enough to invalidate your method, seek specialist support.
+**When to escalate**: If you're unsure whether skewness is severe enough to invalidate your method, raise it at the Quantitative Analytics and Statistics Guild (the Guild) Quant Clinic.
 
 ## Kurtosis: Measuring Tail Behaviour
 
@@ -146,10 +148,10 @@ This chapter covers **shape** (symmetry and tail behaviour).
 - Method validation: Does the method assume normal tails?
 - Simulation/modelling: Need to capture tail behaviour accurately
 
-**When to escalate**: If kurtosis is extreme (< 2 or > 5) and you're using methods assuming normality, seek specialist support.
+**When to escalate**: If kurtosis is extreme (< 2 or > 5) and you're using methods assuming normality, raise it with the Guild.
 
 ::: {.callout-note icon=false}
-## Rethinking: Skewness vs Kurtosis in Practice
+## 🤔 Rethinking: Skewness vs Kurtosis in Practice
 
 At CQC, **skewness** is far more important than kurtosis for day-to-day work.
 
@@ -176,6 +178,47 @@ At CQC, **skewness** is far more important than kurtosis for day-to-day work.
 | Are extreme values common? | Kurtosis, visual inspection | Tail behaviour. Affects outlier interpretation. |
 | Should I use mean or median? | Skewness, mean vs median | If skewed, prefer median. See @sec-describing-data. |
 | Should I use SD or IQR? | Skewness, outliers | If skewed or outliers, prefer IQR. See @sec-variation-uncertainty. |
+
+::: {.callout-warning icon=false}
+## ⚙️ Overthinking: Transformations in Practice
+
+When skewness is severe enough to violate method assumptions, a log or square root transformation often restores approximate normality — but transformations carry costs.
+
+**Common transformations and when they apply:**
+
+| Transformation | Formula | Use for | CQC example |
+|---|---|---|---|
+| **Log** | log(x) or log(x+1) | Positive skew, multiplicative processes | Waiting times, incident rates |
+| **Square root** | √x | Positive skew, count data | Number of complaints, incidents |
+| **Inverse** | 1/x | Extreme positive skew, rates with small denominators | Very long waiting times |
+| **Box-Cox** | Automated search for best *λ* | When above options don't work | Unusual distributions |
+
+**What changes and what doesn't:**
+
+- **What changes**: The scale you work on. A log-scale difference of 0.3 corresponds to roughly a 35% difference on the original scale.
+- **What doesn't change**: The underlying data order. A log transformation preserves which providers rank highest.
+
+**Communicating transformed results:**
+
+Back-transform before reporting to stakeholders. Report the geometric mean (back-transformed mean of logged values) rather than the mean of logged values — they are not the same.
+
+> Example: Care home incident rates log-transformed for analysis. Back-transformed geometric mean: 6.2 incidents per 1,000 bed-days (compared to arithmetic mean of 8.1, inflated by a few very high providers).
+
+**When transformation is insufficient:**
+
+If log-transformation still leaves severe skewness, or if the data has meaningful values at zero (log(0) is undefined), use robust methods (median, IQR, Spearman's correlation) rather than transforming. Raise with the Guild if you're unsure.
+
+**Always report** that transformation was applied, which transformation, and that results are on the transformed scale before back-transformation.
+:::
+
+::: {.callout-note icon=false}
+## Related Approaches
+
+- To measure location (mean vs median) in skewed data → @sec-describing-data
+- To measure spread (SD vs IQR) based on shape → @sec-variation-uncertainty
+- To handle unusual values that create apparent skewness → @sec-unusual-observations
+- For shape-based assumptions in specific methods → @sec-z-scoring (working z-scores for skewed data), @sec-t-tests (normality requirements), @sec-correlation (Pearson vs Spearman)
+:::
 
 ## Key Takeaways
 

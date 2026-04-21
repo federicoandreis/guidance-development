@@ -2,6 +2,8 @@
 title: "How to Use This Book"
 ---
 
+This chapter orients you to the guidance: what it covers, how it is structured, how to navigate it, and how to get help when standard cases don't apply. Read it once on first visit, then use the [Quick Reference](../quick-reference.qmd) as your day-to-day entry point.
+
 ## What This Guidance Is NOT {#sec-getting-started}
 
 This is not a statistics textbook. It will not teach you statistical theory from first principles — refer to external courses for that. It will not cover cutting-edge methods requiring specialist expertise — seek specialist support for those. It will not provide software-specific tutorials — we have separate technical guides for that.
@@ -27,7 +29,7 @@ Each chapter uses three layers of depth:
 
 **Main text**: The minimum content needed to execute the method correctly for standard cases. If you only read the main text, you can apply the method.
 
-**Rethinking boxes**: Context that aids professional judgment. Why CQC uses this method, how it fits our regulatory context, what trade-offs we've accepted. Read these to understand the "why" behind the "how".
+**Rethinking boxes**: Context that aids professional judgment. Why CQC uses this method, how it fits CQC's regulatory context, what trade-offs have been accepted. Read these to understand the "why" behind the "how".
 
 **Overthinking boxes**: Technical details for edge cases and assumption violations. When standard approaches fail, what advanced methods exist, and when to seek specialist support. Read these when you encounter problems or need deeper understanding.
 
@@ -97,7 +99,7 @@ This guidance covers standard cases. Seek specialist support when:
 
 ### How to Get Help
 
-The **Quantitative Analytics and Statistics Guild** offers a space where analysts can ask questions, share approaches, and learn from each other — through Teams channels, drop-in sessions, and wider networking. It is a community, not a delivery team.
+The **Quantitative Analytics and Statistics Guild** (the Guild) offers a space where analysts can ask questions, share approaches, and learn from each other — through Teams channels, drop-in sessions, and wider networking. It is a community, not a delivery team.
 
 **Guild schedule**: The Quant Clinic (drop-in) and monthly Guild meeting dates are posted in the [Guild Teams channel](https://teams.microsoft.com). <!-- TODO: replace with direct channel link -->
 
@@ -114,7 +116,7 @@ Every methods section shows how to document your decisions to meet QA framework 
 -   **Assumption checks**: What to verify and how to record it
 -   **Interpretation guidance**: How to communicate uncertainty appropriately
 
-The QA framework isn't bureaucracy—it's how we ensure our analysis is defensible. This guidance integrates QA requirements into the analytical workflow so they become natural steps, not afterthoughts.
+The QA framework isn't bureaucracy—it's how CQC ensures analysis is defensible. This guidance integrates QA requirements into the analytical workflow so they become natural steps, not afterthoughts.
 
 ## Multiple Lines of Evidence
 
@@ -168,3 +170,37 @@ When in doubt, document your reasoning and seek specialist support. Good judgmen
 
 This guidance supports your work but doesn't replace statistical thinking, regulatory expertise, or consultation when needed.
 :::
+
+## Competency Framework Alignment {#sec-competency-alignment}
+
+The table below maps each chapter to the competency domains it develops, as defined in CQC's Data and Insight Competency Framework (October 2025). Use it to identify which chapters support your current development priorities, or to structure a learning pathway for your team.
+
+::: {.callout-note icon=false}
+**Note for users:** Competency domain names below follow the Government Statistical Service (GSS) framework on which CQC's internal framework is based. Verify the exact domain labels against the current version of the CQC Data and Insight Competency Framework document.
+:::
+
+| Chapter | Topic | Primary Competency Domain | Secondary Domain |
+|---|---|---|---|
+| 1 | How to Use This Book | Professional practice and judgment | — |
+| 2 | Data Types | Statistical analysis and methods | Analytical judgment |
+| 3 | Central Tendency and Position | Statistical analysis and methods | Communication of findings |
+| 4 | Measuring Variation | Statistical analysis and methods | Communication of findings |
+| 5 | Distribution Shape | Statistical analysis and methods | Analytical judgment |
+| 6 | Unusual Observations | Analytical judgment | Data quality and governance |
+| 7 | Missing Data: Foundations | Data quality and governance | Analytical judgment |
+| 8 | Statistical Inference | Statistical analysis and methods | Communication of findings |
+| 9 | QA Principles | Quality assurance and reproducibility | Data quality and governance |
+| 10 | Z-scoring | Statistical analysis and methods | Quality assurance and reproducibility |
+| 11 | SPC Basics | Statistical analysis and methods | Analytical judgment |
+| 12 | t-tests | Statistical analysis and methods | Communication of findings |
+| 13 | Correlation | Statistical analysis and methods | Analytical judgment |
+| 14 | Outlier Methods | Statistical analysis and methods | Data quality and governance |
+| 15 | Missing Data: Methods | Data quality and governance | Statistical analysis and methods |
+
+**Five competency domains referenced above:**
+
+- **Statistical analysis and methods** — selecting, applying, and interpreting appropriate quantitative techniques
+- **Analytical judgment** — making sound decisions in complex situations, including when to seek specialist input
+- **Data quality and governance** — understanding data sources, quality issues, and appropriate handling
+- **Communication of findings** — presenting results clearly with appropriate uncertainty and caveats
+- **Quality assurance and reproducibility** — documentation, peer review, and reproducible analytical practice

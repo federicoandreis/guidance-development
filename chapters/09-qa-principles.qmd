@@ -2,6 +2,8 @@
 title: "Quality Assurance Principles"
 ---
 
+After reading this chapter, you will understand the five questions that structure CQC's Quantitative Analytics and Statistics Quality Assurance (QASQA) Framework, know the roles and responsibilities involved in analytical quality assurance, and be able to apply proportionate QA thinking — scaling documentation and review to the risk and complexity of your analysis.
+
 ## Why QA Matters {#sec-qa-principles}
 
 The 2024 Penny Dash review of CQC's analytical quality identified concerns about "lack of clear description of statistical analysis applied" and "inconsistency in how evidence categories used." These aren't just technical issues—they affect CQC's credibility, regulatory effectiveness, and ability to defend decisions.
@@ -528,7 +530,7 @@ For every analysis, document:
 **Purpose**: QA review, reproducibility, organizational memory, defending decisions if challenged.
 
 ::: {.callout-note icon=false}
-## Rethinking: Why the Penny Dash Review Matters
+## 🤔 Rethinking: Why the Penny Dash Review Matters
 
 The 2024 Penny Dash review found CQC's analytical quality was variable, with concerns about:
 - Lack of clear description of statistical methods
@@ -537,13 +539,13 @@ The 2024 Penny Dash review found CQC's analytical quality was variable, with con
 
 These findings weren't just academic. They affect:
 
-**Credibility**: When analysis is questioned, can we show our working and explain our reasoning?
+**Credibility**: When analysis is questioned, can CQC show its working and explain its reasoning?
 
-**Defensibility**: Can we defend analytical choices if challenged by providers, in court, or in media?
+**Defensibility**: Can analytical choices be defended if challenged by providers, in court, or in media?
 
-**Consistency**: Are we applying similar standards across teams and analyses?
+**Consistency**: Are consistent standards being applied across teams and analyses?
 
-**Learning**: Can we learn from what works and what doesn't if we don't document it?
+**Learning**: Can the organisation learn from what works and what doesn't if it doesn't document it?
 
 **The QA Framework addresses these issues**:
 - Structured around five key questions that cover the analytical cycle
@@ -558,9 +560,9 @@ These findings weren't just academic. They affect:
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: When to Seek Specialist Support
+## ⚙️ Overthinking: When to Escalate to the Guild
 
-The Quantitative Analytics and Statistics Guild community and your function's technical experts can help with complex or novel analytical challenges. Seek specialist support when:
+The Quantitative Analytics and Statistics Guild (the Guild) community and your function's technical experts can help with complex or novel analytical challenges. Escalate when:
 
 **Methodological uncertainty**:
 - Novel method you haven't used before
@@ -605,6 +607,17 @@ The Quantitative Analytics and Statistics Guild community and your function's te
 The Guild is a community space, not a delivery team. Use it strategically for genuine complexity. See @sec-getting-started for how to get help.
 
 For formal review or complex cases: [Practice Lead for Quantitative Analytics and Statistics](mailto:federico.andreis@cqc.org.uk)
+:::
+
+::: {.callout-note icon=false}
+## Related Approaches
+
+- For data type verification (QA step 3 — variable definitions) → @sec-data-types
+- For missing data assessment (QA pre-analysis checklist step 4) → @sec-missing-data-foundations
+- For unusual observation investigation (QA pre-analysis checklist step 4) → @sec-unusual-observations
+- For applying inference principles correctly (QA design and delivery questions) → @sec-statistical-inference
+- For method-specific QA requirements and "before you start" checklists → each methods chapter (@sec-z-scoring through @sec-missing-data-handling)
+- For help with genuinely complex analytical challenges → the Guild Quant Clinic (@sec-getting-started)
 :::
 
 ## Integration with Methods Chapters

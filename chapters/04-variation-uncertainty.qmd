@@ -2,6 +2,8 @@
 title: "Measuring Variation"
 ---
 
+After reading this chapter, you will be able to measure and describe spread across quantitative, ordinal, and nominal data; understand when to prefer standard deviation over IQR, and CV over raw measures; and use visualisation to reveal distribution patterns that summary statistics alone can miss.
+
 ## How Spread Out Is Your Data? {#sec-variation-uncertainty}
 
 Chapter 3 told you where the middle is. This chapter tells you how spread out your data is around that middle.
@@ -194,7 +196,7 @@ $$D = 1 - \sum_{i=1}^{k} p_i^2$$
 - **Both are valid**: Choose based on audience and context
 
 ::: {.callout-note icon=false}
-## Rethinking: Why Heterogeneity Matters for Regulation
+## 🤔 Rethinking: Why Heterogeneity Matters for Regulation
 
 Heterogeneity in categorical variables affects how you interpret performance data.
 
@@ -214,7 +216,7 @@ Measuring heterogeneity helps you understand whether variation is concentrated i
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Other Normalized Measures
+## ⚙️ Overthinking: Other Normalized Measures
 
 Beyond CV, other normalized measures exist for specific contexts.
 
@@ -257,7 +259,7 @@ Beyond CV, other normalized measures exist for specific contexts.
 
 **Comparing across regions**: If regions have different baseline levels, normalized measures show whether relative variability differs.
 
-**When to escalate**: If you're unsure which normalization is appropriate for your comparison, or if stakeholders are confused by normalized measures, seek specialist support.
+**When to escalate**: If you're unsure which normalization is appropriate for your comparison, or if stakeholders are confused by normalized measures, raise it with the Quantitative Analytics and Statistics Guild (the Guild).
 :::
 
 ## Choosing the Right Measure

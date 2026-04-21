@@ -2,6 +2,8 @@
 title: "Statistical Inference"
 ---
 
+After reading this chapter, you will understand how statistical inference moves from observed data to defensible conclusions, know how to interpret p-values and confidence intervals correctly, distinguish statistical significance from practical significance using effect sizes, and apply appropriate thresholds given CQC's regulatory priorities around false negatives versus false positives.
+
 ## From Samples to Conclusions {#sec-statistical-inference}
 
 You've calculated that a care home has 30% more incidents than the national average. Is this a real problem or chance variation? Should you investigate?
@@ -11,9 +13,9 @@ You've calculated that a care home has 30% more incidents than the national aver
 **This chapter covers**: Population vs sample, estimation (point and interval), hypothesis testing, and practical application to CQC work.
 
 ::: {.callout-note icon=false}
-## Rethinking: Exploratory vs Confirmatory Analysis
+## 🤔 Rethinking: Exploratory vs Confirmatory Analysis
 
-Most CQC analysis is **exploratory**: we use data to understand patterns and guide decisions, not to provide definitive proof.
+Most CQC analysis is **exploratory**: data is used to understand patterns and guide decisions, not to provide definitive proof.
 
 **Exploratory** (most CQC work):
 - Flexible, iterative process
@@ -186,7 +188,7 @@ In regulation, we face a trade-off between two types of errors:
 This doesn't mean ignoring false positives—they waste inspection capacity and can damage provider reputation. But it does mean accepting higher false positive rates than academic research would.
 
 ::: {.callout-note icon=false}
-## Rethinking: Regulatory vs Research Priorities
+## 🤔 Rethinking: Regulatory vs Research Priorities
 
 Academic research and regulation have different priorities.
 
@@ -239,7 +241,7 @@ Every statistical result should report:
 | Point estimate only | "The true improvement is probably between 5.8 and 9.2 points (95% confidence interval)." |
 
 ::: {.callout-warning icon=false}
-## Overthinking: Statistical Power
+## ⚙️ Overthinking: Statistical Power
 
 **Statistical power**: The probability of detecting a real effect when it exists (avoiding false negatives).
 
@@ -270,6 +272,17 @@ The inference principles in this chapter underpin every methods chapter in Part 
 - **Correlation** (@sec-correlation): Significance tests for correlation coefficients use the same p-value logic. Sample size determines precision.
 - **Outlier methods** (@sec-outlier-methods): Statistical criteria for "unusual" depend on distributional assumptions and the false positive/negative trade-off.
 - **Missing data** (@sec-missing-data-handling): Inference is only valid if missingness doesn't introduce bias. Understanding estimation helps you assess the impact of missing data.
+
+::: {.callout-note icon=false}
+## Related Approaches
+
+- To apply inference to provider comparisons using z-scores → @sec-z-scoring
+- To apply inference to time series (control limits as inference) → @sec-spc-basics
+- To test differences between two groups using t-statistics → @sec-t-tests
+- To test relationships between variables → @sec-correlation
+- To understand how missing data undermines valid inference → @sec-missing-data-foundations
+- For documenting analytical decisions and uncertainty → @sec-qa-principles
+:::
 
 ## Key Takeaways
 

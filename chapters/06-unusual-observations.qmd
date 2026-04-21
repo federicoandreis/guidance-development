@@ -2,6 +2,8 @@
 title: "Unusual Observations and Extreme Values"
 ---
 
+After reading this chapter, you will have a principled framework for identifying, investigating, and handling unusual observations — understanding why extreme values arise, how to distinguish errors from genuine extremes, and why in regulatory work outliers are often the most important observations rather than problems to be removed.
+
 ## When Values Stand Out {#sec-unusual-observations}
 
 Not all data points are created equal. In any dataset, some values stand out—waiting times much longer than average, incident rates much higher than peers, staffing levels far below comparators. These **unusual observations** (often called outliers) demand attention, but what makes a value "unusual" is not as straightforward as it might seem.
@@ -262,7 +264,7 @@ Once you've investigated, you need to decide what to do. No single approach is a
 - Use **IQR** instead of standard deviation (@sec-variation-uncertainty)
 - Use **Spearman's correlation** instead of Pearson's (@sec-correlation)
 - Use **non-parametric tests** instead of t-tests when assumptions violated
-- Use **robust regression** methods (seek specialist support)
+- Use **robust regression** methods (raise with the Quantitative Analytics and Statistics Guild (the Guild))
 
 #### When to use
 - Unusual observations are genuine but distort conventional statistics
@@ -335,7 +337,7 @@ Once you've investigated, you need to decide what to do. No single approach is a
 **CQC example**: You're comparing provider incident rates. Two providers have very high rates. Analyze three ways: (1) all data, (2) excluding the two providers, (3) log-transforming rates. If the same ten providers are flagged in all three analyses, your results are robust. If the flagged list changes substantially, report both and explain the sensitivity.
 
 ::: {.callout-note icon=false}
-## Rethinking: Why "Outlier Removal" Is Often Wrong
+## 🤔 Rethinking: Why "Outlier Removal" Is Often Wrong
 
 Textbooks often present outlier detection as: (1) identify outliers, (2) remove them, (3) analyze the "clean" data. This is dangerous in regulatory contexts.
 
@@ -359,7 +361,7 @@ Textbooks often present outlier detection as: (1) identify outliers, (2) remove 
 :::
 
 ::: {.callout-note icon=false}
-## Rethinking: Small Providers and the "Outlier" Trap
+## 🤔 Rethinking: Small Providers and the "Outlier" Trap
 
 Small providers (e.g., care homes with 20 beds vs 200 beds) are frequently flagged as statistical outliers. This doesn't mean they're performing poorly—it often reflects **low precision**, not poor quality.
 
@@ -393,7 +395,7 @@ A small provider flagged as an outlier requires careful interpretation:
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Winsorizing and Trimming
+## ⚙️ Overthinking: Winsorizing and Trimming
 
 Two alternative approaches to extreme values, less commonly used but worth knowing.
 
@@ -423,11 +425,11 @@ Two alternative approaches to extreme values, less commonly used but worth knowi
 
 **CQC context**: Trimming and winsorizing are rarely appropriate for regulatory work because they systematically exclude or modify the very providers we might need to investigate. Use robust methods instead.
 
-If you're considering these approaches, seek specialist support — there's usually a better option.
+If you're considering these approaches, raise it with the Guild — there's usually a better option.
 :::
 
 ::: {.callout-warning icon=false}
-## Overthinking: Multivariate Outliers
+## ⚙️ Overthinking: Multivariate Outliers
 
 So far we've discussed **univariate outliers**: unusual on a single variable. But values can be unusual in combination.
 
@@ -454,9 +456,20 @@ Individually, none of these is extreme. But *together*, low satisfaction with sl
 
 **CQC relevance**: Limited. Most CQC analysis examines indicators one at a time or in simple relationships. Multivariate outlier detection requires more sophisticated modeling.
 
-**When to escalate**: If you're doing multivariate modeling (regression, clustering, PCA) and suspect influential observations, seek specialist support. Multivariate outlier diagnostics require specialist interpretation.
+**When to escalate**: If you're doing multivariate modeling (regression, clustering, PCA) and suspect influential observations, raise it with the Guild. Multivariate outlier diagnostics require specialist interpretation.
 
 For most CQC work, focus on univariate outliers and well-understood relationships.
+:::
+
+::: {.callout-note icon=false}
+## Related Approaches
+
+- For the conceptual measures used to identify "unusual" values → @sec-describing-data (central tendency), @sec-variation-uncertainty (spread)
+- For investigating whether extreme values reflect genuine changes over time → @sec-spc-basics
+- For statistical flagging of providers against national benchmarks → @sec-z-scoring
+- For comparing two groups where outliers may violate normality → @sec-t-tests
+- For computational outlier detection methods (Tukey's fences, modified z-scores) → @sec-outlier-methods
+- For documenting your investigation and handling decisions → @sec-qa-principles
 :::
 
 ## Integration with Other Methods
