@@ -20,6 +20,7 @@ Thumbs.db
 *~
 .windsurfrules
 .Rprofile
+.claude/
 
 # R and Python artifacts
 .Renviron
