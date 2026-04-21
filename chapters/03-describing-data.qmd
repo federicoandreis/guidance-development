@@ -49,13 +49,13 @@ Any mean can be **weighted** to give different observations different importance
 - Use for: Provider-centered metrics, fairness assessments
 - Example: Average provider rating across all care homes
 
-**Weighted by size**:
+#### Weighted by size
 - Larger providers count more
 - Answers: "What's typical for a patient?"
 - Use for: Patient-centered metrics, resource planning
 - Example: National average incident rate weighted by bed-days
 
-**Other weighting schemes**:
+#### Other weighting schemes
 - **By precision**: More reliable estimates count more (meta-analysis)
 - **By time**: Recent data counts more (trend monitoring)
 
@@ -106,7 +106,7 @@ Different values of *p* give different means:
 - Multiplicative data → geometric (*p* → 0)
 - Rates with varying denominators → harmonic (*p* = -1)
 
-**When to escalate**: If you're considering a generalized mean with *p* ≠ {-1, 0, 1, 2}, consult the Quantitative Guild. These are rarely needed and require careful justification.
+**When to escalate**: If you're considering a generalized mean with *p* ≠ {-1, 0, 1, 2}, seek specialist support. These are rarely needed and require careful justification.
 :::
 
 ::: {.callout-warning icon=false}
@@ -115,6 +115,8 @@ Different values of *p* give different means:
 The generalized mean formula can be extended to include weights:
 
 $$M_p(x_1, ..., x_n; w_1, ..., w_n) = \left( \frac{\sum_{i=1}^{n} w_i x_i^p}{\sum_{i=1}^{n} w_i} \right)^{1/p}$$
+
+In words: raise each value to power *p*, multiply by its weight, divide the weighted sum by the total weight, then take the *p*th root.
 
 This unifies both dimensions:
 - **Power parameter** (*p*): Determines combination rule (additive, multiplicative, rate-based)
@@ -132,7 +134,7 @@ This unifies both dimensions:
 - Provider-centered (*w* = 1) vs patient-centered (*w* = size) perspectives
 - Additive (*p* = 1) vs multiplicative (*p* → 0) vs rate-based (*p* = -1) data structures
 
-**When to escalate**: If you need weighted geometric or weighted harmonic means, consult the Quantitative Guild. These are valid but require careful implementation and justification.
+**When to escalate**: If you need weighted geometric or weighted harmonic means, seek specialist support. These are valid but require careful implementation and justification.
 :::
 
 ## Class 2: Quantiles {#sec-quantiles}
@@ -159,20 +161,20 @@ Quantiles divide your data into equal-sized groups:
 
 The **median** splits your data in half: 50% of observations below, 50% above.
 
-**Why the median matters**:
+#### Why the median matters
 
 - **Robust to outliers**: One extreme value doesn't shift it
 - **Describes typical experience**: In skewed data, often more representative than mean
 - **Easy to communicate**: "Half of providers have lower rates, half have higher"
 - **Not affected by extreme tails**: Useful when you don't trust extreme values
 
-**CQC examples**:
+#### CQC examples
 
 - Median waiting time: The experience of the middle patient
 - Median provider performance: Half are better, half are worse
 - Median length of stay: Not pulled by very long stays
 
-**When median and mean differ**:
+#### When median and mean differ
 
 - Mean > Median: Positive skew (long right tail), a few very high values
 - Mean < Median: Negative skew (long left tail), a few very low values
@@ -235,13 +237,13 @@ The **median** splits your data in half: 50% of observations below, 50% above.
 
 The **mode** is the value that appears most frequently.
 
-**When to use it**:
+### When to use it
 
 - **Qualitative data**: What's the most common CQC rating? Mode = "Good"
 - **Discrete data with clustering**: If 40 providers have exactly 10 incidents per month, that's the mode
 - **Bimodal distributions**: When data clusters around two different values
 
-**Limitations**:
+### Limitations
 
 - Not always unique (data can be bimodal or multimodal)
 - Doesn't use all information in the data
@@ -270,7 +272,7 @@ Two specialized approaches for handling outliers without discarding them:
 
 **When to consider**: If you have confirmed outliers (data errors, unusual circumstances) but don't want to delete them entirely. However, for most CQC analyses, it's clearer to calculate the standard mean and median, report both, and explain why they differ.
 
-**When to escalate**: If you're considering trimming or winsorization for a high-stakes analysis (e.g., provider ratings, funding allocation), consult the Quantitative Guild. These methods require careful justification.
+**When to escalate**: If you're considering trimming or winsorization for a high-stakes analysis (e.g., provider ratings, funding allocation), seek specialist support. These methods require careful justification.
 :::
 
 ::: {.callout-note icon=false}

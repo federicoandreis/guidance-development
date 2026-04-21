@@ -53,7 +53,7 @@ This glossary defines statistical and CQC-specific terms used throughout the gui
 
 **Correlation coefficient**: The numerical value (r for Pearson, ρ for Spearman) that quantifies the strength and direction of a correlation. See @sec-correlation.
 
-**CQC Guild** (Data and Insight Quantitative Guild): Internal group providing specialist statistical support and maintaining analytical standards.
+**CQC Guild** (Quantitative Analytics and Statistics Guild): A community space where analysts can ask questions, share approaches, and learn from each other — through Teams channels, drop-in sessions, and wider networking. For complex cases, escalate to the Practice Lead for Quantitative Analytics and Statistics.
 
 ---
 
@@ -157,7 +157,7 @@ This glossary defines statistical and CQC-specific terms used throughout the gui
 
 **Overdispersion**: When data shows more variation than expected by the statistical model. Common in count data. Requires adjustment in z-scoring. See @sec-z-scoring.
 
-**Overthinking box**: Callout boxes (yellow/orange) containing technical details, edge cases, and when to escalate to the Guild. Optional reading for most analysts.
+**Overthinking box**: Callout boxes (yellow/orange) containing technical details, edge cases, and when to seek specialist support. Optional reading for most analysts.
 
 ---
 

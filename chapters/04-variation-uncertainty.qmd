@@ -8,7 +8,7 @@ Chapter 3 told you where the middle is. This chapter tells you how spread out yo
 
 Two providers might both have a mean incident rate of 10 per month, but one consistently records 9-11 incidents (low variation), while the other swings from 0-20 (high variation). This distinction matters for regulation.
 
-**Why measuring variation matters**:
+### Why measuring variation matters
 
 - **Consistency vs volatility**: Low variation suggests stable processes, high variation suggests inconsistent performance
 - **Comparison context**: A provider 5 incidents above the mean is more concerning if typical variation is ±2 than if it's ±10
@@ -30,17 +30,17 @@ Quantitative data (continuous and discrete) requires measures that use arithmeti
 - **Variance**: Squared units (e.g., hours², incidents²). Mathematically convenient but hard to interpret.
 - **Standard deviation**: Original units (e.g., hours, incidents). Easy to interpret: "typical distance from mean."
 
-**When to report which**:
+#### When to report which
 - **SD for interpretation**: "The standard deviation is 2.5 hours, so most practices are within 2.5 hours of the mean."
 - **Variance for calculations**: Many statistical methods (t-tests, ANOVA, regression) work with variance internally.
 - **Both are the same information**: If you have one, you have the other. Don't treat them as different measures.
 
-**Interpretation**:
+#### Interpretation
 - Low SD/variance: Data clustered tightly around mean, consistent performance
 - High SD/variance: Data spread out, variable performance
 - Example: Mean waiting time = 3.2 hours, SD = 0.8 hours → most practices are between 2.4 and 4.0 hours
 
-**Why SD/variance matters**:
+#### Why SD/variance matters
 - **Z-scoring** (@sec-z-scoring): Quantifies how many SDs a provider is from the mean
 - **Control limits in SPC** (@sec-spc-basics): Typically set at ±3 SD from mean
 - **Comparing providers**: A provider 1 SD above mean in a low-SD indicator is more unusual than 1 SD above mean in a high-SD indicator
@@ -51,12 +51,12 @@ Quantitative data (continuous and discrete) requires measures that use arithmeti
 
 **Interquartile range (IQR)** is the distance between the 25th and 75th percentiles (Q3 - Q1). It describes the spread of the middle 50% of your data.
 
-**Why use IQR instead of SD**:
+#### Why use IQR instead of SD
 - **Robust to outliers**: Extreme values don't affect it
 - **Works with skewed data**: Doesn't assume symmetry
 - **Easy to communicate**: "The middle half of providers span this range"
 
-**When to use**:
+#### When to use
 - Skewed data where SD is inflated by outliers
 - Reporting spread to non-technical audiences
 - Box plots (which display IQR visually)
@@ -77,7 +77,7 @@ Quantitative data (continuous and discrete) requires measures that use arithmeti
 - **80% range** (P10 to P90): Excludes extreme 10% at each tail
 - **90% range** (P5 to P95): Excludes extreme 5% at each tail
 
-**When to use**: Describing spread while excluding extreme outliers, especially for skewed distributions.
+#### When to use Describing spread while excluding extreme outliers, especially for skewed distributions.
 
 ### Coefficient of Variation: Comparing Across Scales
 
@@ -85,23 +85,23 @@ Quantitative data (continuous and discrete) requires measures that use arithmeti
 
 **Definition**: CV = SD / Mean (often expressed as percentage)
 
-**Why use CV**:
+#### Why use CV
 - **Compare different indicators**: "Which is more variable, waiting times or incident rates?"
 - **Compare different scales**: Providers with very different baseline levels
 - **Assess scaling**: Does variability increase proportionally with the mean?
 
-**Example**:
+#### Example
 - Waiting times: Mean = 3 hours, SD = 0.6 hours → CV = 20%
 - Incident rates: Mean = 15 per month, SD = 3 per month → CV = 20%
 
 Both have the same relative variability (20%), even though raw SDs differ.
 
-**Interpretation**:
+#### Interpretation
 - Low CV (< 15%): Low relative variability, consistent performance
 - Moderate CV (15-30%): Moderate relative variability
 - High CV (> 30%): High relative variability, inconsistent performance
 
-**Limitations**:
+#### Limitations
 - Undefined when mean = 0
 - Unstable when mean is close to 0
 - Requires ratio scale (meaningful zero point)
@@ -155,9 +155,11 @@ Nominal data (unordered categories) cannot use quantiles or arithmetic. You need
 
 $$H = -\sum_{i=1}^{k} p_i \log_2(p_i)$$
 
+For each category, multiply its proportion by the log₂ of its proportion; sum these products; negate the result. A larger H means more diversity.
+
 Where *p*ᵢ is the proportion in category *i*, and *k* is the number of categories.
 
-**Interpretation**:
+#### Interpretation
 - H = 0: All observations in one category (no diversity)
 - H = log₂(k): Perfectly uniform distribution (maximum diversity)
 - Higher H = more heterogeneous/diverse
@@ -167,7 +169,7 @@ Where *p*ᵢ is the proportion in category *i*, and *k* is the number of categor
 - 50% hospitals, 50% care homes: H = 1.0
 - 25% each of 4 types: H = 2.0 (maximum for 4 categories)
 
-**CQC use cases**:
+#### CQC use cases
 - Measuring diversity of provider types in a region
 - Quantifying heterogeneity of incident categories
 - Comparing diversity across regions or time periods
@@ -176,7 +178,7 @@ Where *p*ᵢ is the proportion in category *i*, and *k* is the number of categor
 
 $$D = 1 - \sum_{i=1}^{k} p_i^2$$
 
-**Interpretation**:
+#### Interpretation
 - D = 0: All observations in one category (no diversity)
 - D = (k-1)/k: Perfectly uniform distribution (maximum diversity)
 - Higher D = more diverse
@@ -186,7 +188,7 @@ $$D = 1 - \sum_{i=1}^{k} p_i^2$$
 - 50% hospitals, 50% care homes: D = 0.5
 - 25% each of 4 types: D = 0.75
 
-**When to use which**:
+#### When to use which
 - **Shannon's Entropy**: More sensitive to rare categories, commonly used in ecology and information theory
 - **Simpson's Index**: More intuitive interpretation (probability of difference), less sensitive to rare categories
 - **Both are valid**: Choose based on audience and context
@@ -222,12 +224,12 @@ Beyond CV, other normalized measures exist for specific contexts.
 
 **Purpose**: Normalized version of IQR, comparable across scales.
 
-**Interpretation**:
+#### Interpretation
 - QCD = 0: No spread (all values equal)
 - QCD = 1: Maximum theoretical spread
 - Higher QCD = more relative variability
 
-**When to use**:
+#### When to use
 - Comparing IQR-based spread across different scales
 - When data is skewed (CV not appropriate)
 - When you want a robust, normalized dispersion measure
@@ -238,12 +240,12 @@ Beyond CV, other normalized measures exist for specific contexts.
 
 **Purpose**: Makes Shannon's Entropy comparable across variables with different numbers of categories.
 
-**Interpretation**:
+#### Interpretation
 - H_norm = 0: All observations in one category
 - H_norm = 1: Perfectly uniform distribution
 - Scale: Always between 0 and 1, regardless of number of categories
 
-**When to use**:
+#### When to use
 - Comparing heterogeneity across categorical variables with different numbers of categories
 - Example: Comparing diversity of incident types (10 categories) vs provider types (4 categories)
 
@@ -255,7 +257,7 @@ Beyond CV, other normalized measures exist for specific contexts.
 
 **Comparing across regions**: If regions have different baseline levels, normalized measures show whether relative variability differs.
 
-**When to escalate**: If you're unsure which normalization is appropriate for your comparison, or if stakeholders are confused by normalized measures, consult the Quantitative Guild.
+**When to escalate**: If you're unsure which normalization is appropriate for your comparison, or if stakeholders are confused by normalized measures, seek specialist support.
 :::
 
 ## Choosing the Right Measure
@@ -314,6 +316,82 @@ Summary statistics are essential, but visualization reveals patterns numbers alo
 - Good for: Exploring whether variables are related
 - Reveals: Linear vs nonlinear relationships, clustering, outliers
 
+The example below illustrates why visualisation matters. All four provider types have been assigned similar mean waiting times in their description, but the box plots immediately reveal that **spread differs substantially**. Care homes are tightly clustered; GP practices and mental health trusts show wide variation with potential outliers.
+
+```{r}
+#| label: fig-boxplot-variation
+#| fig-cap: "Box plots comparing synthetic waiting times (hours) across four CQC-regulated provider types (n = 100 per group, values are illustrative). Care homes show the tightest spread; GP practices and mental health trusts show substantially higher variation, with outliers visible in the mental health trust group."
+#| fig-alt: "Horizontal box plots for four provider types. Care Home: median around 3 hours, IQR approximately 2.7–3.3 hours — tightly clustered. Hospital Trust: median around 6 hours, IQR approximately 5.2–6.8 hours — moderate spread. GP Practice: median around 4 hours, IQR approximately 2.3–5.7 hours — wide spread. Mental Health Trust: median around 8 hours, IQR approximately 6–10 hours — widest spread with several high outliers."
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 8
+#| fig-height: 4
+
+library(ggplot2)
+
+set.seed(42)
+n <- 100
+var_df <- data.frame(
+  group = factor(
+    rep(c("Care Home", "Hospital Trust", "GP Practice", "Mental Health Trust"), each = n),
+    levels = c("Care Home", "Hospital Trust", "GP Practice", "Mental Health Trust")
+  ),
+  waiting_time = c(
+    rnorm(n, 3, 0.4),
+    rnorm(n, 6, 1.2),
+    rnorm(n, 4, 2.5),
+    rnorm(n, 8, 3.0)
+  )
+)
+var_df$waiting_time <- pmax(var_df$waiting_time, 0.1)
+
+cqc_palette <- c(
+  "Care Home"            = "#006560",
+  "Hospital Trust"       = "#007EF5",
+  "GP Practice"          = "#A57703",
+  "Mental Health Trust"  = "#A83DA4"
+)
+
+ggplot(var_df, aes(x = group, y = waiting_time, fill = group)) +
+  geom_boxplot(alpha = 0.85, outlier.size = 1.2, outlier.alpha = 0.6) +
+  scale_fill_manual(values = cqc_palette, guide = "none") +
+  scale_x_discrete(limits = rev(levels(var_df$group))) +
+  labs(
+    x = NULL,
+    y = "Waiting time (hours)"
+  ) +
+  coord_flip() +
+  theme_minimal(base_size = 11) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank())
+```
+
+```{r}
+#| label: fig-violin-variation
+#| fig-cap: "Violin plots (with embedded median boxes) for the same synthetic data. The violin width shows where values are concentrated. Care homes have a narrow, symmetric distribution; GP practices show a wide, roughly uniform spread; mental health trusts show a right-skewed distribution with a long upper tail."
+#| fig-alt: "Violin plots for four provider types. Care Home: a narrow, nearly symmetric violin centred on 3 hours. Hospital Trust: a moderately wide violin around 6 hours, roughly symmetric. GP Practice: a wide, relatively flat violin spanning 0–9 hours around a median of 4 hours. Mental Health Trust: an asymmetric violin extending from around 2 to over 15 hours, with the bulk concentrated between 6 and 10 hours and a long upper tail."
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 8
+#| fig-height: 4
+
+ggplot(var_df, aes(x = group, y = waiting_time, fill = group)) +
+  geom_violin(alpha = 0.75, trim = TRUE) +
+  geom_boxplot(width = 0.1, fill = "white", alpha = 0.9, outlier.shape = NA) +
+  scale_fill_manual(values = cqc_palette, guide = "none") +
+  scale_x_discrete(limits = rev(levels(var_df$group))) +
+  labs(
+    x = NULL,
+    y = "Waiting time (hours)"
+  ) +
+  coord_flip() +
+  theme_minimal(base_size = 11) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank())
+```
+
 Always visualize your data before applying statistical methods. Patterns obvious in plots might not be obvious in summary statistics.
 
 ## Key Takeaways
@@ -337,3 +415,18 @@ Always visualize your data before applying statistical methods. Patterns obvious
 
 8. **Visualize before you analyze**: Plots reveal distribution shape, outliers, and patterns that summary statistics might miss.
 :::
+
+## Related Approaches
+
+Understanding variation is foundational to every methods chapter. Where to go next:
+
+### Apply variation concepts to methods
+- **Monitoring variation over time** → Statistical Process Control (@sec-spc-basics): Control limits are set using SD; distinguishing common cause from special cause variation is built on everything in this chapter.
+- **Comparing providers against their peers** → Z-scoring (@sec-z-scoring): Z-scores express a provider's deviation in units of SD — the same SD described here.
+- **Investigating unusual values** → @sec-unusual-observations: Defines "unusual" relative to the distribution's spread.
+- **Comparing two groups** → t-tests (@sec-t-tests): t-statistics use SD and IQR concepts directly.
+
+### For deeper understanding
+- **Shape of the distribution** → @sec-distribution-shape: How skewness and kurtosis affect which variation measure to use.
+- **Where the middle sits** → @sec-describing-data: Location and spread together describe a distribution fully.
+- **Data quality before analysis** → @sec-qa-principles

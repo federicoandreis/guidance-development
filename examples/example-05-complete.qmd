@@ -1,4 +1,4 @@
----
+﻿---
 title: "Example 5: Regional A&E Performance"
 subtitle: "Two-Sample t-test"
 number-sections: false
@@ -20,6 +20,18 @@ library(reticulate)
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
 For detailed explanation of t-test methodology, two-sample design considerations, and step-by-step guidance, see @sec-t-tests.
+:::
+
+::: {.callout-note icon=false}
+## 💻 Running This Example
+
+These examples require R or Python. If you are not yet set up with a coding environment:
+
+- **Microsoft Fabric**: CQC's primary analytics platform — contact your function's data engineer for access
+- **RSS training**: Introductory R and Python courses available via CQC's learning platform
+- **Quant Clinic**: Drop-in sessions for hands-on help with code and methods — see the [Guild Teams channel](https://teams.microsoft.com) for upcoming dates
+
+Both R and Python versions are provided throughout. Use whichever you are more comfortable with.
 :::
 
 ---
@@ -84,7 +96,7 @@ By working through this example, you will learn to:
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -148,7 +160,7 @@ print(ae_data.groupby('ics')['ae_performance'].describe())
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -238,7 +250,7 @@ plt.show()
 
 ### Assumption 1: Normality
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -290,7 +302,7 @@ plt.show()
 
 ### Assumption 2: Equal Variances
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -349,7 +361,7 @@ print(f"Ratio: {max(north_sd, south_sd) / min(north_sd, south_sd):.2f}")
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -431,7 +443,7 @@ print(f"95% CI for difference: [{ci[0]:.2f}, {ci[1]:.2f}]")
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 

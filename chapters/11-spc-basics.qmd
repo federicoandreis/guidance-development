@@ -26,14 +26,14 @@ SPC monitors processes over time to distinguish **common cause variation** (norm
 
 **Key purpose**: SPC is about **understanding process behavior** (analytic study), not estimating population parameters (enumerative study). You're asking "is this process stable or changing?" not "what's the population mean?"
 
-**Key advantages**:
+### Key advantages
 - Detects changes earlier than waiting for annual comparisons
 - Reduces false alarms by accounting for natural variation
 - Provides visual, intuitive displays
 - Supports real-time monitoring and rapid response
 - Helps understand process capability and variation patterns
 
-**What it does NOT do**:
+### What it does NOT do
 - Explain why changes occurred (investigation determines cause)
 - Replace professional judgment about whether to act
 - Work well with very small sample sizes or infrequent measurements
@@ -119,7 +119,7 @@ A **control chart** plots your data over time with three key lines:
 
 **Lower Control Limit (LCL)**: Lower boundary of expected variation (typically mean - 3 SD)
 
-**Interpretation**:
+### Interpretation
 - Points within control limits: Common cause variation (expected)
 - Points outside control limits: Special cause variation (investigate)
 - Patterns within limits: May also signal change (see detection rules)
@@ -135,7 +135,7 @@ Different data types need different charts:
 
 **Example**: Monthly average waiting time, quarterly mean length of stay
 
-**Control limits**: 
+#### Control limits
 - Centre line = mean of all observations
 - UCL = mean + 3 × moving range average / 1.128
 - LCL = mean - 3 × moving range average / 1.128
@@ -191,14 +191,16 @@ $$\text{CL} = \bar{x} = \frac{\sum x_i}{n}$$
 **Moving range (MR)**: Absolute difference between consecutive points
 $$\text{MR}_i = |x_i - x_{i-1}|$$
 
-**Average moving range**: 
+#### Average moving range
 $$\overline{\text{MR}} = \frac{\sum \text{MR}_i}{n-1}$$
 
-**Control limits**:
+Sum all moving ranges, then divide by the number of consecutive pairs (n − 1).
+
+#### Control limits
 $$\text{UCL} = \bar{x} + 3 \times \frac{\overline{\text{MR}}}{1.128}$$
 $$\text{LCL} = \bar{x} - 3 \times \frac{\overline{\text{MR}}}{1.128}$$
 
-The constant 1.128 is used to estimate standard deviation from moving range for individuals charts.
+The control limits are set 3 estimated standard deviations above and below the mean. The constant 1.128 converts the average moving range into an estimate of standard deviation for individual measurements.
 
 ### Step 3: Add Control Limits to Chart
 
@@ -237,9 +239,9 @@ These rules help detect changes before they become extreme.
 
 **Scenario**: You're monitoring monthly incident counts at a care home. A new falls prevention program started in month 13. Did it work?
 
-**Data**:
+### Data
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: spc-intervention-data
@@ -280,9 +282,9 @@ data = r.data
 ```
 ::::
 
-**Analysis**:
+### Analysis
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: spc-intervention-chart
@@ -365,9 +367,9 @@ plt.show()
 ```
 ::::
 
-**Interpretation**:
+### Interpretation
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: spc-interpretation
@@ -402,11 +404,11 @@ print(f"Reduction: {centre_line - post_mean:.1f} incidents/month")
 
 Use this decision tree:
 
-**What are you measuring?**
+### What are you measuring?
 
 → **Continuous data** (waiting times, length of stay, scores)
   - One measurement per period? → **I-Chart**
-  - Multiple measurements per period? → **X̄-chart** (beyond this guide, consult Guild)
+  - Multiple measurements per period? → **X̄-chart** (beyond this guide, seek specialist support)
 
 → **Proportions/Percentages** (% meeting target, % with complications)
   - → **P-Chart**
@@ -419,24 +421,24 @@ Use this decision tree:
 
 ## Common Pitfalls
 
-**Pitfall 1: Too few data points**
+### Pitfall 1: Too few data points
 - Need at least 12-20 points to establish reliable limits
 - With fewer points, limits are unstable and unreliable
 
-**Pitfall 2: Recalculating limits too often**
+### Pitfall 2: Recalculating limits too often
 - Control limits should be stable unless process fundamentally changes
 - Don't recalculate every time you add a point, defeats the purpose
 
-**Pitfall 3: Treating every point outside limits as a crisis**
+### Pitfall 3: Treating every point outside limits as a crisis
 - Even with stable process, 0.2% of points will be outside limits by chance
 - Investigate, but don't panic. Confirm the change is real.
 
-**Pitfall 4: Ignoring patterns within limits**
+### Pitfall 4: Ignoring patterns within limits
 - Eight points on one side of centre = shift
 - Six increasing points = trend
 - These signal change even if within limits
 
-**Pitfall 5: Using wrong chart type**
+### Pitfall 5: Using wrong chart type
 - Proportions need P-charts (not I-charts)
 - Counts with varying denominators need U-charts (not C-charts)
 - Wrong chart = wrong limits = wrong conclusions
@@ -445,24 +447,24 @@ Use this decision tree:
 
 For QA purposes, record:
 
-**Data**:
+### Data
 - What you're measuring and why
 - Time period covered
 - Number of observations
 - Any exclusions or data quality issues
 
-**Chart specifications**:
+### Chart specifications
 - Chart type used and why
 - How control limits were calculated
 - What period was used to establish limits
 - Any recalculation of limits and why
 
-**Results**:
+### Results
 - Points outside control limits (when and how many)
 - Patterns detected (shifts, trends)
 - Whether process appears stable or changing
 
-**Decisions**:
+### Decisions
 - What actions were triggered
 - Why you did/didn't investigate specific points
 - Any process changes implemented
@@ -527,7 +529,7 @@ The basic rule (points outside 3-sigma limits) is conservative: it minimizes fal
 
 **Implementation**:
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```r
 # Function to check Rule 4 (8 consecutive points one side)
@@ -615,7 +617,7 @@ if check_rule4(data['value'], centre_line):
 
 **When to use**: Research context or when you have strong prior information.
 
-**CQC practice**: Stick with simple Shewhart-type charts (I, P, C, U) for most applications. Escalate to Guild for CUSUM, EWMA, or Bayesian methods. These advanced methods are referenced in the literature but rarely needed for routine monitoring.
+**CQC practice**: Stick with simple Shewhart-type charts (I, P, C, U) for most applications. Seek specialist support for CUSUM, EWMA, or Bayesian methods. These advanced methods are referenced in the literature but rarely needed for routine monitoring.
 
 **Key principle**: Simple methods consistently applied beat complex methods inconsistently used.
 :::
@@ -655,28 +657,28 @@ A systematic review of SPC in healthcare (Thor et al., 2007) found substantial e
 
 ## Related Approaches
 
-**For different analytical questions**:
+### For different analytical questions
 - **Provider comparison** (not time trends) → Z-scoring (@sec-z-scoring)
 - **Two-group comparison** → t-tests (@sec-t-tests) for before/after analysis
 - **Trending data** → See Example 6 (Ambulance Handovers) for SPC with trends
 - **Policy intervention impact** → See Example 8 (DoLS Trends) for interrupted time series
 
-**For advanced SPC methods**:
-- **CUSUM charts** → See Overthinking box above, or consult Guild
-- **EWMA charts** → Guild consultation for implementation
-- **Bayesian SPC** → Specialist methods, Guild support required
+### For advanced SPC methods
+- **CUSUM charts** → See Overthinking box above, or seek specialist support
+- **EWMA charts** → Seek specialist support for implementation
+- **Bayesian SPC** → Specialist methods, seek specialist support
 
-**For foundational concepts**:
+### For foundational concepts
 - **Understanding variation** → @sec-variation-uncertainty (common vs special cause)
 - **Data quality checks** → @sec-qa-principles
 
-**For complete workflows**:
+### For complete workflows
 - **Care Home Falls** → Example 2 (SPC with intervention)
 - **Ambulance Handovers** → Example 6 (SPC with trend analysis)
 
-## When to Escalate to the Guild
+## When to Seek Specialist Support
 
-Escalate to the Quantitative Guild when:
+Seek specialist support when:
 
 - **Complex chart types needed**: G-charts, T-charts, or other specialized charts beyond basics
 - **Autocorrelation suspected**: Data points are not independent (common in daily/weekly data)
@@ -705,20 +707,20 @@ SPC is essential for monitoring change over time. Master the basics before consi
 
 ## Further Reading
 
-**Internal CQC Resources**:
+### Internal CQC Resources
 
 - **QA Framework**: Documentation standards for SPC analyses
-- **Guild Terms of Reference**: When and how to escalate for specialist support
+- **Getting help**: See @sec-getting-started for how to access support
 - **CQC's SPC Journey** (Internal document): How CQC has adopted SPC methods
 
-**External Guidance**:
+### External Guidance
 
 - **Mohammed MA, Worthington P, Woodall WH** (2008). "Plotting basic control charts: tutorial notes for healthcare practitioners." *Quality and Safety in Health Care*, 17(2), 137-145. (Excellent practical introduction)
 - **Provost LP, Murray SK** (2011). *The Health Care Data Guide: Learning from Data for Improvement*. Jossey-Bass. (Comprehensive textbook)
 - **NHS Improvement SPC guidance**: https://www.england.nhs.uk/statistical-process-control-tool/
 - **AQuA Book** (Chapter on Time Series): Analysing data over time
 
-**Online Resources**:
+### Online Resources
 
 - Understanding SPC: https://www.spcforexcel.com/knowledge/control-chart-basics
 - Detection rules explained: https://www.qimacros.com/control-chart/stability-analysis/

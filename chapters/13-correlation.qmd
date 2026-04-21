@@ -25,7 +25,7 @@ Correlation analysis measures the strength and direction of relationships betwee
 
 Correlation quantifies the relationship between two variables using a single number (the correlation coefficient) that ranges from -1 to +1. It answers: "When one variable changes, does the other tend to change in a predictable way?"
 
-**Key advantages**:
+### Key advantages
 
 - Quantifies relationship strength on a standardised scale (-1 to +1)
 - Identifies direction (positive or negative association)
@@ -33,7 +33,7 @@ Correlation quantifies the relationship between two variables using a single num
 - Helps understand contextual factors affecting outcomes
 - Provides evidence for or against assumed relationships
 
-**What it does NOT do**:
+### What it does NOT do
 
 - Prove causation (correlation ≠ causation, see @sec-correlation-causation)
 - Account for confounding variables (without additional methods)
@@ -106,12 +106,12 @@ Before calculating any correlation, clarify:
 
 ### When NOT to Use Correlation
 
-- **Categorical outcome variables** → Use chi-squared test or other categorical methods (escalate to Guild)
+- **Categorical outcome variables** → Use chi-squared test or other categorical methods (seek specialist support)
 - **Comparing provider performance** → Use z-scoring (@sec-z-scoring) or SPC (@sec-spc-basics)
-- **Establishing causation** → Need experimental or quasi-experimental design (escalate to Guild)
-- **Multiple variables simultaneously** → Need multivariate methods like regression (escalate to Guild)
-- **Time series data** → Autocorrelation issues require specialist methods (escalate to Guild)
-- **Hierarchical data** → Providers nested in regions, patients nested in providers (escalate to Guild)
+- **Establishing causation** → Need experimental or quasi-experimental design (seek specialist support)
+- **Multiple variables simultaneously** → Need multivariate methods like regression (seek specialist support)
+- **Time series data** → Autocorrelation issues require specialist methods (seek specialist support)
+- **Hierarchical data** → Providers nested in regions, patients nested in providers (seek specialist support)
 
 ## Understanding Correlation Coefficients
 
@@ -166,7 +166,7 @@ There are two main correlation methods used at CQC. Choose based on your data ch
 
 ### Pearson's Correlation (r)
 
-**Use when**:
+#### Use when
 
 - Both variables are continuous
 - The relationship is linear (straight-line pattern)
@@ -175,7 +175,7 @@ There are two main correlation methods used at CQC. Choose based on your data ch
 
 **How it works**: Measures the strength of the **linear** relationship. If the relationship is curved, Pearson's r will underestimate the strength.
 
-**CQC examples**:
+#### CQC examples
 
 - GP patient satisfaction scores vs. practice list size
 - Average wait times vs. staffing ratios
@@ -184,7 +184,7 @@ There are two main correlation methods used at CQC. Choose based on your data ch
 
 ### Spearman's Rank Correlation (ρ)
 
-**Use when**:
+#### Use when
 
 - One or both variables are ordinal (e.g., CQC ratings, severity levels)
 - The relationship is monotonic but not necessarily linear (consistent direction but possibly curved)
@@ -193,7 +193,7 @@ There are two main correlation methods used at CQC. Choose based on your data ch
 
 :**How it works**: Ranks all values from lowest to highest, then measures correlation of the ranks. More robust to outliers and doesn't assume linearity, just that the relationship is consistently positive or negative.
 
-**CQC examples**:
+#### CQC examples
 
 - CQC rating (ordinal) vs. deprivation index score
 - Severity categories (ordinal) vs. length of stay
@@ -325,7 +325,7 @@ You're investigating whether deprivation is associated with GP access problems. 
 
 First, create the dataset and visualize the relationship:
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ## R
 
@@ -440,7 +440,7 @@ plt.show()
 
 Since both variables are continuous and the relationship appears linear, we'll use **Pearson's correlation**. We'll also calculate **Spearman's correlation** for comparison (good practice when you're not certain about assumptions).
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ## R
 
@@ -611,7 +611,7 @@ Establishing causation requires more than correlation. You need:
 
 The gold standard is a randomized controlled trial (RCT). For observational data, you need quasi-experimental designs, propensity score matching, instrumental variables, or other advanced methods.
 
-:**For CQC**: If you need to establish causation, escalate to the Guild. Correlation analysis is for exploration and hypothesis generation, not causal inference.
+:**For CQC**: If you need to establish causation, seek specialist support. Correlation analysis is for exploration and hypothesis generation, not causal inference.
 :::
 
 ### Simpson's Paradox
@@ -669,33 +669,33 @@ If you test many correlations, some will be "significant" by chance alone.
 
 For QA purposes, record:
 
-**Method selection**:
+### Method selection
 - Which correlation method used (Pearson or Spearman) and why
 - Justification based on data characteristics (linearity, outliers, distribution)
 
-**Data preparation**:
+### Data preparation
 - How outliers were handled (removed, kept, investigated)
 - Any transformations applied
 - Sample size and any exclusions
 
-**Results**:
+### Results
 - Correlation coefficient with confidence interval
 - p-value and interpretation
 - Scatter plot showing the relationship
 - Sample size
 
-**Interpretation**:
+### Interpretation
 - Strength and direction of relationship in context
 - Practical vs statistical significance
 - Alternative explanations considered
 - Limitations (confounders, causation, generalizability)
 
-**Decisions**:
+### Decisions
 - What follow-up analysis or investigation is needed
-- Whether findings warrant escalation to Guild
+- Whether findings warrant seeking specialist support
 - How results inform CQC work
 
-**Evidence to retain**:
+### Evidence to retain
 - Scatter plots and any diagnostic plots
 - Full correlation output (coefficient, CI, p-value)
 - Decision log for method choice and outlier handling
@@ -710,19 +710,19 @@ When exploring relationships among multiple variables, create a matrix of scatte
 
 ### Partial Correlation
 
-Measures the correlation between X and Y while controlling for Z. Requires multivariate methods, escalate to Guild.
+Measures the correlation between X and Y while controlling for Z. Requires multivariate methods — seek specialist support.
 
 ### Regression Analysis
 
-When you want to predict Y from X, or control for multiple variables simultaneously. More complex than correlation, escalate to Guild unless you have training.
+When you want to predict Y from X, or control for multiple variables simultaneously. More complex than correlation — seek specialist support unless you have training.
 
 ### Chi-Squared Test
 
-For examining association between categorical variables (e.g., CQC rating vs. provider type). Different method from correlation, escalate to Guild if needed.
+For examining association between categorical variables (e.g., CQC rating vs. provider type). Different method from correlation — seek specialist support if needed.
 
-## When to Escalate to the Guild
+## When to Seek Specialist Support
 
-Escalate to the Quantitative Guild when:
+Seek specialist support when:
 
 - **Multiple correlated variables**: You need to understand relationships among 3+ variables simultaneously → Need multivariate methods (multiple regression, factor analysis)
 - **Suspected confounding**: You need to control for other variables → Need multiple regression or propensity score methods
@@ -752,18 +752,18 @@ Escalate to the Quantitative Guild when:
 
 ## Further Reading
 
-**Internal CQC Resources**:
+### Internal CQC Resources
 
 - QA Framework: Documentation standards for analytical decisions
-- Guild Terms of Reference: When to escalate for specialist support
+- Getting help: See @sec-getting-started for how to access support
 
-**External Guidance**:
+### External Guidance
 
 - AQuA Book (Chapter on Exploratory Data Analysis)
 - Altman DG (1991). *Practical Statistics for Medical Research*. Chapman & Hall. (Chapter 11: Correlation and regression)
 - Field A (2013). *Discovering Statistics Using R/SPSS*. Sage. (Chapters on correlation)
 
-**Online Resources**:
+### Online Resources
 
 - Understanding correlation: https://www.statology.org/correlation-coefficient/
 - Correlation vs causation: https://www.tylervigen.com/spurious-correlations (entertaining examples)

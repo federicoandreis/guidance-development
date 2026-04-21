@@ -8,7 +8,7 @@ number-sections: false
 
 ## Overview
 
-Practical statistical guidance for CQC analysts. Methods, worked examples, and decision criteria — with complete R and Python code throughout.
+Practical statistical guidance for CQC analysts. Methods, worked examples, and decision criteria, with complete R and Python code throughout.
 
 This book teaches **judgment, not rules**: every section explains the reasoning behind analytical choices so you can adapt to your specific context.
 
@@ -17,8 +17,8 @@ This book teaches **judgment, not rules**: every section explains the reasoning 
 ::: {.callout-tip icon=false}
 ## Start Here
 
+- **First time here?** → [How to Use This Book](chapters/01-getting-started.qmd) for orientation and reading strategies
 - **Know your question?** → [Quick Reference](quick-reference.qmd) maps analytical problems directly to methods
-- **New to statistical analysis?** → [Getting Started](chapters/01-getting-started.qmd) for orientation and reading strategies
 - **Need QA guidance?** → [QA Principles](chapters/09-qa-principles.qmd) for the quality framework underpinning all analysis
 :::
 
@@ -30,7 +30,7 @@ This book teaches **judgment, not rules**: every section explains the reasoning 
 
 Data types, descriptive statistics, variation, distributions, unusual observations, missing data concepts, statistical inference, and QA principles.
 
-[Getting Started →](chapters/01-getting-started.qmd)
+[View Foundations →](chapters/02-data-types.qmd)
 :::
 
 ::: {.nav-card .nav-card-methods}
@@ -44,7 +44,7 @@ Z-scoring, SPC, t-tests, correlation, outlier detection, and missing data handli
 ::: {.nav-card .nav-card-examples}
 **Part III: Worked Examples**
 
-10 complete analytical workflows using realistic CQC data, from data preparation through to stakeholder reporting.
+Complete analytical workflows using realistic CQC data, from data preparation through to stakeholder reporting.
 
 [View Examples →](examples/README.qmd)
 :::
@@ -54,17 +54,20 @@ Z-scoring, SPC, t-tests, correlation, outlier detection, and missing data handli
 
 ## How to Use This Guidance
 
-1. **Check QA principles** → Understand what documentation and quality standards apply
-2. **Select your method** → Use the [Quick Reference](quick-reference.qmd) to match your question to a method
-3. **Follow the method chapter** → Step-by-step guide with assumptions, pitfalls, and interpretation
-4. **Work through an example** → Complete workflows with realistic data and code
-5. **Document your decisions** → QA templates in each methods chapter
-6. **Escalate when needed** → Each chapter explains when to consult the [Quantitative Guild](mailto:federico.andreis@cqc.org.uk)
+There is no single right way to read this book. How you use it depends on what you need right now:
+
+- **Building confidence?** Work through [Part I: Foundations](chapters/02-data-types.qmd) sequentially, then move to Core Methods and Worked Examples in order. See [How to Use This Book](chapters/01-getting-started.qmd) for a full reading guide.
+- **Under pressure?** Jump straight to the method you need via the [Quick Reference](quick-reference.qmd), or find a similar scenario in Part III: Worked Examples.
+- **Checking your approach?** Go to the relevant method chapter for assumptions, pitfalls, and interpretation guidance. Use the QA templates to document your decisions.
+
+Every chapter uses a three-layer approach: **main text** for essentials, **Rethinking boxes** for context and judgment, and **Overthinking boxes** for edge cases and advanced detail. See [How to Use This Book](chapters/01-getting-started.qmd) for more on this structure.
 
 ---
 
 ::: {.callout-note icon=false}
 ## About This Version
 
-**Version 1.0** (2025) covers 9 foundation chapters, 6 core methods, and 10 worked examples with dual R/Python code. For feedback or suggestions, contact the [Quantitative Guild](mailto:federico.andreis@cqc.org.uk).
+**Version 1.0** (2026) covers 8 foundation chapters, 6 core methods, and 10 worked examples with dual R/Python code. For feedback or suggestions, contact the [Practice Lead for Quantitative Analytics and Statistics](mailto:federico.andreis@cqc.org.uk).
+
+**Saving a page as PDF**: Use your browser's Print function (Ctrl+P / Cmd+P) and choose "Save as PDF". For best results, set margins to "Minimum" and enable "Background graphics".
 :::

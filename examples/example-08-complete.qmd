@@ -1,4 +1,4 @@
----
+﻿---
 title: "Example 8: DoLS Application Trends"
 subtitle: "Analyzing Trends Across Local Authorities"
 number-sections: false
@@ -20,6 +20,18 @@ library(reticulate)
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
 For detailed explanation of SPC methodology, interrupted time series, and step-by-step guidance, see @sec-spc-basics.
+:::
+
+::: {.callout-note icon=false}
+## 💻 Running This Example
+
+These examples require R or Python. If you are not yet set up with a coding environment:
+
+- **Microsoft Fabric**: CQC's primary analytics platform — contact your function's data engineer for access
+- **RSS training**: Introductory R and Python courses available via CQC's learning platform
+- **Quant Clinic**: Drop-in sessions for hands-on help with code and methods — see the [Guild Teams channel](https://teams.microsoft.com) for upcoming dates
+
+Both R and Python versions are provided throughout. Use whichever you are more comfortable with.
 :::
 
 ---
@@ -81,7 +93,7 @@ By completing this example, you will learn how to:
 
 ## Step 1: Data Preparation
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -135,7 +147,7 @@ print(f"Mean rate per 10k: {dols_data['rate_per_10k'].mean():.1f}")
 
 **Purpose**: Show overall trend and policy change impact.
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -197,7 +209,7 @@ plt.show()
 
 **Purpose**: Quantify the policy change effect using interrupted time series analysis.
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -255,7 +267,7 @@ print(f"p-value: {p_value:.4f}")
 
 **Purpose**: Find authorities with unusual patterns.
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 

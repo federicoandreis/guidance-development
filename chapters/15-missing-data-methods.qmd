@@ -26,14 +26,14 @@ You have missing data in your analysis and need to decide how to handle it. Miss
 
 Handling missing data means making informed decisions about how to proceed with analysis when you don't have complete information. The goal is to minimise bias and properly represent uncertainty.
 
-**What good missing data handling does**:
+### What good missing data handling does
 - **Investigates** why data is missing (the most critical step)
 - **Visualizes** patterns of missingness to understand the problem
 - **Chooses** an appropriate approach based on the missingness mechanism
 - **Documents** assumptions and limitations transparently
 - **Tests** sensitivity of conclusions to different approaches
 
-**What it does NOT do**:
+### What it does NOT do
 - Magically recover the true missing values
 - Eliminate bias if data is Missing Not at Random (MNAR)
 - Replace good data collection practices
@@ -91,12 +91,12 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 
 **Purpose**: Understand how much data is missing and where.
 
-**Calculate missingness**:
+#### Calculate missingness
 - Overall: What proportion of all values are missing?
 - By variable: Which variables have the most missing data?
 - By case: How many variables are missing per observation?
 
-**Visualize patterns with upset plots** (highly recommended):
+#### Visualize patterns with upset plots (highly recommended)
 - Shows which variables are missing together
 - Reveals patterns you'd miss with simple percentages
 - Example: If patient experience and staffing are always missing together, that suggests a common cause
@@ -107,7 +107,7 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 
 **This is the most critical step.** Don't skip it.
 
-**Ask these questions**:
+#### Ask these questions
 
 1. **Is missingness related to observed characteristics?**
    - Do small providers have more missing data?
@@ -125,20 +125,20 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
    - Deliberate non-reporting (often MNAR)
    - Not applicable (structural zeros)
 
-**Test missingness patterns**:
+#### Test missingness patterns
 - Create a missingness indicator (missing vs not missing)
 - Compare characteristics of complete vs incomplete cases
 - Use chi-square tests for categorical variables
 - Use t-tests for continuous variables
 
-**Interpret results**:
+#### Interpret results
 - If missingness is unrelated to anything → likely MCAR (rare)
 - If missingness is related to observed variables but not outcome → likely MAR
 - If missingness is related to the outcome itself → likely MNAR (problematic)
 
 ### Step 3: Choose Your Approach
 
-**Decision tree**:
+#### Decision tree
 
 **If missingness is <5% and appears random (MCAR)**:
 → **Complete case analysis** is fine. Document and move on.
@@ -149,27 +149,27 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 
 **If missingness is 20-40% and MAR**:
 → **Sensitivity analysis** comparing complete case to simple imputation
-→ Consider consulting Guild for multiple imputation
+→ Consider seeking specialist support for multiple imputation
 
 **If missingness is >40% or MNAR suspected**:
-→ **Escalate to Guild immediately**
+→ **Seek specialist support immediately**
 → May not be possible to proceed without strong assumptions
 
-**Practical approaches for most CQC work**:
+#### Practical approaches for most CQC work
 
-**Complete case analysis** (most common):
+#### Complete case analysis (most common)
 - Analyse only cases with complete data
 - Simple, transparent, defensible
 - Document how many cases excluded and why
 - Check if excluded cases differ systematically
 
-**Sensitivity analysis**:
+#### Sensitivity analysis
 - Run analysis with complete cases
 - Run again with simple imputation (mean, median, or mode)
 - Compare results: if similar, findings are robust
 - If different, investigate why and report both
 
-**Simple imputation** (use cautiously):
+#### Simple imputation (use cautiously)
 - Replace missing with mean (continuous) or mode (categorical)
 - Quick but underestimates uncertainty
 - Only use if missingness is low and MAR
@@ -177,7 +177,7 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 
 ### Step 4: Document Your Approach
 
-**Required documentation** (for QA):
+#### Required documentation (for QA)
 
 1. **Amount of missingness**: Percentage by variable and overall
 2. **Pattern of missingness**: Which variables/cases affected
@@ -185,25 +185,25 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 4. **Mechanism assumption**: MCAR, MAR, or MNAR and justification
 5. **Approach chosen**: Complete case, imputation, or other
 6. **Sensitivity check**: How results change with different approaches
-7. **Limitations**: What assumptions you're making and their implications
+7. ### Limitations What assumptions you're making and their implications
 
-**Example documentation**:
+#### Example documentation
 > "Patient experience data was missing for 87 of 542 GP practices (16%). Missingness was higher in small practices (χ² = 12.3, p = 0.002) and deprived areas (t = -3.1, p = 0.002), but not related to other quality indicators, suggesting MAR. Complete case analysis was used (N=455), excluding practices with missing data. Sensitivity analysis using mean imputation produced similar results (difference in effect estimate: 0.2 points, 95% CI: [-0.1, 0.5]), suggesting findings are robust. Limitation: If small, deprived practices with poor patient experience were less likely to respond (MNAR), our estimates may be optimistic."
 
 ### Step 5: Conduct Sensitivity Analysis
 
 **Purpose**: Test if conclusions change under different assumptions.
 
-**Simple sensitivity check**:
+#### Simple sensitivity check
 1. Run analysis with complete cases (exclude missing data)
 2. Run analysis with simple imputation (e.g., mean imputation)
 3. Compare results
 
-**Interpret**:
+#### Interpret
 - If results are similar → findings are robust to missing data handling
 - If results differ substantially → missingness is affecting conclusions, investigate further or escalate
 
-**What to compare**:
+#### What to compare
 - Point estimates (coefficients, means, etc.)
 - Confidence intervals
 - p-values and significance
@@ -220,9 +220,9 @@ The worked examples in this chapter use pseudo-randomly generated data to illust
 
 ### Investigation Phase
 
-**Step 1: Visualize missingness with upset plot**
+#### Step 1: Visualize missingness with upset plot
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| echo: false
@@ -314,9 +314,9 @@ plt.show()
 
 **Insight from upset plot**: Staffing and satisfaction are often missing together (both missing in 45 homes), suggesting they share a common cause, likely small home size.
 
-**Step 2: Test missingness mechanism**
+#### Step 2: Test missingness mechanism
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 # Check if missingness related to home size
@@ -350,9 +350,9 @@ print(f"t-test: t = {t:.2f}, p = {p:.4f}")
 
 ### Analysis Phase
 
-**Step 3: Complete case analysis**
+#### Step 3: Complete case analysis
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 # Complete case analysis
@@ -382,9 +382,9 @@ print(f"Cases excluded: {len(care_homes) - len(complete_data)}")
 
 **Result**: N=370 homes (82% of sample). Staffing coefficient = 1.2 (p < 0.01).
 
-**Step 4: Sensitivity analysis with mean imputation**
+#### Step 4: Sensitivity analysis with mean imputation
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 # Mean imputation
@@ -431,7 +431,7 @@ print("Difference:", f"{abs(model_complete.coef_[0] - model_imputed.coef_[0]):.3
 
 **Decision**: Use complete case analysis as primary approach, report sensitivity analysis.
 
-**Documentation**:
+#### Documentation
 > "Missing data: staffing (12%), satisfaction (18%), inspection (8%). Upset plot revealed staffing and satisfaction often missing together. Investigation showed missingness related to home size (smaller homes more likely to have missing data, t = -8.3, p < 0.001) but not to quality metrics, suggesting MAR. Complete case analysis used (N=370, 82% of sample). Sensitivity analysis with mean imputation produced similar results (staffing coefficient: 1.20 vs 1.15, difference = 0.05), suggesting findings robust to missing data handling. Limitation: If small homes with poor staffing were systematically less likely to report (MNAR), effect may be underestimated."
 
 **Key lesson**: Investigation showed why data was missing (small homes), which informed our approach and limitations statement.
@@ -441,7 +441,7 @@ print("Difference:", f"{abs(model_complete.coef_[0] - model_imputed.coef_[0]):.3
 
 CQC's experience with missing data varies by data source:
 
-**Local Authority assessments**: Historically high missingness in some metrics. Guild developed MI approaches for key indicators, but found that:
+**Local Authority assessments**: Historically high missingness in some metrics. Specialist MI approaches were developed for key indicators, but found that:
 - Imputation models were complex and hard to explain
 - Stakeholders questioned imputed values
 - Complete case analysis with clear caveats often more defensible
@@ -466,6 +466,8 @@ Don't use advanced methods just because they exist. Transparency and defensibili
 
 For M imputations, the pooled estimate is:
 $$\bar{Q} = \frac{1}{M}\sum_{i=1}^M \hat{Q}_i$$
+
+Average the estimates from all M imputed datasets.
 
 Total variance combines within-imputation variance ($\bar{U}$) and between-imputation variance ($B$):
 $$T = \bar{U} + \left(1 + \frac{1}{M}\right)B$$
@@ -532,57 +534,57 @@ If missingness is related to the unobserved values (MNAR), standard methods prod
 
 ## Related Approaches
 
-**For foundational concepts**:
+### For foundational concepts
 - **Missing data mechanisms** → @sec-missing-data-foundations (MCAR, MAR, MNAR definitions)
 - **Data quality checks** → @sec-qa-principles (detecting and documenting issues)
 - **Uncertainty and variation** → @sec-variation-uncertainty (understanding what we don't know)
 
-**For different analytical contexts**:
+### For different analytical contexts
 - **Small amounts of missingness** (<5%) → Complete case analysis usually fine
 - **Moderate missingness** (5-20%) → Complete case + sensitivity analysis
-- **Substantial missingness** (>20%) → Consult Guild before proceeding
+- **Substantial missingness** (>20%) → Seek specialist support before proceeding
 - **MNAR suspected** → Escalate immediately, may not be solvable
 
-**For advanced methods** (when simple approaches insufficient):
-- **Multiple Imputation** → See Overthinking box, or consult Guild
-- **Maximum Likelihood** → Guild consultation for implementation
-- **Inverse Probability Weighting** → Guild consultation for specialized cases
+### For advanced methods (when simple approaches insufficient)
+- **Multiple Imputation** → See Overthinking box, or seek specialist support
+- **Maximum Likelihood** → Seek specialist support for implementation
+- **Inverse Probability Weighting** → Seek specialist support for specialized cases
 
-**For related data issues**:
+### For related data issues
 - **Outliers and extreme values** → @sec-unusual-observations
-- **Measurement error** → Guild consultation
-- **Data linkage problems** → Guild consultation
+- **Measurement error** → Seek specialist support
+- **Data linkage problems** → Seek specialist support
 
 ## Documenting Your Analysis
 
 For QA purposes, record:
 
-**Investigation**:
+### Investigation
 - Amount of missingness (overall and by variable)
 - Upset plot or missingness pattern visualization
 - Tests of missingness mechanism (which variables predict missingness?)
 - Substantive reasoning about why data is missing
 - Conclusion about mechanism (MCAR, MAR, or MNAR)
 
-**Approach**:
+### Approach
 - Method chosen (complete case, simple imputation, sensitivity analysis)
 - Justification for choice
 - How many cases excluded (if complete case)
 - What values used (if imputation)
 
-**Results**:
+### Results
 - Primary analysis results
 - Sensitivity analysis results
 - Comparison showing robustness (or lack thereof)
 - Interpretation accounting for missing data
 
-**Limitations**:
+### Limitations
 - What assumptions you're making
 - What could go wrong if assumptions fail
 - How this affects interpretation
 - What you can't conclude due to missingness
 
-**Evidence to retain**:
+### Evidence to retain
 - Upset plot or missingness visualization
 - Statistical tests of missingness patterns
 - Complete case and sensitivity analysis outputs
@@ -592,33 +594,33 @@ See @sec-qa-principles for full QA documentation requirements and templates.
 
 ## Common Pitfalls
 
-**Pitfall 1: Skipping the investigation**
+### Pitfall 1: Skipping the investigation
 
 The biggest mistake is jumping straight to "how do I handle this?" without asking "why is this missing?" Always investigate the missingness pattern first. Use upset plots and statistical tests to understand what's happening.
 
-**Pitfall 2: Assuming MAR without evidence**
+### Pitfall 2: Assuming MAR without evidence
 
 Don't assume data is Missing At Random just because it's convenient. If poor performers systematically don't report (MNAR), no amount of statistical sophistication will fix the bias. Be honest about what you can and can't know.
 
-**Pitfall 3: Over-complicating the solution**
+### Pitfall 3: Over-complicating the solution
 
 Most CQC analyses can use complete case analysis with clear documentation. Don't use complex imputation methods just because they exist. Simple, transparent approaches are usually more defensible.
 
-**Pitfall 4: Ignoring the excluded cases**
+### Pitfall 4: Ignoring the excluded cases
 
 If you use complete case analysis, check whether excluded cases differ systematically from included cases. If they do, this is a limitation you must acknowledge.
 
-**Pitfall 5: Not testing sensitivity**
+### Pitfall 5: Not testing sensitivity
 
 Always check if your conclusions change under different assumptions. If results are very sensitive to how you handle missing data, that's important information for stakeholders.
 
-**Pitfall 6: Poor documentation**
+### Pitfall 6: Poor documentation
 
 Missing data handling must be transparent. Document: how much is missing, why you think it's missing, what you did about it, and what limitations remain. Stakeholders will ask, be ready.
 
-## When to Escalate to the Guild
+## When to Seek Specialist Support
 
-Escalate to the Quantitative Guild when:
+Seek specialist support when:
 
 - **Substantial missing data**: >20% missing and analysis is high-stakes
 - **MNAR suspected**: Missingness likely related to unobserved values
@@ -643,24 +645,24 @@ Escalate to the Quantitative Guild when:
 7. **Be honest about MNAR**: if poor performers don't report, no statistical method fixes this
 8. **Prevention beats cure**: better data collection is the real solution
 
-Missing data handling is about managing uncertainty transparently, not eliminating it. When in doubt, consult the Guild.
+Missing data handling is about managing uncertainty transparently, not eliminating it. When in doubt, seek specialist support.
 :::
 
 ## Further Reading
 
-**Internal CQC Resources**:
+### Internal CQC Resources
 
 - **QA Framework**: Documentation standards for analyses with missing data
-- **Guild Terms of Reference**: When and how to escalate for specialist support
+- **Getting help**: See @sec-getting-started for how to access support
 
-**External Guidance**:
+### External Guidance
 
 - **Little RJA, Rubin DB** (2019). *Statistical Analysis with Missing Data* (3rd ed.). Wiley. (The definitive textbook, technical but comprehensive)
 - **Van Buuren S** (2018). *Flexible Imputation of Missing Data* (2nd ed.). CRC Press. (Practical guide to multiple imputation)
 - **Sterne JAC et al.** (2009). "Multiple imputation for missing data in epidemiological and clinical research." *BMJ*, 338:b2393. (Accessible introduction)
 - **AQuA Book** (Chapter on Data Quality): Handling missing data in government analysis
 
-**Online Resources**:
+### Online Resources
 
 - Understanding MCAR, MAR, MNAR: https://stefvanbuuren.name/fimd/sec-MCAR.html
 - Multiple imputation in R (mice package): https://www.gerkovink.com/miceVignettes/

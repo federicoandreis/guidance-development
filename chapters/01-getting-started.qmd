@@ -1,37 +1,49 @@
 ---
-title: "Getting Started"
+title: "How to Use This Book"
 ---
 
-## What This Guidance Is {#sec-getting-started}
+## What This Guidance Is NOT {#sec-getting-started}
 
-This book provides practical statistical guidance for CQC analysts working under deadline pressure. Use it to:
+This is not a statistics textbook. It will not teach you statistical theory from first principles — refer to external courses for that. It will not cover cutting-edge methods requiring specialist expertise — seek specialist support for those. It will not provide software-specific tutorials — we have separate technical guides for that.
+
+Most importantly, this guidance does not provide mechanical rules that eliminate professional judgment. Statistical decisions in regulatory context require you to balance technical correctness, operational feasibility, and stakeholder trust. This guidance helps you make those judgments; it doesn't make them for you.
+
+## What This Guidance Is
+
+This book provides practical statistical guidance for CQC analysts, whether you are working under deadline pressure or looking to build confidence in quantitative techniques. Use it to:
 
 -   **Select appropriate methods** for regulatory analytical questions
 -   **Execute standard methods correctly** with step-by-step procedures
 -   **Recognise edge cases** that need specialist input
--   **Document decisions** to meet QA framework requirements
+-   **Document decisions** to meet QA framework requirements.
 
 This guidance serves as both a quick reference when you need an answer now, and a systematic learning pathway when you have time to build capability.
 
-## What This Guidance Is NOT
-
-This is not a statistics textbook. It will not teach you statistical theory from first principles, refer to external courses for that. It will not cover cutting-edge methods requiring specialist expertise, consult the Guild for those. It will not provide software-specific tutorials, we have separate technical guides for that.
-
-Most importantly, this guidance does not provide mechanical rules that eliminate professional judgment. Statistical decisions in regulatory context require you to balance technical correctness, operational feasibility, and stakeholder trust. This guidance helps you make those judgments, it doesn't make them for you.
-
 ## How to Use This Book
+
+### The Three-Layer Approach
+
+Each chapter uses three layers of depth:
+
+**Main text**: The minimum content needed to execute the method correctly for standard cases. If you only read the main text, you can apply the method.
+
+**Rethinking boxes**: Context that aids professional judgment. Why CQC uses this method, how it fits our regulatory context, what trade-offs we've accepted. Read these to understand the "why" behind the "how".
+
+**Overthinking boxes**: Technical details for edge cases and assumption violations. When standard approaches fail, what advanced methods exist, and when to seek specialist support. Read these when you encounter problems or need deeper understanding.
+
+You can skip boxes and still use the method. The main text is complete on its own.
 
 ### Three Ways to Read This Guidance
 
-**Strategy 1: Systematic learner** (New analyst, limited stats background)
+**Strategy 1: Systematic learner** (building confidence in statistical methods)
 
-Start with the building blocks (Sections 2-5) to establish foundations. Read them sequentially, including the "Rethinking" boxes. Then move to methods sections as your work requires them. You can skip the "Overthinking" boxes initially, return to them when you encounter problems or feel you are ready to advance your understanding.
+Start with Part I: Foundations to establish the building blocks. Read chapters sequentially, including the "Rethinking" boxes. Then move to Part II: Core Methods as your work requires, and use Part III: Worked Examples to see full analytical workflows. You can skip the "Overthinking" boxes initially — return to them when you encounter problems or feel ready to go deeper.
 
-**Strategy 2: Quick reference** (Experienced analyst, confident with basics)
+**Strategy 2: Jump right in** (experienced analyst, need an answer now)
 
-Jump directly to the method you need using the Quick Reference page or table of contents. Skim the main text to refresh your memory, then focus on the worked example. Check the "Overthinking" boxes if you hit edge cases.
+Go directly to the method you need using the [Quick Reference](../quick-reference.qmd) or table of contents. Skim the main text to refresh your memory, then focus on the worked example. Check the "Overthinking" boxes if you hit edge cases. Refer back to Part I: Foundations if you need to revisit a concept.
 
-**Strategy 3: Deep dive** (Practice Lead, Guild member, specialist)
+**Strategy 3: Deep dive** (technical expert, Practice Lead, specialist)
 
 Read comprehensively including all "Overthinking" boxes. Use "Rethinking" boxes to understand CQC's organisational context and why we've made specific methodological choices. Consider how consultation patterns might inform updates.
 
@@ -39,25 +51,15 @@ All three strategies are equally valid. Use the approach that matches your curre
 
 ### Understanding the Structure
 
-**Building blocks** (Chapters 3-5): Foundational concepts referenced throughout the methods sections. Read these first if you're new to statistical analysis or need a refresher.
+**Part I: Foundations**: Data types, descriptive statistics, variation, distributions, unusual observations, missing data concepts, statistical inference, and QA principles. Read these first if you're new to statistical analysis or need a refresher.
 
-**Methods sections** (Sections 6+): Specific techniques for specific problems. Each section is independently usable, you don't need to read them in order.
+**Part II: Core Methods**: Specific techniques for specific problems. Each chapter is independently usable — you don't need to read them in order. Methods chapters may reference foundation chapters, but not each other.
 
-**Quick Reference**: Fastest entry point. Maps common analytical problems directly to relevant sections.
+**Part III: Worked Examples**: Complete analytical workflows using realistic CQC data, from data preparation through to stakeholder reporting.
+
+**Quick Reference**: The fastest entry point. Maps common analytical problems directly to relevant chapters.
 
 **Appendices**: Glossary of terms and list of resources for further learning.
-
-### The Three-Layer Approach
-
-Each methods section uses three layers of depth:
-
-**Main text**: Minimum content needed to execute the method correctly for standard cases. If you only read this, you can apply the method.
-
-**Rethinking boxes**: Context that aids professional judgment. Why CQC uses this method, how it fits our regulatory context, what trade-offs we've accepted. Read these to understand the "why" behind the "how".
-
-**Overthinking boxes**: Technical details for edge cases and assumption violations. When standard approaches fail, when to escalate to the Guild, what advanced methods exist. Read these when you encounter problems or need deeper understanding.
-
-You can skip boxes and still use the method. The main text is complete on its own.
 
 ## Finding the Right Section
 
@@ -79,27 +81,27 @@ The Quick Reference page (immediately after this section) maps common analytical
 
 Different methods work for different data types. If you're unsure whether your data is continuous, discrete, or categorical, read @sec-data-types first. It includes a table mapping data types to appropriate methods.
 
-## When to Seek Guild Help
+## When to Seek Specialist Support
 
-This guidance covers standard cases. Seek Guild consultation when:
+This guidance covers standard cases. Seek specialist support when:
 
--   **Your situation doesn't match the examples**: The worked examples use typical CQC indicators. If your data structure is fundamentally different, check with the Guild.
+-   **Your situation doesn't match the examples**: The worked examples use typical CQC indicators. If your data structure is fundamentally different, ask for advice.
 
--   **Assumptions are violated**: Each method section lists key assumptions. If yours are violated and the "Overthinking" boxes don't address your specific case, escalate.
+-   **Assumptions are violated**: Each method chapter lists key assumptions. If yours are violated and the "Overthinking" boxes don't address your specific case, escalate.
 
--   **Results seem wrong**: If you've followed the steps but results don't make sense, don't just report them. Check with the Guild.
+-   **Results seem wrong**: If you've followed the steps but results don't make sense, don't just report them — ask for a second opinion.
 
--   **Stakes are high**: If your analysis will inform major regulatory decisions or public-facing reports, have the Guild review your approach.
+-   **Stakes are high**: If your analysis will inform major regulatory decisions or public-facing reports, have a specialist review your approach.
 
 -   **You're doing something new**: If you're the first person at CQC to analyse this type of data or answer this type of question, consult before finalising your approach.
 
 ### How to Get Help
 
-**Champion Hours**: Bi-weekly drop-in sessions for statistical support. Bring your data and your question.
+The **Quantitative Analytics and Statistics Guild** offers a space where analysts can ask questions, share approaches, and learn from each other — through Teams channels, drop-in sessions, and wider networking. It is a community, not a delivery team.
 
-**Quantitative Analytics Guild**: Community of practice for quantitative analysts and statisticians. Post questions, share approaches, learn from others.
+**Guild schedule**: The Quant Clinic (drop-in) and monthly Guild meeting dates are posted in the [Guild Teams channel](https://teams.microsoft.com). <!-- TODO: replace with direct channel link -->
 
-**Practice Lead for Quantitative Analytics & Statistics**: For complex methodological questions or when you need formal review.
+Ideally, each function will have one or two technical experts you can refer to for day-to-day statistical questions. If no such expert is available in your function, or for complex methodological questions requiring formal review, escalate to the **Practice Lead for Quantitative Analytics and Statistics**.
 
 Don't wait until you're stuck. Early consultation prevents wasted effort.
 
@@ -120,7 +122,7 @@ The QA framework isn't bureaucracy—it's how we ensure our analysis is defensib
 
 **Why this matters**: Any individual analysis can be affected by: - Data quality issues specific to that time period or source - Analytical choices (researcher degrees of freedom) - Chance patterns in that particular dataset - Unmeasured confounding factors
 
-**CQC practice for building robust evidence**:
+### CQC practice for building robust evidence
 
 1.  **Multiple time periods**: Does the pattern hold across different months/quarters/years? Or is it specific to one period?
 
@@ -136,7 +138,7 @@ The QA framework isn't bureaucracy—it's how we ensure our analysis is defensib
 
 **Key principle**: Replication and consistency across multiple lines of evidence provide stronger support for conclusions than statistical significance in a single analysis. Use statistics to guide investigation, not as definitive proof.
 
-**When to escalate**: If different lines of evidence contradict each other, or if you're unsure how to weight different sources of evidence, consult the Guild.
+**When to escalate**: If different lines of evidence contradict each other, or if you're unsure how to weight different sources of evidence, seek specialist support.
 
 ## A Note on Professional Judgment
 
@@ -149,7 +151,7 @@ Statistical analysis in regulatory context is not mechanical. You will face situ
 
 This guidance helps you navigate these trade-offs by explaining CQC's reasoning, showing worked examples in regulatory context, and being explicit about what we don't know.
 
-When in doubt, document your reasoning and consult the Guild. Good judgment comes from experience, and experience comes from making decisions and learning from them.
+When in doubt, document your reasoning and seek specialist support. Good judgment comes from experience, and experience comes from making decisions and learning from them.
 
 ## Key Takeaways
 
@@ -162,7 +164,7 @@ When in doubt, document your reasoning and consult the Guild. Good judgment come
 4. **Methods sections are independent**: Read them in any order based on your analytical needs
 5. **Professional judgment is essential**: Statistics provides tools, you provide context and decision-making
 6. **Documentation is non-negotiable**: Every analysis requires clear QA documentation
-7. **Know when to escalate**: The Guild exists to support complex cases, not replace your judgment
+7. **Know when to seek support**: The Guild community and your function's technical experts are there to help — use them early, not as a last resort
 
 This guidance supports your work but doesn't replace statistical thinking, regulatory expertise, or consultation when needed.
 :::

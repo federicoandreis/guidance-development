@@ -7,6 +7,12 @@ number-sections: false
 
 This page provides the fastest route to the right method for experienced analysts. If you're new to statistical analysis, start with [@sec-getting-started].
 
+::: {.callout-tip icon=false}
+## Getting Help
+
+Not sure which method applies, or hitting an edge case? The **Quantitative Analytics and Statistics Guild** is your first port of call — Teams channels, monthly meetings, and Quant Clinic drop-in sessions. See [When to Seek Specialist Support](#when-to-seek-specialist-support) below, or go to @sec-getting-started for fuller guidance.
+:::
+
 ## Common Analyst Scenarios
 
 **Jump directly to the section you need:**
@@ -57,15 +63,10 @@ This page provides the fastest route to the right method for experienced analyst
 | **Proportions** | ≥100 total | vs benchmark | Z-scoring | [@sec-z-scoring] |
 | **Proportions** | Time series | Trend detection | SPC (P-chart) | [@sec-spc-basics] |
 | **Binary** | ≥100 total | Two groups | t-test on proportions | [@sec-t-tests] |
-| **Ordinal** | Any | Any | Consult Guild (specialized methods) | - |
-| **Nominal** | Any | Group comparisons | Consult Guild (Chi-squared, etc.) | - |
+| **Ordinal** | Any | Any | Seek specialist support (specialized methods) | - |
+| **Nominal** | Any | Group comparisons | Seek specialist support (Chi-squared, etc.) | - |
 
-**Notes:**
-- Sample sizes are guidelines, not rigid thresholds. See individual method chapters for detailed requirements.
-- For small samples (<30), consult [@sec-statistical-inference] and consider Guild support.
-- For very small numbers (<5 events), see Overthinking boxes in method chapters.
-
-**See [@sec-data-types] for detailed guidance on identifying and working with different data types.**
+**Notes: Sample sizes are guidelines, not rigid thresholds. See individual method chapters for detailed requirements.**
 
 ## Common Workflows
 
@@ -105,48 +106,28 @@ This page provides the fastest route to the right method for experienced analyst
 :::
 :::
 
-## Quick Decision Tree
+## At a Glance: From Question to Analysis
 
-::: {.decision-tree}
-**Step 1: What are you comparing?**
+The typical analytical workflow has three stages. You don't always need every step, but this is the general shape:
 
-- **Single value vs benchmark** → Z-scoring [@sec-z-scoring]
-- **Many values vs benchmark** → Z-scoring [@sec-z-scoring]
-- **Time series (one provider over time)** → SPC [@sec-spc-basics]
-- **Two groups** → t-test [@sec-t-tests]
-- **Two variables (relationship)** → Correlation [@sec-correlation]
-- **Nothing (just investigating unusual values)** → Outlier Methods [@sec-outlier-methods]
+**1. Start with your question** — what are you trying to find out?
 
-**Step 2: Check your data** (do this BEFORE analysis)
+| I'm comparing... | Method |
+|---|---|
+| One or many providers vs benchmark | Z-scoring [@sec-z-scoring] |
+| Performance over time | SPC [@sec-spc-basics] |
+| Two groups | t-test [@sec-t-tests] |
+| Two variables (relationship) | Correlation [@sec-correlation] |
+| Investigating unusual values | Outlier Methods [@sec-outlier-methods] |
 
-1. **Data type** → [@sec-data-types] (continuous, counts, proportions?)
-2. **Quality checks** → [@sec-qa-principles] (errors, outliers, missing data)
-3. **Distribution** → [@sec-describing-data], [@sec-distribution-shape] (shape, skewness)
-4. **Sample size** → [@sec-statistical-inference] (enough data for method?)
+**2. Check your data** — before running any analysis, understand what you're working with.
 
-**Step 3: Run analysis**
+Know your data type ([@sec-data-types]), check for quality issues ([@sec-qa-principles]), look at the distribution ([@sec-describing-data], [@sec-distribution-shape]), and assess whether you have enough data ([@sec-statistical-inference]). Check for unusual observations ([@sec-unusual-observations]) and assess missing data ([@sec-missing-data-foundations]).
 
-- Go to relevant method chapter (see table above)
-- Follow step-by-step guide
-- Check assumptions
-- Interpret in context
+**3. Run, interpret, document** — follow the method chapter step-by-step, check assumptions, interpret results in context, and record your methods, assumptions, limitations, and interpretation for QA ([@sec-qa-principles]).
 
-**Step 4: Document** → [@sec-qa-principles]
-
-- Methods used and why
-- Assumptions checked
-- Limitations and caveats
-- Interpretation for decision-makers
-
-**Throughout**: Check for unusual observations ([@sec-unusual-observations]), assess missing data ([@sec-missing-data-foundations]), verify assumptions, document decisions.
-:::
-
-## Escalate to Guild When
+## When to Seek Specialist Support
 
 - Designing new indicators | Complex missing data | Methodology challenged | Method unclear | Need specialist support
 
-**Contact**: [Quantitative Analytics and Statistics Practice Lead](mailto:federico.andreis@cqc.org.uk)
-
----
-
-**Key principles**: Check data quality first • Match method to question • Report completely (n, effect size, CI, limits) • Document decisions • Statistical ≠ practical significance
+Raise questions through the **Guild community** (Teams channels, drop-in sessions) or consult your function's technical expert. For complex or high-stakes cases, escalate to the **[Practice Lead for Quantitative Analytics and Statistics](mailto:federico.andreis@cqc.org.uk)**.

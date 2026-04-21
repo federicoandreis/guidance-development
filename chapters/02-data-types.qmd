@@ -35,7 +35,7 @@ Quantitative data represents measurable quantities. You can perform arithmetic o
 
 **Key characteristic**: You can always imagine a value between any two measurements. Between 1.5 and 1.6 metres, there's 1.55 metres. Between 1.55 and 1.56, there's 1.555 metres. And so on.
 
-**CQC examples**:
+#### CQC examples
 
 - Waiting times (e.g., 2.5 hours, 3.75 hours)
 - Length of stay (e.g., 4.2 days, 7.8 days)
@@ -51,7 +51,7 @@ Quantitative data represents measurable quantities. You can perform arithmetic o
 
 **Key characteristic**: You cannot have values between the possible measurements. You can have 5 incidents or 6 incidents, but not 5.3 incidents.
 
-**CQC examples**:
+#### CQC examples
 
 - Number of incidents (e.g., 0, 1, 2, 3 incidents)
 - Number of complaints (e.g., 12 complaints this month)
@@ -74,7 +74,7 @@ Qualitative data represents categories, groups, or qualities. You cannot perform
 
 **Key characteristic**: Categories are different from each other, but there's no inherent ordering. "North East" isn't "more" or "less" than "South West".
 
-**CQC examples**:
+#### CQC examples
 
 - Provider type (hospital, care home, GP practice)
 - Geographical region (North East, South West, London)
@@ -87,7 +87,7 @@ Qualitative data represents categories, groups, or qualities. You cannot perform
 
 **Key characteristic**: Categories have a meaningful order, but the distances between categories aren't necessarily equal.
 
-**CQC examples**:
+#### CQC examples
 
 - CQC ratings (Inadequate < Requires Improvement < Good < Outstanding)
 - Severity levels (Low < Medium < High)
@@ -183,7 +183,7 @@ The "right" data type is the one that best serves your analytical purpose while 
 
 **Rates vs counts**: Incident rates (per 1,000 bed days) are quantitative, continuous, but they're calculated from discrete counts. When counts are very small (e.g., 0-5 incidents), the rate might not behave like continuous data. Some methods handle this better than others.
 
-**When to escalate**: If your data doesn't clearly fit one type, or if you're unsure whether a boundary case matters for your chosen method, consult the Guild. These edge cases often require specialist judgment about which approximation is most defensible.
+**When to escalate**: If your data doesn't clearly fit one type, or if you're unsure whether a boundary case matters for your chosen method, seek specialist support. These edge cases often require specialist judgment about which approximation is most defensible.
 :::
 
 ## Checking Your Data Type

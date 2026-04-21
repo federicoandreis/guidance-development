@@ -1,3 +1,8 @@
+# Planning files
+task_plan.md
+findings.md
+progress.md
+
 # Documentation and development files
 docs/
 code/
@@ -29,9 +34,12 @@ __pycache__/
 *.tmp
 *.temp
 .cache/
+sample-version/
 
 # IDE files
 .vscode/
 .idea/
 *.sublime-*
 /.quarto/
+
+**/*.quarto_ipynb

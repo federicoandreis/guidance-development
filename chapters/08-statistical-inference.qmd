@@ -59,7 +59,7 @@ Most CQC analysis is **exploratory**: we use data to understand patterns and gui
 - Plausible range: 38 to 52
 - We're 95% confident the true rate is between 38 and 52
 
-**What determines CI width**:
+#### What determines CI width
 - **Sample size**: Larger sample → narrower CI (more precise)
 - **Variability**: Higher SD → wider CI (more uncertainty)
 - **Confidence level**: 99% CI wider than 95% CI
@@ -90,7 +90,7 @@ Examples: This care home's true rate = national average; the intervention made n
 
 **Example**: p = 0.03 means "If the provider's true rate equals the national average, there's only a 3% chance we'd see a difference this large from random variation alone."
 
-**What p-values are NOT**:
+#### What p-values are NOT
 - NOT the probability the null hypothesis is true
 - NOT the probability the result is due to chance
 - NOT a measure of effect size or importance
@@ -104,7 +104,7 @@ Examples: This care home's true rate = national average; the intervention made n
 
 **Critical point**: 0.05 is arbitrary, from Ronald Fisher (1925), not a law of nature.
 
-**CQC practice—choose thresholds based on context**:
+#### CQC practice — choose thresholds based on context
 
 | Context | Recommended Threshold | Rationale |
 |---------|----------------------|-----------|
@@ -148,7 +148,7 @@ Examples: This care home's true rate = national average; the intervention made n
 - If SD = 1 hour → d = 2.0 (very large)
 - If SD = 10 hours → d = 0.2 (small)
 
-**Other measures**:
+#### Other measures
 - **Absolute difference**: Raw difference (e.g., 7.5 points on 0-100 scale). Easy to interpret but doesn't account for variability.
 - **Percentage difference**: Relative change (e.g., 30% reduction). Intuitive but misleading with small baselines.
 
@@ -160,7 +160,7 @@ CIs tell you two things at once:
 1. **Statistical significance**: Does the interval exclude the null value (e.g., 0)?
 2. **Practical significance**: What's the plausible range of effects?
 
-**Example comparisons**:
+#### Example comparisons
 
 | Confidence Interval | Interpretation |
 |---------------------|----------------|
@@ -224,10 +224,10 @@ Every statistical result should report:
 
 ### Good vs Bad Examples
 
-**Good**:
+#### Good
 > "Pilot practices (n=10) scored 7.5 points higher than controls (n=10) on average (95% CI: 5.8 to 9.2, p < 0.001, Cohen's d = 4.06). This represents a large and operationally meaningful improvement on the 0-100 scale. Small sample size (n=10 per group) limits generalizability. No information on whether improvements persist over time."
 
-**Bad**:
+#### Bad
 > "Pilot practices scored significantly higher (p < 0.05)."
 
 ### Communicating to Stakeholders
@@ -257,7 +257,7 @@ Every statistical result should report:
 
 **When to calculate power**: Before designing a new indicator. Ask: "Will we have enough data to detect meaningful differences?"
 
-**When to escalate**: If designing a new indicator and unsure about power calculations, consult the Quantitative Guild.
+**When to escalate**: If designing a new indicator and unsure about power calculations, seek specialist support.
 :::
 
 ## Applying These Concepts

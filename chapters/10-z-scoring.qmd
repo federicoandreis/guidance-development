@@ -24,13 +24,13 @@ Z-scoring standardizes performance across providers, accounting for expected var
 
 Z-scoring measures how many standard deviations a provider's observed value is from the expected (mean) value. It answers: "Is this provider's performance unusual enough that it's unlikely to be due to chance?"
 
-**Key advantages**:
+### Key advantages
 - Standardizes different indicators to the same scale
 - Accounts for natural variation in the data
 - Provides consistent banding across all indicators
 - Identifies statistical outliers systematically
 
-**What it does NOT do**:
+### What it does NOT do
 - Prove causation (a high z-score shows difference, not why)
 - Account for case-mix or risk adjustment (unless you build that in first)
 - Replace professional judgment about whether to investigate
@@ -97,8 +97,12 @@ For each provider, calculate the indicator you're analysing.
 **For proportions** (e.g., percentage of patients seen within target):
 $$\text{Proportion} = \frac{\text{Number meeting target}}{\text{Total number}}$$
 
+Divide the count who met the target by the total number of patients.
+
 **For rates** (e.g., incidents per 1,000 bed days):
 $$\text{Rate} = \frac{\text{Number of events}}{\text{Denominator}} \times 1000$$
+
+Divide the event count by the exposure measure (e.g., bed-days), then multiply by 1,000.
 
 **For continuous measures** (e.g., mean waiting time):
 Use the observed value directly.
@@ -109,7 +113,11 @@ Calculate the mean (μ) and standard deviation (σ) across all providers:
 
 $$\mu = \frac{\sum x_i}{n}$$
 
+Sum all values, then divide by the number of providers (*n*).
+
 $$\sigma = \sqrt{\frac{\sum (x_i - \mu)^2}{n-1}}$$
+
+For each value, compute its squared distance from the mean, average these squared distances, then take the square root.
 
 where $x_i$ is each provider's indicator value and $n$ is the number of providers.
 
@@ -138,7 +146,9 @@ CQC typically uses these z-score bands:
 | +2 ≤ z < +3 | Above average | 2.1% |
 | z ≥ +3 | Significantly above average | 0.1% |
 
-![Normal distribution showing z-score bands and expected percentages. The vertical dashed lines mark standard deviations (σ) from the mean (μ). In a normal distribution, 68.2% of values fall within ±1σ, 95.4% within ±2σ, and 99.7% within ±3σ.](../figures/zscore-distribution.png){#fig-zscore-distribution width=100%}
+![Normal distribution with z-score bands: 68.2% of values within ±1σ, 95.4% within ±2σ, and 99.7% within ±3σ of the mean.](../figures/zscore-distribution.png){#fig-zscore-distribution width=100%
+  fig-alt="Bell curve with vertical dashed lines at −3σ, −2σ, −1σ, mean (μ), +1σ, +2σ, and +3σ. Shaded bands show the proportion of values in each region: 68.2% between ±1σ, 95.4% between ±2σ, and 99.7% between ±3σ. Values beyond ±3σ represent approximately 0.3% of the distribution."
+  fig-cap="Z-score bands on a normal distribution. Providers beyond ±2 are considered to show variation; beyond ±3, significant variation."}
 
 **Direction matters**: For some indicators, high values are concerning (e.g., incident rates). For others, low values are concerning (e.g., percentage meeting targets). Interpret bands accordingly.
 
@@ -155,9 +165,9 @@ A histogram of z-scores with reference lines at ±1, ±2, and ±3 standard devia
 
 **Scenario**: You're analysing 2-week-wait cancer referral rates across 150 GP practices. You want to identify practices with unusually high or low referral rates.
 
-**Data structure**:
+### Data structure
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: zscore-example-data
@@ -194,9 +204,9 @@ gp_data = r.gp_data
 
 **Step 1: Calculate indicator** (already done above)
 
-**Step 2: Calculate national statistics**:
+### Step 2: Calculate national statistics
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: zscore-national-stats
@@ -217,9 +227,9 @@ print(f"National SD: {national_sd:.2f}")
 ```
 ::::
 
-**Step 3: Calculate z-scores**:
+### Step 3: Calculate z-scores
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: zscore-calculate
@@ -232,9 +242,9 @@ gp_data['z_score'] = (gp_data['referral_rate'] - national_mean) / national_sd
 ```
 ::::
 
-**Step 4: Assign bands**:
+### Step 4: Assign bands
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: zscore-bands
@@ -259,9 +269,9 @@ gp_data['band'].value_counts().sort_index()
 ```
 ::::
 
-**Step 5: Visualize the distribution**:
+### Step 5: Visualize the distribution
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: zscore-viz-worked
@@ -291,9 +301,9 @@ plt.show()
 ```
 ::::
 
-**Step 6: Identify practices for investigation**:
+### Step 6: Identify practices for investigation
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: zscore-identify-practices
@@ -322,9 +332,9 @@ print(low_referrers)
 ```
 ::::
 
-**Step 7: Visualize**:
+### Step 7: Visualize
 
-:::: {.panel-tabset}
+:::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: zscore-visualize-final
@@ -412,24 +422,24 @@ plt.show()
 
 ## Common Pitfalls
 
-**Pitfall 1: Ignoring direction**
+### Pitfall 1: Ignoring direction
 - High z-scores are concerning for negative indicators (incidents, mortality)
 - Low z-scores are concerning for positive indicators (screening uptake, quality measures)
 - Always check which direction matters
 
-**Pitfall 2: Treating bands as hard thresholds**
+### Pitfall 2: Treating bands as hard thresholds
 - A provider with z = 1.99 is not fundamentally different from z = 2.01
 - Use bands as guidance, not mechanical rules
 
-**Pitfall 3: Ignoring small denominators**
+### Pitfall 3: Ignoring small denominators
 - Providers with few patients/events have more uncertain estimates
 - Their z-scores are less reliable, see Overthinking box
 
-**Pitfall 4: Multiple testing**
+### Pitfall 4: Multiple testing
 - If you run z-scoring on 100 indicators, you'll flag some providers by chance
 - Consider the full picture, not just one indicator
 
-**Pitfall 5: Assuming causation**
+### Pitfall 5: Assuming causation
 - Z-scoring identifies difference, not cause
 - Investigation determines whether it's a quality issue, case-mix, data error, or chance
 
@@ -437,23 +447,23 @@ plt.show()
 
 For QA purposes, record:
 
-**Data**:
+### Data
 - Indicator definition
 - Time period
 - Number of providers (before/after exclusions)
 - Exclusion criteria applied
 
-**Calculations**:
+### Calculations
 - National mean and SD
 - Z-score formula used
 - Banding thresholds applied
 
-**Results**:
+### Results
 - Number/percentage of providers in each band
 - Whether distribution looks normal
 - Providers flagged for investigation
 
-**Decisions**:
+### Decisions
 - Why you chose standard vs working z-scores
 - How you handled small denominators
 - What follow-up actions you recommend
@@ -540,7 +550,7 @@ If your indicator is heavily skewed (e.g., length of stay with long right tail),
 2. Use Working z-scores with appropriate distribution
 3. Use median-based methods instead
 
-**When to escalate**: If you're unsure whether your data meets assumptions, or if you need Working z-scores, consult the Guild. Working z-scores require model-based approaches (Beta distribution for proportions, Poisson/Negative Binomial for counts) that need specialist implementation.
+**When to escalate**: If you're unsure whether your data meets assumptions, or if you need Working z-scores, seek specialist support. Working z-scores require model-based approaches (Beta distribution for proportions, Poisson/Negative Binomial for counts) that need specialist implementation.
 :::
 
 ::: {.callout-warning icon=false}
@@ -587,7 +597,7 @@ $$Z_i = \frac{Y_i - T}{s_i}$$
 - Estimating parameters (Beta shape parameters, Poisson/NB dispersion)
 - Calculating z-scores from model-based expectations
 
-**CQC practice**: The Guild has R scripts for Working z-scores. Don't implement from scratch—use established code that's been validated.
+**CQC practice**: Validated R scripts exist for Working z-scores. Don't implement from scratch — use established code. Contact the Practice Lead if you need access.
 
 **When to use**:
 - Denominators <30 or expected events <10
@@ -605,25 +615,25 @@ $$Z_i = \frac{Y_i - T}{s_i}$$
 
 ## Related Approaches
 
-**For different data challenges**:
-- **Heavily skewed data** → See Overthinking box on Working z-scores above, or consult Guild for transformation approaches
+### For different data challenges
+- **Heavily skewed data** → See Overthinking box on Working z-scores above, or seek specialist support for transformation approaches
 - **Proportions near 0% or 100%** → Wilson score intervals (Working z-scores)
 - **Very small denominators** → Working z-scores or funnel plots
 - **Monitoring over time** → Statistical Process Control (@sec-spc-basics)
 - **Only two groups to compare** → Consider t-tests (@sec-t-tests) if no national benchmark
 
-**For foundational concepts**:
+### For foundational concepts
 - **Understanding variation** → @sec-variation-uncertainty
 - **Data quality checks** → @sec-qa-principles
 - **Missing data investigation** → @sec-missing-data-foundations
 
-**For complete workflows**:
+### For complete workflows
 - **GP Access Analysis** → Example 1 (worked example with z-scoring)
 - **Mental Health Wait Times** → Example 3 (z-scoring with skewed data)
 
-## When to Escalate to the Guild
+## When to Seek Specialist Support
 
-Escalate to the Quantitative Guild when:
+Seek specialist support when:
 
 - **Distribution extremely skewed** despite transformations or log-scaling
 - **Negative variance estimates** appear in your calculations
@@ -652,19 +662,19 @@ Z-scoring is CQC's workhorse method for provider comparison. Master it, understa
 
 ## Further Reading
 
-**Internal CQC Resources**:
+### Internal CQC Resources
 
 - **Z-scoring Guidance Document** (Internal): Detailed technical specifications for Standard and Working z-scores
 - **QA Framework**: Documentation standards for z-scoring analyses
-- **Guild Terms of Reference**: When and how to escalate for specialist support
+- **Getting help**: See @sec-getting-started for how to access support
 
-**External Guidance**:
+### External Guidance
 
 - **Spiegelhalter DJ** (2005). "Funnel plots for comparing institutional performance." *Statistics in Medicine*, 24(8), 1185-1202. (Foundational paper on funnel plots and provider comparison)
 - **AQuA Book** (Chapter on Uncertainty): Communicating uncertainty in performance metrics
 - **NHS Digital Statistical Process Control guidance**: Alternative approaches to provider comparison
 
-**Online Resources**:
+### Online Resources
 
 - Understanding z-scores: https://www.statology.org/z-score/
 - Funnel plots explained: https://www.phc.ox.ac.uk/research/resources/funnel-plots

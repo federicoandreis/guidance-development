@@ -1,4 +1,4 @@
----
+﻿---
 title: "Example 6: Ambulance Handover Delays"
 subtitle: "SPC with Trend Analysis and Seasonality"
 number-sections: false
@@ -20,6 +20,18 @@ library(reticulate)
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
 For detailed explanation of SPC methodology, control charts with trends, and step-by-step guidance, see @sec-spc-basics.
+:::
+
+::: {.callout-note icon=false}
+## 💻 Running This Example
+
+These examples require R or Python. If you are not yet set up with a coding environment:
+
+- **Microsoft Fabric**: CQC's primary analytics platform — contact your function's data engineer for access
+- **RSS training**: Introductory R and Python courses available via CQC's learning platform
+- **Quant Clinic**: Drop-in sessions for hands-on help with code and methods — see the [Guild Teams channel](https://teams.microsoft.com) for upcoming dates
+
+Both R and Python versions are provided throughout. Use whichever you are more comfortable with.
 :::
 
 ---
@@ -81,7 +93,7 @@ By completing this example, you will learn how to:
 
 ### Import Data
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -138,7 +150,7 @@ print(f"Range: {handover_data['delays_over_30min'].min()} to {handover_data['del
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -189,7 +201,7 @@ plt.show()
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -257,7 +269,7 @@ print(handover_data[handover_data['outside_limits']][['month', 'date', 'delays_o
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -338,7 +350,7 @@ plt.show()
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 

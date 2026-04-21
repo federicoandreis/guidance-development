@@ -1,4 +1,4 @@
----
+﻿---
 title: "Example 1: GP Access Analysis"
 subtitle: "Z-scoring with Data Quality Challenges"
 number-sections: false
@@ -20,6 +20,18 @@ library(reticulate)
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
 For detailed explanation of z-scoring methodology, assumptions, and step-by-step guidance, see @sec-z-scoring.
+:::
+
+::: {.callout-note icon=false}
+## 💻 Running This Example
+
+These examples require R or Python. If you are not yet set up with a coding environment:
+
+- **Microsoft Fabric**: CQC's primary analytics platform — contact your function's data engineer for access
+- **RSS training**: Introductory R and Python courses available via CQC's learning platform
+- **Quant Clinic**: Drop-in sessions for hands-on help with code and methods — see the [Guild Teams channel](https://teams.microsoft.com) for upcoming dates
+
+Both R and Python versions are provided throughout. Use whichever you are more comfortable with.
 :::
 
 ---
@@ -98,7 +110,7 @@ By working through this example, you will learn to:
 
 ### Import Data
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -140,7 +152,7 @@ plt.rcParams['figure.figsize'] = (10, 6)
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -183,7 +195,7 @@ print(gp_data_raw.info())
 
 ### Check for Duplicates
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -218,7 +230,7 @@ print(f"Duplicate rows: {n_dup_rows}")
 
 ### Check Missing Data
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -272,7 +284,7 @@ print(missing_summary[missing_summary['Missing_N'] > 0])
 - 5% exclusion is acceptable
 - Document impact in QA log
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -302,7 +314,7 @@ print(f"Excluded: {len(gp_data_raw) - len(gp_data_clean)} practices")
 
 ### Calculate Difficulty Rate
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -330,7 +342,7 @@ print(gp_data_clean['difficulty_rate'].describe())
 
 ### Save Clean Data
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -366,7 +378,7 @@ print("✅ Clean data prepared")
 
 ### Distribution of Difficulty Rates
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -418,7 +430,7 @@ plt.show()
 
 ### Check Normality
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -489,7 +501,7 @@ print(f"Shapiro-Wilk test p-value: {p_value:.4f}")
 
 ### Calculate Z-scores
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -531,7 +543,7 @@ print(gp_data_clean['z_score'].describe())
 
 ### Assign Performance Bands
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -567,7 +579,7 @@ print(gp_data_clean['band'].value_counts().sort_index())
 
 ### Identify Practices for Follow-up
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -602,7 +614,7 @@ print(flagged_practices.nlargest(10, 'z_score')[['practice_code', 'practice_name
 
 ### Visualize Results
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -662,7 +674,7 @@ plt.show()
 
 ### Save Results
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 

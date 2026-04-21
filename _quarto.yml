@@ -14,11 +14,11 @@ book:
 
   chapters:
     - index.qmd
+    - chapters/01-getting-started.qmd
     - quick-reference.qmd
 
     - part: "Part I: Foundations"
       chapters:
-        - chapters/01-getting-started.qmd
         - chapters/02-data-types.qmd
         - chapters/03-describing-data.qmd
         - chapters/04-variation-uncertainty.qmd

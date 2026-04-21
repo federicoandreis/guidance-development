@@ -1,4 +1,4 @@
----
+﻿---
 title: "Example 4: Medication Safety Pilot"
 subtitle: "Paired t-test with Small Sample"
 number-sections: false
@@ -20,6 +20,18 @@ library(reticulate)
 ::: {.callout-note icon=false}
 ## Method Reference
 For detailed explanation of t-test methodology, paired design considerations, and step-by-step guidance, see @sec-t-tests.
+:::
+
+::: {.callout-note icon=false}
+## 💻 Running This Example
+
+These examples require R or Python. If you are not yet set up with a coding environment:
+
+- **Microsoft Fabric**: CQC's primary analytics platform — contact your function's data engineer for access
+- **RSS training**: Introductory R and Python courses available via CQC's learning platform
+- **Quant Clinic**: Drop-in sessions for hands-on help with code and methods — see the [Guild Teams channel](https://teams.microsoft.com) for upcoming dates
+
+Both R and Python versions are provided throughout. Use whichever you are more comfortable with.
 :::
 
 ---
@@ -83,7 +95,7 @@ By working through this example, you will learn to:
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -135,7 +147,7 @@ print(f"Mean reduction: {med_data['difference'].mean():.2f} incidents/month")
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -221,7 +233,7 @@ plt.show()
 
 ### Assumption 1: Normality of Differences
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -270,7 +282,7 @@ else:
 
 ### Assumption 2: Check for Outliers
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -348,7 +360,7 @@ else:
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -427,7 +439,7 @@ print(f"\n95% CI for mean reduction: [{ci[0]:.2f}, {ci[1]:.2f}] incidents")
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 

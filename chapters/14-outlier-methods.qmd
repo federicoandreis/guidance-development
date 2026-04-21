@@ -24,13 +24,13 @@ Outlier detection provides computational tools to flag unusual observations for 
 
 Outlier detection methods apply statistical rules to identify observations that are unusually far from the bulk of the data. They answer: "Which values are extreme enough to warrant investigation?"
 
-**Key advantages**:
+### Key advantages
 - Provides systematic, reproducible criteria for flagging unusual values
 - Scales to large datasets where visual inspection is impractical
 - Offers multiple methods for different data characteristics
 - Helps prioritize investigation efforts
 
-**What it does NOT do**:
+### What it does NOT do
 - Tell you whether an outlier is an error or genuine extreme value (requires investigation)
 - Provide a single "correct" answer (different methods flag different points)
 - Replace the conceptual understanding needed before analysis (see @sec-unusual-observations)
@@ -85,11 +85,11 @@ Check these requirements before applying outlier detection:
 
 Always start with visualization to understand the distribution and identify potential outliers visually.
 
-**Create distribution plots**:
+#### Create distribution plots
 - Histogram with density curve to see overall shape
 - Box plot to identify outliers using IQR method automatically
 
-**What to look for**:
+#### What to look for
 - Is the distribution symmetric or skewed?
 - How many potential outliers are visible?
 - Are outliers in one tail or both?
@@ -132,7 +132,7 @@ Count how many methods flag each observation:
 
 Detection is just the first step. Every flagged observation requires investigation.
 
-**For each flagged observation, ask**:
+#### For each flagged observation, ask
 
 1. **Data quality**: Could this be an error?
    - Implausible value (negative, impossible)?
@@ -170,7 +170,7 @@ You're analysing staffing ratios (qualified staff per 10 residents) across 80 ca
 
 ### Step 1: Generate and Visualize Data
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: outlier-data
@@ -269,7 +269,7 @@ plt.show()
 
 ### Step 2: Apply Detection Methods
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: outlier-detect
@@ -349,7 +349,7 @@ print(f"\nIQR Fences: [{lower_fence:.2f}, {upper_fence:.2f}]")
 
 ### Step 3: Compare Methods
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| label: outlier-compare
@@ -400,27 +400,27 @@ print(flagged.to_string(index=False))
 
 ## Common Pitfalls
 
-**Pitfall 1: Mechanical application without investigation**
+### Pitfall 1: Mechanical application without investigation
 
 Detecting outliers doesn't tell you what to do with them. Every flagged observation requires investigation to determine whether it's an error, genuine extreme, or contextual issue.
 
-**Pitfall 2: Using wrong method for data type**
+### Pitfall 2: Using wrong method for data type
 
 Z-scores assume normality. For highly skewed data, use modified Z-scores or IQR. Don't force methods onto data that violates assumptions.
 
-**Pitfall 3: Removing outliers to "improve" results**
+### Pitfall 3: Removing outliers to "improve" results
 
 Never remove observations just to make your analysis tidier or improve model fit. Outliers contain information. Only remove when you have evidence of errors.
 
-**Pitfall 4: Not documenting decisions**
+### Pitfall 4: Not documenting decisions
 
 "We removed 5 outliers" is insufficient for QA. Document which observations, which methods, what investigation revealed, and why you chose your treatment.
 
-**Pitfall 5: Ignoring small numbers**
+### Pitfall 5: Ignoring small numbers
 
 Small providers naturally show higher variation. An extreme value from a 15-bed home is less surprising than from a 100-bed home. Consider denominators when interpreting outliers.
 
-**Pitfall 6: Single method only**
+### Pitfall 6: Single method only
 
 Using only one detection method misses the bigger picture. Apply 2-3 methods and look for consensus. Agreement across methods strengthens the case for investigation.
 
@@ -428,25 +428,25 @@ Using only one detection method misses the bigger picture. Apply 2-3 methods and
 
 For QA purposes, record:
 
-**Detection approach**:
+### Detection approach
 - Which methods applied and why chosen
 - Thresholds used and rationale
 - Number of outliers flagged by each method
 - Agreement/disagreement across methods
 
-**Investigation process**:
+### Investigation process
 - Which observations investigated
 - Evidence gathered (provider contact, related data, narrative)
 - Findings for each case
 - Time spent on investigation
 
-**Treatment decisions**:
+### Treatment decisions
 - Which outliers kept, which removed, which adjusted
 - Justification for each decision
 - How treatment affects conclusions
 - Sensitivity analysis (do conclusions change?)
 
-**Evidence to retain**:
+### Evidence to retain
 - Distribution plots (before and after)
 - Detection method outputs with thresholds
 - Investigation log with documented decisions
@@ -456,23 +456,23 @@ See @sec-qa-principles for full QA documentation requirements and templates.
 
 ## Related Approaches
 
-**For different data characteristics**:
-- **Multivariate outliers** → Mahalanobis distance (escalate to Guild)
+### For different data characteristics
+- **Multivariate outliers** → Mahalanobis distance (seek specialist support)
 - **Time-series outliers** → SPC methods (@sec-spc-basics)
-- **Clustering-based detection** → DBSCAN, Isolation Forest (escalate to Guild)
+- **Clustering-based detection** → DBSCAN, Isolation Forest (seek specialist support)
 
-**For foundational understanding**:
+### For foundational understanding
 - **Conceptual framework** → @sec-unusual-observations (read first!)
 - **Small provider variation** → @sec-variation-uncertainty
 - **Data quality checks** → @sec-qa-principles
 
-**For related analyses**:
+### For related analyses
 - **Provider comparison** → Z-scoring (@sec-z-scoring) handles expected variation
 - **Missing data** → @sec-missing-data-foundations (outliers vs missing different issues)
 
-## When to Escalate to the Guild
+## When to Seek Specialist Support
 
-Escalate when:
+Seek specialist support when:
 
 - **Multivariate outliers needed**: Outliers across multiple variables simultaneously
 - **Advanced methods required**: Isolation Forest, Local Outlier Factor, or other machine learning approaches
@@ -500,19 +500,19 @@ Outlier detection is about systematically prioritizing investigation, not automa
 
 ## Further Reading
 
-**Internal CQC Resources**:
+### Internal CQC Resources
 
 - **QA Framework**: Documentation standards for outlier investigation and treatment
-- **Guild Terms of Reference**: When and how to escalate for specialist support
+- **Getting help**: See @sec-getting-started for how to access support
 - **Data Quality Guidance**: Distinguishing errors from genuine extremes
 
-**External Guidance**:
+### External Guidance
 
 - **Tukey JW** (1977). *Exploratory Data Analysis*. Addison-Wesley. (Classic text on outlier detection including box plots and fences)
 - **Iglewicz B, Hoaglin DC** (1993). "How to Detect and Handle Outliers." *ASQC Basic References in Quality Control* vol. 16. (Modified Z-score method)
 - **Rousseeuw PJ, Hubert M** (2011). "Robust statistics for outlier detection." *Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery*, 1(1), 73-79.
 
-**Online Resources**:
+### Online Resources
 
 - **NIST Engineering Statistics Handbook**: Section on outlier detection (freely available, comprehensive)
 - **R Documentation**: `?boxplot.stats` for Tukey's method implementation

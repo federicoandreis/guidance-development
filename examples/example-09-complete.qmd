@@ -1,4 +1,4 @@
----
+﻿---
 title: "Example 9: Staffing and Quality Outcomes"
 subtitle: "Correlation Analysis with Confounding Considerations"
 number-sections: false
@@ -20,6 +20,18 @@ library(reticulate)
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
 For detailed explanation of correlation methodology, Pearson vs Spearman, and step-by-step guidance, see @sec-correlation.
+:::
+
+::: {.callout-note icon=false}
+## 💻 Running This Example
+
+These examples require R or Python. If you are not yet set up with a coding environment:
+
+- **Microsoft Fabric**: CQC's primary analytics platform — contact your function's data engineer for access
+- **RSS training**: Introductory R and Python courses available via CQC's learning platform
+- **Quant Clinic**: Drop-in sessions for hands-on help with code and methods — see the [Guild Teams channel](https://teams.microsoft.com) for upcoming dates
+
+Both R and Python versions are provided throughout. Use whichever you are more comfortable with.
 :::
 
 ---
@@ -94,7 +106,7 @@ This synthetic dataset represents 800 residential care homes with the following 
 
 ## 📥 Step 2: Load and Explore Data
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ## R
 
@@ -180,7 +192,7 @@ print(home_data_py.head(10))
 
 ## 📊 Step 3: Visualize the Relationship
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ## R
 
@@ -245,7 +257,7 @@ plt.show()
 
 ## 🔢 Step 4: Calculate Correlation
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ## R
 
@@ -361,7 +373,7 @@ print(results_df.to_string(index=False))
 - Subgroup by complexity: Relationship holds across all groups
 - Spearman vs Pearson: Similar results (confirms linearity)
 
-**Next steps**: Investigate CH600 (high staffing, high ulcers); consider multivariate analysis controlling for multiple confounders (escalate to Guild)
+**Next steps**: Investigate CH600 (high staffing, high ulcers); consider multivariate analysis controlling for multiple confounders (seek specialist support)
 
 ---
 

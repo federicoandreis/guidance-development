@@ -17,8 +17,8 @@ This appendix provides internal CQC resources, external guidance, and recommende
 Internal framework for ensuring analytical quality. Aligns with the AQuA Book. Defines roles, responsibilities, and quality standards for quantitative work.  
 *Contact*: Practice Leads or federico.andreis@cqc.org.uk
 
-**Data and Insight Quantitative Guild Terms of Reference** (2025)  
-Defines the Guild's role in providing specialist statistical support, maintaining standards, and building analytical capability.  
+**Quantitative Analytics and Statistics Guild** (2025)  
+Defines the Guild community's role in offering a space for statistical questions, sharing approaches, and building analytical capability.  
 *Access*: Internal CQC document
 
 **Data and Insight Competency Framework** (2025)  
@@ -34,7 +34,7 @@ Comprehensive internal guidance on standard and working z-scores. Covers data ty
 
 **SPC Implementation Guidance** (if available)  
 Internal guidance on applying SPC methods at CQC.  
-*Contact*: Guild for current resources
+*Contact*: Practice Lead for current resources
 
 ---
 
@@ -157,7 +157,7 @@ Q&A site for statistics. Search before asking; most questions already answered.
 
 ### Internal CQC Training
 
-Contact the Guild or Learning & Development team for:
+Contact the Practice Lead or Learning & Development team for:
 - Introduction to statistics for analysts
 - R programming for data analysis
 - Advanced statistical methods
@@ -227,9 +227,10 @@ Python with data science packages pre-installed.
 
 ### Within CQC
 
-1. **Guild consultation**: For specialist statistical advice, method selection, or complex analyses
-2. **Peer review**: Use the QA Framework for structured feedback
-3. **Practice Leads**: For guidance on standards and processes
+1. **Guild community**: Teams channels, drop-in sessions, and networking for statistical questions and shared learning
+2. **Function technical experts**: For day-to-day statistical questions within your function
+3. **Practice Lead for Quantitative Analytics and Statistics**: For complex methodological questions or formal review
+4. **Peer review**: Use the QA Framework for structured feedback
 
 ### External Support
 
@@ -277,14 +278,16 @@ For specific sections, include the section title and URL when published.
 ## Document History
 
 **Version 1.0** (December 2025): Initial release covering:
-- **Part I: Foundations** (9 sections): Getting Started, Data Types, Describing Data, Variation & Uncertainty, Distribution Shape, Unusual Observations, Missing Data Foundations, Statistical Inference, QA Principles
+- **How to Use This Book**: Orientation and reading strategies
+- **Quick Reference**: Method selection guide
+- **Part I: Foundations** (8 chapters): Data Types, Describing Data, Variation & Uncertainty, Distribution Shape, Unusual Observations, Missing Data Foundations, Statistical Inference, QA Principles
 - **Part II: Core Methods** (6 sections): Z-scoring, SPC Basics, t-tests, Correlation, Outlier Methods, Missing Data Methods
 - **Part III: Worked Examples** (10 complete examples with R and Python code)
 - **Appendices**: Glossary, References
 
 **Planned for Version 2.0**: ANOVA, Chi-squared tests, advanced SPC methods (Bayesian, CUSUM, EWMA), case studies, interactive components.
 
-**Feedback**: Contact the Guild or Practice Leads with suggestions for improvements or additional resources.
+**Feedback**: Contact the [Practice Lead for Quantitative Analytics and Statistics](mailto:federico.andreis@cqc.org.uk) with suggestions for improvements or additional resources.
 
 ---
 

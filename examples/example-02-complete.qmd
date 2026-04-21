@@ -1,4 +1,4 @@
----
+﻿---
 title: "Example 2: Care Home Falls Monitoring"
 subtitle: "Statistical Process Control with Intervention"
 number-sections: false
@@ -20,6 +20,18 @@ library(reticulate)
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
 For detailed explanation of SPC methodology, control charts, and step-by-step guidance, see @sec-spc-basics.
+:::
+
+::: {.callout-note icon=false}
+## 💻 Running This Example
+
+These examples require R or Python. If you are not yet set up with a coding environment:
+
+- **Microsoft Fabric**: CQC's primary analytics platform — contact your function's data engineer for access
+- **RSS training**: Introductory R and Python courses available via CQC's learning platform
+- **Quant Clinic**: Drop-in sessions for hands-on help with code and methods — see the [Guild Teams channel](https://teams.microsoft.com) for upcoming dates
+
+Both R and Python versions are provided throughout. Use whichever you are more comfortable with.
 :::
 
 ---
@@ -83,7 +95,7 @@ By working through this example, you will learn to:
 
 ### Setup
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -126,7 +138,7 @@ print(falls_data.head())
 
 ### Visualize Time Series
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -184,7 +196,7 @@ plt.show()
 
 ### Calculate Control Limits (Including All Data)
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -239,7 +251,7 @@ print(f"  LCL: {lcl_all:.2f}")
 
 ### Identify Special Causes
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -274,7 +286,7 @@ print(special_causes)
 
 ### Recalculate Control Limits (Excluding Month 8)
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -335,7 +347,7 @@ baseline_params = pd.DataFrame({
 
 ### Plot Baseline Control Chart
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -414,7 +426,7 @@ plt.show()
 
 ### Full Control Chart with Intervention
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -489,7 +501,7 @@ plt.show()
 
 ### Detect Points Outside Limits
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -524,7 +536,7 @@ print(f"\nTotal: {len(outside_lcl)} of {len(post_intervention)} months")
 
 **Rule 4**: 8+ consecutive points one side of centre line indicates process shift.
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -572,7 +584,7 @@ if max_run >= 8:
 
 ### Statistical Comparison
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 

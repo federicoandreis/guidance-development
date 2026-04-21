@@ -1,4 +1,4 @@
----
+﻿---
 title: "Example 3: Mental Health Wait Times"
 subtitle: "Z-scoring with Skewed Data"
 number-sections: false
@@ -20,6 +20,18 @@ library(reticulate)
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
 For detailed explanation of z-scoring methodology, handling skewed data, and step-by-step guidance, see @sec-z-scoring.
+:::
+
+::: {.callout-note icon=false}
+## 💻 Running This Example
+
+These examples require R or Python. If you are not yet set up with a coding environment:
+
+- **Microsoft Fabric**: CQC's primary analytics platform — contact your function's data engineer for access
+- **RSS training**: Introductory R and Python courses available via CQC's learning platform
+- **Quant Clinic**: Drop-in sessions for hands-on help with code and methods — see the [Guild Teams channel](https://teams.microsoft.com) for upcoming dates
+
+Both R and Python versions are provided throughout. Use whichever you are more comfortable with.
 :::
 
 ---
@@ -89,7 +101,7 @@ By working through this example, you will learn to:
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -144,7 +156,7 @@ print(mh_data['wait_time_days'].describe())
 
 ### Visualize Distribution
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -196,7 +208,7 @@ plt.show()
 
 ### Check Skewness Statistically
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -271,7 +283,7 @@ plt.show()
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -323,7 +335,7 @@ print(f"\nServices flagged (raw z-scores): {len(flagged_raw)}")
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -407,7 +419,7 @@ plt.show()
 
 ---
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 
@@ -500,7 +512,7 @@ plt.show()
 
 ## Step 7: Final Results
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ### R
 

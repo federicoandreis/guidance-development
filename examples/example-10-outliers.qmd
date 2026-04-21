@@ -1,4 +1,4 @@
----
+﻿---
 title: "Example 10: Care Home Staffing Investigation"
 subtitle: "Outlier Detection and Treatment with Data Quality Issues"
 number-sections: false
@@ -19,6 +19,18 @@ library(reticulate)
 ::: {.callout-note icon=false}
 ## 📖 Method Reference
 For detailed explanation of outlier detection methods, treatment strategies, and step-by-step guidance, see @sec-outlier-methods.
+:::
+
+::: {.callout-note icon=false}
+## 💻 Running This Example
+
+These examples require R or Python. If you are not yet set up with a coding environment:
+
+- **Microsoft Fabric**: CQC's primary analytics platform — contact your function's data engineer for access
+- **RSS training**: Introductory R and Python courses available via CQC's learning platform
+- **Quant Clinic**: Drop-in sessions for hands-on help with code and methods — see the [Guild Teams channel](https://teams.microsoft.com) for upcoming dates
+
+Both R and Python versions are provided throughout. Use whichever you are more comfortable with.
 :::
 
 ---
@@ -82,7 +94,7 @@ By working through this example, you will learn to:
 
 ## 🔍 Step 1: Load and Explore Data
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| eval: true
@@ -154,7 +166,7 @@ print(care_homes['staff_per_10'].describe())
 
 ## 🔍 Step 2: Visualize Distribution
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| eval: true
@@ -209,7 +221,7 @@ plt.show()
 
 ## 🔍 Step 3: Apply Detection Methods
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| eval: true
@@ -273,7 +285,7 @@ print(f"IQR: {care_homes['outlier_iqr'].sum()} outliers")
 
 ## 🔍 Step 4: Compare Methods
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| eval: true
@@ -303,7 +315,7 @@ print(high_priority.head(15).to_string(index=False))
 
 ## 🔍 Step 5: Investigation and Treatment
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| eval: true
@@ -364,7 +376,7 @@ print(investigation['action'].value_counts())
 
 ## 📊 Final Output
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 ## R
 ```{r}
 #| eval: true

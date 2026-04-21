@@ -26,7 +26,7 @@ Before deciding how to handle an unusual observation, understand why it exists.
 
 **Most common cause in practice**. Errors create values that are impossible or implausible.
 
-**Examples**:
+#### Examples
 - **Entry errors**: "234" instead of "23.4" (decimal point missing)
 - **Unit errors**: Days recorded as hours (72 instead of 3)
 - **System glitches**: Missing data coded as 999
@@ -39,7 +39,7 @@ Before deciding how to handle an unusual observation, understand why it exists.
 
 **Real but rare events**. Some values are accurate recordings of unusual situations.
 
-**Examples**:
+#### Examples
 - Care home with COVID outbreak has genuinely high mortality for that month
 - Small GP practice with one serious incident has high rate per 1000 patients
 - Hospital specialist unit treats sickest patients, genuinely different outcomes
@@ -51,7 +51,7 @@ Before deciding how to handle an unusual observation, understand why it exists.
 
 **The value isn't extreme for its true group, but appears extreme when mixed with others**.
 
-**Examples**:
+#### Examples
 - Maternity unit compared to general hospital (different denominators, different populations)
 - Small care home (20 beds) compared to large nursing home (200 beds)—precision and operational models differ
 - Specialist vs generalist providers mixed in same analysis
@@ -63,7 +63,7 @@ Before deciding how to handle an unusual observation, understand why it exists.
 
 **Something genuinely changed**. This is what SPC methods (@sec-spc-basics) are designed to detect.
 
-**Examples**:
+#### Examples
 - New infection control protocol reduces incidents (genuine improvement)
 - Staffing crisis leads to temporary spike in complaints (temporary deterioration)
 - Regulatory inspection triggers short-term improvement (Hawthorne effect)
@@ -79,7 +79,7 @@ There's no single "correct" way to identify unusual observations. Different defi
 
 **How far is this value from the typical value?**
 
-**Approaches**:
+#### Approaches
 - **Z-scores** (@sec-z-scoring): How many standard deviations from the mean?
 - **Distance from median**: How far from the middle value?
 - **Mahalanobis distance**: Multivariate distance accounting for correlations
@@ -96,7 +96,7 @@ There's no single "correct" way to identify unusual observations. Different defi
 
 **Where does this value sit in the ranking?**
 
-**Approaches**:
+#### Approaches
 - **Percentiles** (@sec-quantiles): Is this in the top 5%? Bottom 10%?
 - **IQR-based** (Tukey's fences): Beyond 1.5 × IQR from quartiles?
 - **Extreme order statistics**: Minimum or maximum value?
@@ -113,7 +113,7 @@ There's no single "correct" way to identify unusual observations. Different defi
 
 **How poorly does this value fit the model?**
 
-**Approaches**:
+#### Approaches
 - **Residuals**: Difference between observed and predicted values
 - **Leverage**: How much influence this point has on the model
 - **Cook's distance**: Combined influence and residual measure
@@ -130,7 +130,7 @@ There's no single "correct" way to identify unusual observations. Different defi
 
 **Is this value implausible or concerning based on clinical or operational expertise?**
 
-**Approaches**:
+#### Approaches
 - **Clinical thresholds**: Mortality >50% in a care home warrants investigation regardless of statistical methods
 - **Regulatory standards**: Staffing below minimum requirements
 - **Historical comparison**: This provider's current rate vs their own history
@@ -150,7 +150,7 @@ There's no single "correct" way to identify unusual observations. Different defi
 
 ### Investigation Workflow
 
-**Step 1: Verify the data**
+#### Step 1: Verify the data
 
 - Check original source (is the value recorded correctly?)
 - Check extraction and processing (did any transformations create this?)
@@ -159,7 +159,7 @@ There's no single "correct" way to identify unusual observations. Different defi
 
 **If it's an error**: Correct it if possible, exclude it if not. Document what you did and why.
 
-**Step 2: Understand the context**
+#### Step 2: Understand the context
 
 - What kind of provider is this? (size, type, population served)
 - What period does this cover? (one-off event or sustained?)
@@ -168,7 +168,7 @@ There's no single "correct" way to identify unusual observations. Different defi
 
 **If context explains it**: Document the context. May still warrant investigation, but for different reasons than data quality.
 
-**Step 3: Consider the pattern**
+#### Step 3: Consider the pattern
 
 - Is this value unusual relative to peers? (cross-sectional outlier)
 - Is it unusual relative to this provider's own history? (temporal outlier)
@@ -177,7 +177,7 @@ There's no single "correct" way to identify unusual observations. Different defi
 
 **If pattern is systematic**: May indicate need to stratify analysis or revise comparator group.
 
-**Step 4: Assess regulatory significance**
+#### Step 4: Assess regulatory significance
 
 - Does this value indicate potential patient harm? (safety threshold)
 - Does it trigger inspection criteria? (regulatory action)
@@ -207,18 +207,18 @@ Once you've investigated, you need to decide what to do. No single approach is a
 
 **Principle**: Transparency over convenience. Keep the value, report it clearly, document why it's unusual.
 
-**When to use**:
+#### When to use
 - Value is verified as accurate
 - Removing it would introduce bias (e.g., removing high performers makes everyone look worse)
 - You're describing what exists, not estimating a population parameter
 - Regulatory context requires seeing all data
 
-**Advantages**:
+#### Advantages
 - Transparent and defensible
 - No arbitrary decisions
 - Preserves information
 
-**Disadvantages**:
+#### Disadvantages
 - May violate statistical assumptions
 - Can dominate summary statistics (especially with small samples)
 - Requires careful interpretation
@@ -229,24 +229,24 @@ Once you've investigated, you need to decide what to do. No single approach is a
 
 **Principle**: Mathematical transformation reduces the influence of extreme values without removing them.
 
-**Common transformations**:
+#### Common transformations
 - **Log transformation**: log(x). Reduces positive skew, brings extreme high values closer to the center.
 - **Square root**: √x. Milder than log, suitable for count data.
 - **Inverse**: 1/x. For rate data where small denominators create extreme values.
 - **Winsorizing**: Replace extreme values with less extreme ones (e.g., 95th percentile).
 
-**When to use**:
+#### When to use
 - Data is heavily skewed
 - Transformation improves adherence to statistical assumptions (e.g., normality for t-tests)
 - You're modeling and transformation improves model fit
 - Transformation has substantive interpretation (e.g., log for multiplicative processes)
 
-**Advantages**:
+#### Advantages
 - Retains all data
 - Can improve statistical properties
 - Well-established in some contexts
 
-**Disadvantages**:
+#### Disadvantages
 - Changes interpretation (results are on transformed scale)
 - Not always intuitive to communicate
 - May not be appropriate for all data types
@@ -257,24 +257,24 @@ Once you've investigated, you need to decide what to do. No single approach is a
 
 **Principle**: Choose statistical methods designed to resist the influence of unusual observations.
 
-**Robust alternatives**:
+#### Robust alternatives
 - Use **median** instead of mean (@sec-describing-data)
 - Use **IQR** instead of standard deviation (@sec-variation-uncertainty)
 - Use **Spearman's correlation** instead of Pearson's (@sec-correlation)
 - Use **non-parametric tests** instead of t-tests when assumptions violated
-- Use **robust regression** methods (available via Guild consultation)
+- Use **robust regression** methods (seek specialist support)
 
-**When to use**:
+#### When to use
 - Unusual observations are genuine but distort conventional statistics
 - You want a measure of "typical" that isn't affected by extremes
 - Small sample with one or two unusual values
 
-**Advantages**:
+#### Advantages
 - Simple to apply
 - Well-established alternatives exist
 - Results less sensitive to outliers
 
-**Disadvantages**:
+#### Disadvantages
 - Less statistically efficient with clean data
 - May not answer the original question (median ≠ mean)
 - Some robust methods require specialist implementation
@@ -285,25 +285,25 @@ Once you've investigated, you need to decide what to do. No single approach is a
 
 **Principle**: Exclude the observation from analysis. Only after investigation and documentation.
 
-**When justified**:
+#### When justified
 - Value is a confirmed error that cannot be corrected
 - Value represents a fundamentally different population (e.g., mixing acute hospitals with hospices)
 - Method assumptions critically violated and transformation doesn't help
 - Including the value would produce misleading conclusions
 
-**When NOT justified**:
+#### When NOT justified
 - "It makes my results cleaner"
 - "It's more than 3 SD from the mean" (mechanical application of a rule)
 - "It doesn't fit my hypothesis"
 - "I don't know what else to do"
 
-**If you remove, you MUST**:
+#### If you remove, you MUST
 - Document what you removed and why
 - Report sample size before and after exclusions
 - Conduct sensitivity analysis showing results with and without exclusion
 - Explain why exclusion is justified, not just that the value is extreme
 
-**Disadvantages**:
+#### Disadvantages
 - Introduces potential bias
 - Reduces sample size
 - May be difficult to defend
@@ -315,20 +315,20 @@ Once you've investigated, you need to decide what to do. No single approach is a
 
 **Principle**: Test whether your conclusions change depending on how you handle unusual observations.
 
-**Approach**:
+#### Approach
 - Analyze with all data included
 - Analyze with unusual observations excluded
 - Analyze with transformation
 - Analyze with robust methods
 - Compare results
 
-**When to use**:
+#### When to use
 - High-stakes analysis where conclusions will be scrutinized
 - Borderline decisions (unclear whether to include or exclude)
 - Multiple unusual observations requiring different decisions
 - Building confidence in findings
 
-**Report**:
+#### Report
 - "Results were robust to outlier treatment: the same three providers were flagged regardless of whether we included extreme values."
 - "Results were sensitive to outlier treatment: Provider X was flagged only when we excluded one extreme observation. We retained all data and flagged Provider X with low confidence."
 
@@ -423,7 +423,7 @@ Two alternative approaches to extreme values, less commonly used but worth knowi
 
 **CQC context**: Trimming and winsorizing are rarely appropriate for regulatory work because they systematically exclude or modify the very providers we might need to investigate. Use robust methods instead.
 
-If you're considering these approaches, consult the Guild—there's usually a better option.
+If you're considering these approaches, seek specialist support — there's usually a better option.
 :::
 
 ::: {.callout-warning icon=false}
@@ -454,7 +454,7 @@ Individually, none of these is extreme. But *together*, low satisfaction with sl
 
 **CQC relevance**: Limited. Most CQC analysis examines indicators one at a time or in simple relationships. Multivariate outlier detection requires more sophisticated modeling.
 
-**When to escalate**: If you're doing multivariate modeling (regression, clustering, PCA) and suspect influential observations, consult the Guild. Multivariate outlier diagnostics require specialist interpretation.
+**When to escalate**: If you're doing multivariate modeling (regression, clustering, PCA) and suspect influential observations, seek specialist support. Multivariate outlier diagnostics require specialist interpretation.
 
 For most CQC work, focus on univariate outliers and well-understood relationships.
 :::
